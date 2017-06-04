@@ -1,0 +1,124 @@
+diff -urN Python-3.6.1.orig/Makefile.pre.in Python-3.6.1/Makefile.pre.in
+--- Python-3.6.1.orig/Makefile.pre.in	2017-04-05 00:24:31.403486296 +0100
++++ Python-3.6.1/Makefile.pre.in	2017-04-05 00:32:29.000000000 +0100
+@@ -228,6 +228,7 @@
+ BUILDPYTHON=	python$(BUILDEXE)
+ 
+ PYTHON_FOR_GEN=@PYTHON_FOR_GEN@
++PY_BUILD_ENVIRON=@PY_BUILD_ENVIRON@
+ PYTHON_FOR_BUILD=@PYTHON_FOR_BUILD@
+ _PYTHON_HOST_PLATFORM=@_PYTHON_HOST_PLATFORM@
+ BUILD_GNU_TYPE=	@build@
+@@ -561,14 +562,14 @@
+ # (depends on python having already been built)
+ .PHONY=clinic
+ clinic: $(BUILDPYTHON) $(srcdir)/Modules/_blake2/blake2s_impl.c
+-	$(RUNSHARED) $(PYTHON_FOR_BUILD) ./Tools/clinic/clinic.py --make
++	$(RUNSHARED) $(PY_BUILD_ENVIRON) $(PYTHON_FOR_BUILD) ./Tools/clinic/clinic.py --make
+ 
+ # Build the interpreter
+ $(BUILDPYTHON):	Programs/python.o $(LIBRARY) $(LDLIBRARY) $(PY3LIBRARY)
+ 	$(LINKCC) $(PY_LDFLAGS) $(LINKFORSHARED) -o $@ Programs/python.o $(BLDLIBRARY) $(LIBS) $(MODLIBS) $(SYSLIBS) $(LDLAST)
+ 
+ platform: $(BUILDPYTHON) pybuilddir.txt
+-	$(RUNSHARED) $(PYTHON_FOR_BUILD) -c 'import sys ; from sysconfig import get_platform ; print("%s-%d.%d" % (get_platform(), *sys.version_info[:2]))' >platform
++	$(RUNSHARED) $(PY_BUILD_ENVIRON) $(PYTHON_FOR_BUILD) -c 'import sys ; from sysconfig import get_platform ; print("%s-%d.%d" % (get_platform(), *sys.version_info[:2]))' >platform
+ 
+ # Create build directory and generate the sysconfig build-time data there.
+ # pybuilddir.txt contains the name of the build dir and is used for
+@@ -579,7 +580,7 @@
+ # or removed in case of failure.
+ pybuilddir.txt: $(BUILDPYTHON)
+ 	@echo "none" > ./pybuilddir.txt
+-	$(RUNSHARED) $(PYTHON_FOR_BUILD) -S -m sysconfig --generate-posix-vars ;\
++	$(RUNSHARED) $(PY_BUILD_ENVIRON) $(PYTHON_FOR_BUILD) -S -m sysconfig --generate-posix-vars ;\
+ 	if test $$? -ne 0 ; then \
+ 		echo "generate-posix-vars failed" ; \
+ 		rm -f ./pybuilddir.txt ; \
+@@ -606,7 +607,7 @@
+ 	esac; \
+ 	$(RUNSHARED) CC='$(CC)' LDSHARED='$(BLDSHARED)' OPT='$(OPT)' \
+ 		_TCLTK_INCLUDES='$(TCLTK_INCLUDES)' _TCLTK_LIBS='$(TCLTK_LIBS)' \
+-		$(PYTHON_FOR_BUILD) $(srcdir)/setup.py $$quiet build
++		$(PY_BUILD_ENVIRON) $(PYTHON_FOR_BUILD) $(srcdir)/setup.py $$quiet build
+ 
+ 
+ # Build static library
+@@ -1052,7 +1053,7 @@
+ 			upgrade) ensurepip="--upgrade" ;; \
+ 			install|*) ensurepip="" ;; \
+ 		esac; \
+-		$(RUNSHARED) $(PYTHON_FOR_BUILD) -m ensurepip \
++		$(RUNSHARED) $(PY_BUILD_ENVIRON) $(PYTHON_FOR_BUILD) -m ensurepip \
+ 			$$ensurepip --root=$(DESTDIR)/ ; \
+ 	fi
+ 
+@@ -1062,7 +1063,7 @@
+ 			upgrade) ensurepip="--altinstall --upgrade" ;; \
+ 			install|*) ensurepip="--altinstall" ;; \
+ 		esac; \
+-		$(RUNSHARED) $(PYTHON_FOR_BUILD) -m ensurepip \
++		$(RUNSHARED) $(PY_BUILD_ENVIRON) $(PYTHON_FOR_BUILD) -m ensurepip \
+ 			$$ensurepip --root=$(DESTDIR)/ ; \
+ 	fi
+ 
+@@ -1431,7 +1432,7 @@
+ # Install the dynamically loadable modules
+ # This goes into $(exec_prefix)
+ sharedinstall: sharedmods
+-	$(RUNSHARED) $(PYTHON_FOR_BUILD) $(srcdir)/setup.py install \
++	$(RUNSHARED) $(PY_BUILD_ENVIRON) $(PYTHON_FOR_BUILD) $(srcdir)/setup.py install \
+ 	   	--prefix=$(prefix) \
+ 		--install-scripts=$(BINDIR) \
+ 		--install-platlib=$(DESTSHARED) \
+@@ -1515,7 +1516,7 @@
+ # This installs a few of the useful scripts in Tools/scripts
+ scriptsinstall:
+ 	SRCDIR=$(srcdir) $(RUNSHARED) \
+-	$(PYTHON_FOR_BUILD) $(srcdir)/Tools/scripts/setup.py install \
++	$(PY_BUILD_ENVIRON) $(PYTHON_FOR_BUILD) $(srcdir)/Tools/scripts/setup.py install \
+ 	--prefix=$(prefix) \
+ 	--install-scripts=$(BINDIR) \
+ 	--root=$(DESTDIR)/
+diff -urN Python-3.6.1.orig/configure Python-3.6.1/configure
+--- Python-3.6.1.orig/configure	2017-04-05 00:24:31.410153364 +0100
++++ Python-3.6.1/configure	2017-04-05 00:50:24.058517296 +0100
+@@ -751,6 +751,7 @@
+ VERSION
+ GENERATED_COMMENT
+ PYTHON_FOR_BUILD
++PY_BUILD_ENVIRON
+ PYTHON_FOR_GEN
+ host_os
+ host_vendor
+@@ -2928,7 +2929,8 @@
+ 	fi
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: $interp" >&5
+ $as_echo "$interp" >&6; }
+-	PYTHON_FOR_BUILD='_PYTHON_PROJECT_BASE=$(abs_builddir) _PYTHON_HOST_PLATFORM=$(_PYTHON_HOST_PLATFORM) PYTHONPATH=$(shell test -f pybuilddir.txt && echo $(abs_builddir)/`cat pybuilddir.txt`:)$(srcdir)/Lib _PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_$(ABIFLAGS)_$(MACHDEP)_$(MULTIARCH) '$interp
++	PY_BUILD_ENVIRON='_PYTHON_PROJECT_BASE=$(abs_builddir) _PYTHON_HOST_PLATFORM=$(_PYTHON_HOST_PLATFORM) PYTHONPATH=$(shell test -f pybuilddir.txt && echo $(abs_builddir)/`cat pybuilddir.txt`:)$(srcdir)/Lib _PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_$(ABIFLAGS)_$(MACHDEP)_$(MULTIARCH)'
++	PYTHON_FOR_BUILD=$interp
+     fi
+     # Used to comment out stuff for rebuilding generated files
+     GENERATED_COMMENT='#'
+diff -urN Python-3.6.1.orig/configure.ac Python-3.6.1/configure.ac
+--- Python-3.6.1.orig/configure.ac	2017-04-05 00:24:31.413486898 +0100
++++ Python-3.6.1/configure.ac	2017-04-05 00:49:59.701219619 +0100
+@@ -78,7 +78,8 @@
+ 	    AC_MSG_ERROR([python$PACKAGE_VERSION interpreter not found])
+ 	fi
+         AC_MSG_RESULT($interp)
+-	PYTHON_FOR_BUILD='_PYTHON_PROJECT_BASE=$(abs_builddir) _PYTHON_HOST_PLATFORM=$(_PYTHON_HOST_PLATFORM) PYTHONPATH=$(shell test -f pybuilddir.txt && echo $(abs_builddir)/`cat pybuilddir.txt`:)$(srcdir)/Lib _PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_$(ABIFLAGS)_$(MACHDEP)_$(MULTIARCH) '$interp
++	PY_BUILD_ENVIRON='_PYTHON_PROJECT_BASE=$(abs_builddir) _PYTHON_HOST_PLATFORM=$(_PYTHON_HOST_PLATFORM) PYTHONPATH=$(shell test -f pybuilddir.txt && echo $(abs_builddir)/`cat pybuilddir.txt`:)$(srcdir)/Lib _PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_$(ABIFLAGS)_$(MACHDEP)_$(MULTIARCH)'
++	PYTHON_FOR_BUILD=$interp
+     fi
+     # Used to comment out stuff for rebuilding generated files
+     GENERATED_COMMENT='#'
+@@ -88,6 +89,7 @@
+     PYTHON_FOR_BUILD='./$(BUILDPYTHON) -E'
+     GENERATED_COMMENT=''
+ fi
++AC_SUBST(PY_BUILD_ENVIRON)
+ AC_SUBST(PYTHON_FOR_BUILD)
+ AC_SUBST(GENERATED_COMMENT)
+ 
