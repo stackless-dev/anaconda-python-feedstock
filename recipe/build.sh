@@ -39,9 +39,22 @@ unset _CONDA_PYTHON_SYSCONFIGDATA_NAME
 # tries to update bzip2.
 find "${PREFIX}/lib" -name "libbz2*${SHLIB_EXT}*" | xargs rm -fv {}
 
+<<<<<<< HEAD
 # Prevent lib/python${VER}/_sysconfigdata_*.py from ending up with full paths to these things
 # in _build_env because _build_env will not get found during prefix replacement, only _h_env_placeh ...
 AR=$(basename "${AR}")
+=======
+# Prevent lib/python3.6/_sysconfigdata_m_linux_arm-linux-gnueabi.py from ending up with full paths to these
+# things in _build_env because _build_env will not get found during prefix replacement, only _h_env_placeh ...
+AR=$(basename "${AR}")
+# CC must contain the string 'gcc' or else distutils thinks it is on macOS and uses '-R' to set rpaths.
+CC=$(basename "${GCC}")
+CXX=$(basename "${CXX}")
+RANLIB=$(basename "${RANLIB}")
+READELF=$(basename "${READELF}")
+
+${SYS_PYTHON} ${RECIPE_DIR}/brand_python.py
+>>>>>>> Add cross-compilation support and (enabled for now) _OPTIMIZED flag (WIP)
 
 # CC must contain the string 'gcc' or else distutils thinks it is on macOS and uses '-R' to set rpaths.
 if [[ ${HOST} =~ .*darwin.* ]]; then
@@ -86,9 +99,18 @@ export CPPFLAGS CFLAGS CXXFLAGS LDFLAGS
 
 if [[ ${HOST} =~ .*darwin.* ]]; then
   sed -i -e "s/@OSX_ARCH@/$ARCH/g" Lib/distutils/unixccompiler.py
+<<<<<<< HEAD
 fi
 
 if [[ "${BUILD}" != "${HOST}" ]] && [[ -n "${BUILD}" ]] && [[ -n "${HOST}" ]]; then
+=======
+elif [ $(uname) == Linux ]; then
+  export CPPFLAGS="-I$PREFIX/include"
+  export LDFLAGS="-L$PREFIX/lib -Wl,-rpath=$PREFIX/lib,--no-as-needed"
+fi
+
+if [[ "${BUILD}" != "${HOST}" ]]; then
+>>>>>>> Add cross-compilation support and (enabled for now) _OPTIMIZED flag (WIP)
   # Build the exact same Python for the build machine. It would be nice (and might be
   # possible already?) to be able to make this just an 'exact' pinned build dependency
   # of a split-package?
@@ -103,6 +125,7 @@ if [[ "${BUILD}" != "${HOST}" ]] && [[ -n "${BUILD}" ]] && [[ -n "${HOST}" ]]; t
             AR=/usr/bin/ar \
             RANLIB=/usr/bin/ranlib \
             LD=/usr/bin/ld && \
+<<<<<<< HEAD
       ${SRC_DIR}/configure --build=${BUILD} \
                            --host=${BUILD} \
                            --prefix=${BUILD_PYTHON_PREFIX} \
@@ -111,6 +134,16 @@ if [[ "${BUILD}" != "${HOST}" ]] && [[ -n "${BUILD}" ]] && [[ -n "${HOST}" ]]; t
       make install)
     export PATH=${BUILD_PYTHON_PREFIX}/bin:${PATH}
     ln -s ${BUILD_PYTHON_PREFIX}/bin/python${VER} ${BUILD_PYTHON_PREFIX}/bin/python
+=======
+      ../configure --build=${BUILD} \
+                   --host=${BUILD} \
+                   --prefix=${BUILD_PYTHON_PREFIX} \
+                   --with-ensurepip=no && \
+      make && \
+      make install)
+    export PATH=${BUILD_PYTHON_PREFIX}/bin:${PATH}
+    ln -s ${BUILD_PYTHON_PREFIX}/bin/python3.6 ${BUILD_PYTHON_PREFIX}/bin/python
+>>>>>>> Add cross-compilation support and (enabled for now) _OPTIMIZED flag (WIP)
   popd
   echo "ac_cv_file__dev_ptmx=yes"        > config.site
   echo "ac_cv_file__dev_ptc=yes"        >> config.site
@@ -119,6 +152,7 @@ if [[ "${BUILD}" != "${HOST}" ]] && [[ -n "${BUILD}" ]] && [[ -n "${HOST}" ]]; t
   export CONFIG_SITE=${PWD}/config.site
   # This is needed for libffi:
   export PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig
+<<<<<<< HEAD
 fi
 
 # This causes setup.py to query the sysroot directories from the compiler, something which
@@ -193,10 +227,23 @@ if [[ ${_OPTIMIZED} == yes ]]; then
     LTO_CFLAGS+=(-flto)
   fi
   export CFLAGS="${CFLAGS} ${LTO_CFLAGS[@]}"
+=======
+  _OPTIMISED=1
+else
+  _OPTIMISED=1
+fi
+
+declare -a _extra_opts
+if [[ ${_OPTIMIZED} == 1 ]]; then
+  _extra_opts+=(--enable-optimizations)
+  _extra_opts+=(--enable-lto)
+  _MAKE_TARGET=profile-opt
+>>>>>>> Add cross-compilation support and (enabled for now) _OPTIMIZED flag (WIP)
 else
   _MAKE_TARGET=
 fi
 
+<<<<<<< HEAD
 mkdir -p ${_buildd_static}
 pushd ${_buildd_static}
   ${SRC_DIR}/configure "${_common_configure_args[@]}" \
@@ -339,3 +386,21 @@ pushd $PREFIX/lib/python${VER}
   cat ${our_compilers_name} | sed "s|${PREFIX}|/opt/anaconda1anaconda2anaconda3|g" > "${RECIPE_DIR}"/sysconfigdata/${our_compilers_name}
 
 popd
+=======
+./configure --build=${BUILD} \
+            --host=${HOST} \
+            --enable-shared \
+            --enable-ipv6 \
+            --with-ensurepip=no \
+            --prefix=$PREFIX \
+            --with-system-ffi \
+            --with-tcltk-includes="-I$PREFIX/include" \
+            --with-tcltk-libs="-L$PREFIX/lib -ltcl8.6 -ltk8.6" \
+            --enable-loadable-sqlite-extensions \
+            "${_extra_opts[@]}"
+
+make ${_MAKE_TARGET}
+make install
+ln -s $PREFIX/bin/python3.6 $PREFIX/bin/python
+ln -s $PREFIX/bin/pydoc3.6 $PREFIX/bin/pydoc
+>>>>>>> Add cross-compilation support and (enabled for now) _OPTIMIZED flag (WIP)
