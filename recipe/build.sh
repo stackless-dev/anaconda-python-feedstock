@@ -81,6 +81,13 @@ else
   _MAKE_TARGET=
 fi
 
+# This causes setup.py to query the sysroot directories from the compiler, something which
+# IMHO should be done by default anyway with a flag to disable it to workaround broken ones.
+if [[ -n ${HOST} ]]; then
+  IFS='-' read -r host_arch host_vendor host_os host_libc <<<"${HOST}"
+  export _PYTHON_HOST_PLATFORM=${host_os}-${host_arch}
+fi
+
 ./configure --build=${BUILD} \
             --host=${HOST} \
             --enable-shared \
