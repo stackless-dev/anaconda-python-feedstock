@@ -85,7 +85,7 @@ requirements:
     - {{ compiler('cxx') }}
     - {{ cdt('xorg-x11-proto-devel') }}
     - {{ cdt('libx11-devel') }}
-    - pkg-config
+    - pkg-config        # [unix]
   run:
     - bzip2 1.0.*       # [unix]
     - openssl 1.0.*     # [unix]
