@@ -18,7 +18,6 @@ source:
     - 0006-Win32-Change-FD_SETSIZE-from-512-to-2048.patch
     - 0007-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
     - 0008-Do-not-pass-g-to-GCC-when-not-Py_DEBUG.patch
-    - 0009-Add-more-Anaconda-advertising.patch
 
 build:
   number: 2
