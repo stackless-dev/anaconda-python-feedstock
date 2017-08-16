@@ -1,4 +1,5 @@
 {% set version = "3.6.2" %}
+{% set sha256 = "7919489310a5f17f7acbab64d731e46dca0702874840dadce8bd4b2b3b8e7a82" %}
 
 package:
   name: python
@@ -7,25 +8,22 @@ package:
 source:
   fn: Python-{{ version }}.tgz
   url: https://www.python.org/ftp/python/{{ version }}/Python-{{ version }}.tgz
-  sha256: 7919489310a5f17f7acbab64d731e46dca0702874840dadce8bd4b2b3b8e7a82
+  sha256: {{ sha256 }}
   patches:
-    - omit-local-site-packages.patch  # [osx]
-    - osx64-dist.patch                # [osx and x86_64]
-    - win-find_exe.patch              # [win]
-    - win-library_bin.patch           # [win]
-    # Adjust FD_SETSIZE to allow select() to wait on more connections
-    # simultaneously.  Desirable for serious use of Tornado on Windows.
-    # See also:
-    # - https://bugs.python.org/issue28708
-    # - https://github.com/zeromq/libzmq/issues/1165
-    - fd_setsize.patch                # [win]
-    - mingw-w64--DMS_WINXX.patch
-    - win-msc_ver-1900.patch
-    - fix-ABI-issue29943.patch
-    - do-not-download-externals.patch  # [win]
+    - 0001-Add-Anaconda-Distribution-version-logic.patch
+    - 0002-Darwin-Omit-PYTHONFRAMEWORK-site-packages.patch
+    - 0003-Darwin-Add-arch-x86_64-to-UnicCCompiler-ld_args.patch
+    - 0004-Win32-distutils-Also-look-for-executable.bat.patch
+    - 0005-Win32-Ensure-Library-bin-is-in-os.environ-PATH.patch
+    - 0006-Win32-Change-FD_SETSIZE-from-512-to-2048.patch
+    - 0007-Win32-distutils-Add-support-to-cygwinccompiler-for-V.patch
+    - 0008-Do-not-pass-g-to-GCC-when-not-Py_DEBUG.patch
+    - 0009-Support-cross-compiling-byte-code.patch
+    - 0010-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
+    - do-not-download-externals.patch
 
 build:
-  number: 0
+  number: 1
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
@@ -47,7 +45,7 @@ requirements:
     - tk 8.6.*          # [unix]
     - xz 5.2.*          # [unix]
     - zlib 1.2.*        # [unix]
-    - ncurses 6.0*      # [linux]
+    - ncurses 6.0.*     # [linux]
     - libffi 3.2.*      # [unix]
   build:
     - {{ compiler('c') }}
@@ -56,14 +54,13 @@ requirements:
     - {{ cdt('libx11-devel') }}
     - pkg-config        # [unix]
   run:
-    - bzip2 1.0.*       # [unix]
     - openssl 1.0.*     # [unix]
     - readline 7.*      # [unix]
     - sqlite 3.16.*     # [unix]
     - tk 8.6.*          # [unix]
     - xz 5.2.*          # [unix]
     - zlib 1.2.*        # [unix]
-    - ncurses 6.0*      # [linux]
+    - ncurses 6.0.*     # [linux]
     - libffi 3.2.*      # [unix]
     - vs2015_runtime    # [win]
 

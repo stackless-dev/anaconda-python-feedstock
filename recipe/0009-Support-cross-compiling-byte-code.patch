@@ -1,15 +1,28 @@
-diff -urN Python-3.6.1.orig/Makefile.pre.in Python-3.6.1/Makefile.pre.in
---- Python-3.6.1.orig/Makefile.pre.in	2017-04-05 00:24:31.403486296 +0100
-+++ Python-3.6.1/Makefile.pre.in	2017-04-05 00:32:29.000000000 +0100
-@@ -228,6 +228,7 @@
+From 43c81cab40acabbdfacb1b0436bce96a91233335 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Wed, 16 Aug 2017 12:17:33 +0100
+Subject: [PATCH 09/10] Support cross-compiling byte-code
+
+https://bugs.python.org/issue22724
+---
+ Makefile.pre.in | 17 +++++++++--------
+ configure       |  4 +++-
+ configure.ac    |  4 +++-
+ 3 files changed, 15 insertions(+), 10 deletions(-)
+
+diff --git a/Makefile.pre.in b/Makefile.pre.in
+index 93a2bab6d9..b9c780b0dc 100644
+--- a/Makefile.pre.in
++++ b/Makefile.pre.in
+@@ -230,6 +230,7 @@ PYTHON=		python$(EXE)
  BUILDPYTHON=	python$(BUILDEXE)
  
- PYTHON_FOR_GEN=@PYTHON_FOR_GEN@
+ PYTHON_FOR_REGEN=@PYTHON_FOR_REGEN@
 +PY_BUILD_ENVIRON=@PY_BUILD_ENVIRON@
  PYTHON_FOR_BUILD=@PYTHON_FOR_BUILD@
  _PYTHON_HOST_PLATFORM=@_PYTHON_HOST_PLATFORM@
  BUILD_GNU_TYPE=	@build@
-@@ -561,14 +562,14 @@
+@@ -530,14 +531,14 @@ coverage-report: regen-grammar regen-importlib
  # (depends on python having already been built)
  .PHONY=clinic
  clinic: $(BUILDPYTHON) $(srcdir)/Modules/_blake2/blake2s_impl.c
@@ -26,7 +39,7 @@ diff -urN Python-3.6.1.orig/Makefile.pre.in Python-3.6.1/Makefile.pre.in
  
  # Create build directory and generate the sysconfig build-time data there.
  # pybuilddir.txt contains the name of the build dir and is used for
-@@ -579,7 +580,7 @@
+@@ -548,7 +549,7 @@ platform: $(BUILDPYTHON) pybuilddir.txt
  # or removed in case of failure.
  pybuilddir.txt: $(BUILDPYTHON)
  	@echo "none" > ./pybuilddir.txt
@@ -35,7 +48,7 @@ diff -urN Python-3.6.1.orig/Makefile.pre.in Python-3.6.1/Makefile.pre.in
  	if test $$? -ne 0 ; then \
  		echo "generate-posix-vars failed" ; \
  		rm -f ./pybuilddir.txt ; \
-@@ -606,7 +607,7 @@
+@@ -575,7 +576,7 @@ sharedmods: $(BUILDPYTHON) pybuilddir.txt Modules/_math.o
  	esac; \
  	$(RUNSHARED) CC='$(CC)' LDSHARED='$(BLDSHARED)' OPT='$(OPT)' \
  		_TCLTK_INCLUDES='$(TCLTK_INCLUDES)' _TCLTK_LIBS='$(TCLTK_LIBS)' \
@@ -44,7 +57,7 @@ diff -urN Python-3.6.1.orig/Makefile.pre.in Python-3.6.1/Makefile.pre.in
  
  
  # Build static library
-@@ -1052,7 +1053,7 @@
+@@ -1055,7 +1056,7 @@ install: @FRAMEWORKINSTALLFIRST@ commoninstall bininstall maninstall @FRAMEWORKI
  			upgrade) ensurepip="--upgrade" ;; \
  			install|*) ensurepip="" ;; \
  		esac; \
@@ -53,7 +66,7 @@ diff -urN Python-3.6.1.orig/Makefile.pre.in Python-3.6.1/Makefile.pre.in
  			$$ensurepip --root=$(DESTDIR)/ ; \
  	fi
  
-@@ -1062,7 +1063,7 @@
+@@ -1065,7 +1066,7 @@ altinstall: commoninstall
  			upgrade) ensurepip="--altinstall --upgrade" ;; \
  			install|*) ensurepip="--altinstall" ;; \
  		esac; \
@@ -62,7 +75,7 @@ diff -urN Python-3.6.1.orig/Makefile.pre.in Python-3.6.1/Makefile.pre.in
  			$$ensurepip --root=$(DESTDIR)/ ; \
  	fi
  
-@@ -1431,7 +1432,7 @@
+@@ -1436,7 +1437,7 @@ libainstall:	@DEF_MAKE_RULE@ python-config
  # Install the dynamically loadable modules
  # This goes into $(exec_prefix)
  sharedinstall: sharedmods
@@ -71,7 +84,7 @@ diff -urN Python-3.6.1.orig/Makefile.pre.in Python-3.6.1/Makefile.pre.in
  	   	--prefix=$(prefix) \
  		--install-scripts=$(BINDIR) \
  		--install-platlib=$(DESTSHARED) \
-@@ -1515,7 +1516,7 @@
+@@ -1520,7 +1521,7 @@ frameworkinstallextras:
  # This installs a few of the useful scripts in Tools/scripts
  scriptsinstall:
  	SRCDIR=$(srcdir) $(RUNSHARED) \
@@ -80,18 +93,19 @@ diff -urN Python-3.6.1.orig/Makefile.pre.in Python-3.6.1/Makefile.pre.in
  	--prefix=$(prefix) \
  	--install-scripts=$(BINDIR) \
  	--root=$(DESTDIR)/
-diff -urN Python-3.6.1.orig/configure Python-3.6.1/configure
---- Python-3.6.1.orig/configure	2017-04-05 00:24:31.410153364 +0100
-+++ Python-3.6.1/configure	2017-04-05 00:50:24.058517296 +0100
-@@ -751,6 +751,7 @@
+diff --git a/configure b/configure
+index 1822772d4e..ee36227f63 100755
+--- a/configure
++++ b/configure
+@@ -751,6 +751,7 @@ CONFIG_ARGS
+ SOVERSION
  VERSION
- GENERATED_COMMENT
  PYTHON_FOR_BUILD
 +PY_BUILD_ENVIRON
- PYTHON_FOR_GEN
+ PYTHON_FOR_REGEN
  host_os
  host_vendor
-@@ -2928,7 +2929,8 @@
+@@ -2925,7 +2926,8 @@ $as_echo_n "checking for python interpreter for cross build... " >&6; }
  	fi
          { $as_echo "$as_me:${as_lineno-$LINENO}: result: $interp" >&5
  $as_echo "$interp" >&6; }
@@ -99,12 +113,13 @@ diff -urN Python-3.6.1.orig/configure Python-3.6.1/configure
 +	PY_BUILD_ENVIRON='_PYTHON_PROJECT_BASE=$(abs_builddir) _PYTHON_HOST_PLATFORM=$(_PYTHON_HOST_PLATFORM) PYTHONPATH=$(shell test -f pybuilddir.txt && echo $(abs_builddir)/`cat pybuilddir.txt`:)$(srcdir)/Lib _PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_$(ABIFLAGS)_$(MACHDEP)_$(MULTIARCH)'
 +	PYTHON_FOR_BUILD=$interp
      fi
-     # Used to comment out stuff for rebuilding generated files
-     GENERATED_COMMENT='#'
-diff -urN Python-3.6.1.orig/configure.ac Python-3.6.1/configure.ac
---- Python-3.6.1.orig/configure.ac	2017-04-05 00:24:31.413486898 +0100
-+++ Python-3.6.1/configure.ac	2017-04-05 00:49:59.701219619 +0100
-@@ -78,7 +78,8 @@
+ elif test "$cross_compiling" = maybe; then
+     as_fn_error $? "Cross compiling required --host=HOST-TUPLE and --build=ARCH" "$LINENO" 5
+diff --git a/configure.ac b/configure.ac
+index 92adce5987..ced0082601 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -73,13 +73,15 @@ if test "$cross_compiling" = yes; then
  	    AC_MSG_ERROR([python$PACKAGE_VERSION interpreter not found])
  	fi
          AC_MSG_RESULT($interp)
@@ -112,13 +127,15 @@ diff -urN Python-3.6.1.orig/configure.ac Python-3.6.1/configure.ac
 +	PY_BUILD_ENVIRON='_PYTHON_PROJECT_BASE=$(abs_builddir) _PYTHON_HOST_PLATFORM=$(_PYTHON_HOST_PLATFORM) PYTHONPATH=$(shell test -f pybuilddir.txt && echo $(abs_builddir)/`cat pybuilddir.txt`:)$(srcdir)/Lib _PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_$(ABIFLAGS)_$(MACHDEP)_$(MULTIARCH)'
 +	PYTHON_FOR_BUILD=$interp
      fi
-     # Used to comment out stuff for rebuilding generated files
-     GENERATED_COMMENT='#'
-@@ -88,6 +89,7 @@
+ elif test "$cross_compiling" = maybe; then
+     AC_MSG_ERROR([Cross compiling required --host=HOST-TUPLE and --build=ARCH])
+ else
      PYTHON_FOR_BUILD='./$(BUILDPYTHON) -E'
-     GENERATED_COMMENT=''
  fi
 +AC_SUBST(PY_BUILD_ENVIRON)
  AC_SUBST(PYTHON_FOR_BUILD)
- AC_SUBST(GENERATED_COMMENT)
  
+ dnl Ensure that if prefix is specified, it does not end in a slash. If
+-- 
+2.13.2
+
