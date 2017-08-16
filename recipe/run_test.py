@@ -85,13 +85,6 @@ if sys.platform != 'win32':
     import syslog
     import termios
 
-#    from distutils import sysconfig
-#    for var_name in 'LDSHARED', 'CC':
-#        value = sysconfig.get_config_var(var_name)
-#        assert value.split()[0] == 'gcc', value
-#    for var_name in 'LDCXXSHARED', 'CXX':
-#        value = sysconfig.get_config_var(var_name)
-#        assert value.split()[0] == 'g++', value
 
 if not (armv6l or armv7l or ppc64le or osx105):
     import tkinter

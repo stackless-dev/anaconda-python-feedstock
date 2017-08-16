@@ -8,6 +8,7 @@
 # "not helpful for PGO".
 
 VER=${PKG_VERSION%.*}
+CONDA_FORGE=no
 
 # Remove bzip2's shared library if present,
 # as we only want to link to it statically.
@@ -28,27 +29,21 @@ READELF=$(basename "${READELF}")
 export CFLAGS=$(echo "${CFLAGS}" | sed "s/-O2/-O3/g")
 export CXXFLAGS=$(echo "${CXXFLAGS}" | sed "s/-O2/-O3/g")
 
-${SYS_PYTHON} ${RECIPE_DIR}/brand_python.py
+if [[ ${CONDA_FORGE} == yes ]]; then
+  ${SYS_PYTHON} ${RECIPE_DIR}/brand_python.py
+fi
 
 _buildd_static=build-static
 _buildd_shared=build-shared
 LTO_CFLAGS="-g -flto -fuse-linker-plugin"
 
-# Remove test data to save space .. err do not do this, we should be running regrtest.py
-# in the test phase of Python.
-# Though keep `support` as some things use that.
-# mkdir Lib/test_keep
-# mv Lib/test/support Lib/test_keep/support
-# rm -rf Lib/test Lib/*/test
-# mv Lib/test_keep Lib/test
+# Remove ensurepip stubs.
+rm -rf Lib/ensurepip
 
+export CPPFLAGS=${CPPFLAGS}" -I${PREFIX}/include"
+export LDFLAGS="${LDFLAGS}" -Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib"
 if [ $(uname) == Darwin ]; then
-  export CFLAGS="-I$PREFIX/include $CFLAGS"
-  export LDFLAGS="-Wl,-rpath,$PREFIX/lib -L$PREFIX/lib -headerpad_max_install_names $LDFLAGS"
   sed -i -e "s/@OSX_ARCH@/$ARCH/g" Lib/distutils/unixccompiler.py
-elif [ $(uname) == Linux ]; then
-  export CPPFLAGS="-I$PREFIX/include"
-  export LDFLAGS="-L$PREFIX/lib -Wl,-rpath=$PREFIX/lib,--no-as-needed"
 fi
 
 if [[ "${BUILD}" != "${HOST}" ]] && [[ -n "${BUILD}" ]] && [[ -n "${HOST}" ]]; then
@@ -113,16 +108,15 @@ if [[ ${CC} =~ .*-arm.* ]]; then
 fi
 
 declare -a _common_configure_args
-_common_configure_args+=(--prefix=${PREFIX}
-                         --build=${BUILD}
-                         --host=${HOST}
-                         --enable-ipv6
-                         --with-ensurepip=no
-                         --with-computed-gotos
-                         --with-system-ffi
-                         --enable-loadable-sqlite-extensions)
-
-_common_configure_args+=(--with-tcltk-includes=-I${PREFIX}/include)
+_common_configure_args+=(--prefix=${PREFIX})
+_common_configure_args+=(--build=${BUILD})
+_common_configure_args+=(--host=${HOST})
+_common_configure_args+=(--enable-ipv6)
+_common_configure_args+=(--with-ensurepip=no)
+_common_configure_args+=(--with-computed-gotos)
+_common_configure_args+=(--with-system-ffi)
+_common_configure_args+=(--enable-loadable-sqlite-extensions)
+_common_configure_args+=(--with-tcltk-includes="-I${PREFIX}/include")
 _common_configure_args+=("--with-tcltk-libs=-L${PREFIX}/lib -ltcl8.6 -ltk8.6")
 
 mkdir -p ${_buildd_shared}
@@ -185,5 +179,15 @@ if [[ -f ${PREFIX}/bin/python${VER}m ]]; then
   rm -f ${PREFIX}/bin/python${VER}m
   ln -s ${PREFIX}/bin/python${VER} ${PREFIX}/bin/python${VER}m
 fi
-ln -s $PREFIX/bin/python${VER} $PREFIX/bin/python
-ln -s $PREFIX/bin/pydoc${VER} $PREFIX/bin/pydoc
+ln -s ${PREFIX}/bin/python${VER} ${PREFIX}/bin/python
+ln -s ${PREFIX}/bin/pydoc${VER} ${PREFIX}/bin/pydoc
+
+# Remove test data to save space
+# Though keep `support` as some things use that.
+# TODO :: Make a subpackage for this once we implement multi-level testing.
+pushd ${PREFIX}/lib/python${VER}
+  mkdir test_keep
+  mv test/__init__.py test/test_support* test/script_helper* test_keep/
+  rm -rf test */test
+  mv test_keep test
+popd
