@@ -41,7 +41,7 @@ LTO_CFLAGS="-g -flto -fuse-linker-plugin"
 rm -rf Lib/ensurepip
 
 export CPPFLAGS=${CPPFLAGS}" -I${PREFIX}/include"
-export LDFLAGS="${LDFLAGS}" -Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib"
+export LDFLAGS=${LDFLAGS}" -Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib"
 if [ $(uname) == Darwin ]; then
   sed -i -e "s/@OSX_ARCH@/$ARCH/g" Lib/distutils/unixccompiler.py
 fi
