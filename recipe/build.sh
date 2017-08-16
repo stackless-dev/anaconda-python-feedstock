@@ -37,22 +37,9 @@ _buildd_static=build-static
 _buildd_shared=build-shared
 LTO_CFLAGS="-g -flto -fuse-linker-plugin"
 
-<<<<<<< HEAD
-# Remove test data to save space .. err do not do this, we should be running regrtest.py
-# in the test phase of Python.
-# Though keep `support` as some things use that.
-# mkdir Lib/test_keep
-# mv Lib/test/support Lib/test_keep/support
-# rm -rf Lib/test Lib/*/test
-# mv Lib/test_keep Lib/test
-
-=======
 # Remove ensurepip stubs.
 rm -rf Lib/ensurepip
 
-export CPPFLAGS=${CPPFLAGS}" -I${PREFIX}/include"
-export LDFLAGS="${LDFLAGS}" -Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib"
->>>>>>> Tidy up patches
 if [ $(uname) == Darwin ]; then
   sed -i -e "s/@OSX_ARCH@/$ARCH/g" Lib/distutils/unixccompiler.py
 fi
