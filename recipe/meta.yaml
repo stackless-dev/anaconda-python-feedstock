@@ -10,9 +10,11 @@ source:
   url: https://www.python.org/ftp/python/{{ version }}/Python-{{ version }}.tgz
   sha256: {{ sha256 }}
   patches:
-      - osx-dist.patch                  # [osx and x86_64]
-      - win-find_exe.patch              # [win]
-      - win-library_bin.patch           # [win]
+    - 0001-Add-Anaconda-Distribution-version-logic.patch
+    - 0002-Do-not-pass-g-to-GCC-when-not-Py_DEBUG.patch
+    - 0003-Darwin-Add-arch-x86_64-to-UnicCCompiler-ld_args.patch
+    - 0004-Win32-distutils-Also-look-for-executable.bat.patch
+    - 0005-Win32-Ensure-Library-bin-is-in-os.environ-PATH.patch
 
 build:
   number: 2
@@ -25,21 +27,29 @@ build:
     - python_branding
 
 requirements:
-  build:
+  host:
     - bzip2 1.0.*       # [unix]
     - openssl 1.0.*     # [unix]
     - readline 7.*      # [unix]
-    - sqlite 3.13.*     # [unix]
+    - sqlite 3.16.*     # [unix]
     - tk 8.6.*          # [unix]
     - zlib 1.2.*        # [unix]
-    - ncurses 5.9*      # [linux]
+    - ncurses 6.0.*     # [linux]
+    - libffi 3.2.*      # [unix]
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - {{ cdt('xorg-x11-proto-devel') }}
+    - {{ cdt('libx11-devel') }}
+    - pkg-config        # [unix]
   run:
     - openssl 1.0.*     # [unix]
     - readline 7.*      # [unix]
-    - sqlite 3.13.*     # [unix]
+    - sqlite 3.16.*     # [unix]
     - tk 8.6.*          # [unix]
     - zlib 1.2.*        # [unix]
-    - ncurses 5.9*      # [linux]
+    - ncurses 6.0.*     # [linux]
+    - libffi 3.2.*      # [unix]
     - vs2008_runtime    # [win]
 
 test:
@@ -52,8 +62,9 @@ test:
 about:
   home: http://www.python.org/
   license: PSF
-  summary: General purpose programming language
-      
+  license_file: LICENSE
+  summary: 'General purpose programming language.'
+
 extra:
   recipe-maintainers:
     - jakirkham
