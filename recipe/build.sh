@@ -37,46 +37,10 @@ _buildd_static=build-static
 _buildd_shared=build-shared
 LTO_CFLAGS="-g -flto -fuse-linker-plugin"
 
-# Remove test data to save space .. err do not do this, we should be running regrtest.py
-# in the test phase of Python.
-# Though keep `support` as some things use that.
-# mkdir Lib/test_keep
-# mv Lib/test/support Lib/test_keep/support
-# rm -rf Lib/test Lib/*/test
-# mv Lib/test_keep Lib/test
+# Remove ensurepip stubs.
+rm -rf Lib/ensurepip
 
-if [[ ${HOST} =~ .*darwin.* ]] && [[ -n ${CONDA_BUILD_SYSROOT} ]]; then
-  # Python's setup.py will figure out that this is a macOS sysroot.
-  CFLAGS="-isysroot ${CONDA_BUILD_SYSROOT} "${CFLAGS}
-  LDFLAGS="-isysroot ${CONDA_BUILD_SYSROOT} "${LDFLAGS}
-  CPPFLAGS="-isysroot ${CONDA_BUILD_SYSROOT} "${CPPFLAGS}
-fi
-
-# Debian uses -O3 then resets it at the end to -O2 in _sysconfigdata.py
-if [[ ${_OPTIMIZED} = yes ]]; then
-  CPPFLAGS=$(echo "${CPPFLAGS}" | sed "s/-O2/-O3/g")
-  CFLAGS=$(echo "${CFLAGS}" | sed "s/-O2/-O3/g")
-  CXXFLAGS=$(echo "${CXXFLAGS}" | sed "s/-O2/-O3/g")
-fi
-
-if [[ ${CONDA_FORGE} == yes ]]; then
-  ${SYS_PYTHON} ${RECIPE_DIR}/brand_python.py
-fi
-
-_buildd_static=build-static
-_buildd_shared=build-shared
-declare -a LTO_CFLAGS
-
-CPPFLAGS=${CPPFLAGS}" -I${PREFIX}/include"
-
-re='^(.*)(-I[^ ]*)(.*)$'
-if [[ ${CFLAGS} =~ $re ]]; then
-  CFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[3]}"
-fi
-
-export CPPFLAGS CFLAGS CXXFLAGS LDFLAGS
-
-if [[ ${HOST} =~ .*darwin.* ]]; then
+if [ $(uname) == Darwin ]; then
   sed -i -e "s/@OSX_ARCH@/$ARCH/g" Lib/distutils/unixccompiler.py
 fi
 
