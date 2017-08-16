@@ -1,0 +1,39 @@
+From 4685669d0db6905b3c75013f6c275b7227f30b28 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Wed, 16 Aug 2017 13:26:22 +0100
+Subject: [PATCH 9/9] Add more Anaconda advertising
+
+On top of the version.txt file this adds more:
+
+```
+Anaconda is brought to you by Continuum Analytics.
+
+Please check out: http://continuum.io/thanks and https://anaconda.org
+```
+
+@csoja, @ilanschnell, can we remove this? We do not do it for Python 3.
+---
+ Modules/main.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/Modules/main.c b/Modules/main.c
+index e5357cf9b4..7ab137ce68 100644
+--- a/Modules/main.c
++++ b/Modules/main.c
+@@ -555,8 +555,12 @@ Py_Main(int argc, char **argv)
+         (command == NULL && filename == NULL && module == NULL && stdin_is_interactive)) {
+         fprintf(stderr, "Python %s on %s\n",
+             Py_GetVersion(), Py_GetPlatform());
+-        if (!Py_NoSiteFlag)
++        if (!Py_NoSiteFlag) {
+             fprintf(stderr, "%s\n", COPYRIGHT);
++            fprintf(stderr,
++                    "Anaconda is brought to you by Continuum Analytics.\n"
++                    "Please check out: http://continuum.io/thanks and https://anaconda.org\n");
++        }
+     }
+ 
+     if (command != NULL) {
+-- 
+2.13.2
+
