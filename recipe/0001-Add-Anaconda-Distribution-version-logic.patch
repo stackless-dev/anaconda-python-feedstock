@@ -1,14 +1,14 @@
-From 330c46969910bed788186174d88730c86470e4cd Mon Sep 17 00:00:00 2001
+From 467c740ac78c784ab2876c8e3184da386778a30d Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 15 Aug 2017 22:38:19 +0100
-Subject: [PATCH 01/10] Add Anaconda Distribution version logic
+Subject: [PATCH 01/11] Add Anaconda Distribution version logic
 
 ---
  Include/pylifecycle.h |  1 +
  Lib/platform.py       |  1 +
  Modules/main.c        |  3 ++-
- Python/getversion.c   | 43 ++++++++++++++++++++++++++++++++++++++++---
- 4 files changed, 44 insertions(+), 4 deletions(-)
+ Python/getversion.c   | 42 +++++++++++++++++++++++++++++++++++++++---
+ 4 files changed, 43 insertions(+), 4 deletions(-)
 
 diff --git a/Include/pylifecycle.h b/Include/pylifecycle.h
 index 1c5f7a6374..b0f8aeae76 100644
@@ -49,10 +49,10 @@ index d36db6d8b5..227daaf6b7 100644
      }
  
 diff --git a/Python/getversion.c b/Python/getversion.c
-index 7bd6efd0a0..65a243f7de 100644
+index 7bd6efd0a0..c2615ccca7 100644
 --- a/Python/getversion.c
 +++ b/Python/getversion.c
-@@ -2,14 +2,51 @@
+@@ -2,14 +2,50 @@
  /* Return the full version string. */
  
  #include "Python.h"
@@ -101,8 +101,7 @@ index 7bd6efd0a0..65a243f7de 100644
  	static char version[250];
 -	PyOS_snprintf(version, sizeof(version), "%.80s (%.80s) %.80s",
 -		      PY_VERSION, Py_GetBuildInfo(), Py_GetCompiler());
-+
-+    PyOS_snprintf(version, sizeof(version), "%.80s |%s| (%.80s) %.80s",
++	PyOS_snprintf(version, sizeof(version), "%.80s |%s| (%.80s) %.80s",
 +		      PY_VERSION, Anaconda_GetVersion(),
 +		      Py_GetBuildInfo(), Py_GetCompiler());
  	return version;
