@@ -1,0 +1,80 @@
+From 6d2899cfe93eaadc875e79dfc64d385a427f884c Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Thu, 17 Aug 2017 12:49:04 +0100
+Subject: [PATCH 11/11] Fallback to system compilers if
+ (psuedo-)cross-compilers not found
+
+---
+ Lib/sysconfig.py | 49 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+
+diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
+index 9314e71a2f..6ddb73f10e 100644
+--- a/Lib/sysconfig.py
++++ b/Lib/sysconfig.py
+@@ -512,6 +512,49 @@ def get_path(name, scheme=_get_default_scheme(), vars=None, expand=True):
+     return get_paths(scheme, vars, expand)[name]
+ 
+ 
++def conda_customize_compiler(_config_vars):
++    """
++    It may be the case that this should get called from
++    Lib/distutils/sysconfig.py instead so that startup
++    time is not compromised when not compiling. Then again
++    _find_executable would be sped up if that was important.
++    """
++    from _osx_support import (_find_executable, _read_output)
++    _CONDA_CROSS_KEYS = ('AR', 'BLDSHARED', 'BLDSHARED', 'CC', 'CXX' 'CONFIG_ARGS',
++                         'CXX', 'HOST_GNU_TYPE', 'LDCXXSHARED', 'LDSHARED', 'LINKCC',
++                         'MAINCC', 'RANLIB', 'READELF')
++    # skip checks if the compiler was overridden with a CC env variable
++    if 'CC' in os.environ and 'CXX' in os.environ:
++        return _config_vars
++    replacements = dict({})
++    for compiler in ('CC', 'CXX'):
++        if compiler in _config_vars and compiler not in os.environ:
++            oldcc = _config_vars[compiler].split()[0]
++            cc = _find_executable(oldcc)
++            if not cc and '-' in oldcc:
++                cc = _find_executable(oldcc.split('-')[-1])
++            # TODO :: Careful with those .exes Eugine.
++            replacements[oldcc] = cc
++    if len(replacements) > 0:
++        if 'HOST_GNU_TYPE' in _config_vars:
++            # Get HOST_GNU_TYPE from cc -dumpmachine
++            if len(_config_vars['HOST_GNU_TYPE']):
++                cmd = "%s -dumpmachine" % (replacements[next(iter(replacements))],)
++                host_gnu_type = _read_output(cmd)
++                if host_gnu_type != _config_vars['HOST_GNU_TYPE']:
++                    replacements[_config_vars['HOST_GNU_TYPE']] = host_gnu_type
++        for cv in _CONDA_CROSS_KEYS:
++            if cv in _config_vars and cv not in os.environ:
++                # Replace in order of longest first so substrings do not get replaced.
++                newcv = oldcv = _config_vars[cv]
++                for k in sorted(replacements, key=lambda k: len(replacements[k]), reverse=False):
++                    newcv = newcv.replace(k, replacements[k])
++                if newcv != oldcv:
++                    # TODO :: Take care about _INITPRE (backup of original values in _osx_support,
++                    #         read comment in get_platform_osx. Do we need to do this? I hope not.
++                    _config_vars[cv] = newcv
++
++
+ def get_config_vars(*args):
+     """With no arguments, return a dictionary of all configuration
+     variables relevant for the current platform.
+@@ -574,6 +617,12 @@ def get_config_vars(*args):
+                 srcdir = os.path.dirname(get_makefile_filename())
+         _CONFIG_VARS['srcdir'] = _safe_realpath(srcdir)
+ 
++        # Handle conda-specific (pseudo)-cross-compiler. This is very
++        # similar to _osx_support.customize_config_vars() but not macOS
++        # specific.
++        if os.name == 'posix':
++            conda_customize_compiler(_CONFIG_VARS)
++
+         # OS X platforms require special customization to handle
+         # multi-architecture, multi-os-version installers
+         if sys.platform == 'darwin':
+-- 
+2.13.2
+
