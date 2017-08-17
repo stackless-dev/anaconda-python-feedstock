@@ -202,9 +202,10 @@ pushd ${PREFIX}
       strip lib/libpython${VER}m.a
     fi
   fi
-  if [[ -f lib/libpython${VER}m.a ]] && [[ -f lib/python${VER}/config-${VER}m/libpython${VER}m.a ]]; then
-    chmod +w lib/python${VER}/config-${VER}m/libpython${VER}m.a
-    rm lib/python${VER}/config-${VER}m/libpython${VER}m.a
-    ln -s ../../libpython${VER}m.a lib/python${VER}/config-${VER}m/libpython${VER}m.a
+  CONFIG_LIBPYTHON=$(find lib/python${VER}/config-${VER}m* -name "libpython${VER}m.a")
+  if [[ -f lib/libpython${VER}m.a ]] && [[ -f ${CONFIG_LIBPYTHON} ]]; then
+    chmod +w ${CONFIG_LIBPYTHON}
+    rm ${CONFIG_LIBPYTHON}
+    ln -s ../../libpython${VER}m.a ${CONFIG_LIBPYTHON}
   fi
 popd
