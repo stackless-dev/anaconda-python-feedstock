@@ -185,7 +185,24 @@ ln -s ${PREFIX}/bin/pydoc${VER} ${PREFIX}/bin/pydoc
 # TODO :: Make a subpackage for this once we implement multi-level testing.
 pushd ${PREFIX}/lib/python${VER}
   mkdir test_keep
-  mv test/__init__.py test/test_support* test/script_helper* test_keep/
+  mv test/__init__.py test/support test/test_support* test/test_script_helper* test_keep/
   rm -rf test */test
   mv test_keep test
+popd
+
+# Size reductions:
+pushd ${PREFIX}
+  if [[ -f lib/libpython${VER}m.a ]]; then
+    chmod +w lib/libpython${VER}m.a
+    if [[ -n ${HOST} ]]; then
+      ${HOST}-strip lib/libpython${VER}m.a
+    else
+      strip lib/libpython${VER}m.a
+    fi
+  fi
+  if [[ -f lib/libpython${VER}m.a ]] && [[ -f lib/python${VER}/config-${VER}m/libpython${VER}m.a ]]; then
+    chmod +w lib/python${VER}/config-${VER}m/libpython${VER}m.a
+    rm lib/python${VER}/config-${VER}m/libpython${VER}m.a
+    ln -s ../../libpython${VER}m.a lib/python${VER}/config-${VER}m/libpython${VER}m.a
+  fi
 popd
