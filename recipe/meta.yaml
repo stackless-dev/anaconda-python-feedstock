@@ -75,7 +75,17 @@ about:
   home: http://www.python.org/
   license: PSF
   license_file: LICENSE
-  summary: 'General purpose programming language.'
+  summary: General purpose programming language
+  description: |
+    Python is a widely used high-level, general-purpose, interpreted, dynamic
+    programming language. Its design philosophy emphasizes code
+    readability, and its syntax allows programmers to express concepts in
+    fewer lines of code than would be possible in languages such as C++ or
+    Java. The language provides constructs intended to enable clear programs
+    on both a small and large scale.
+  doc_url: https://www.python.org/doc/versions/
+  doc_source_url: https://github.com/python/pythondotorg/blob/master/docs/source/index.rst
+  dev_url: https://docs.python.org/devguide/
 
 extra:
   recipe-maintainers:
