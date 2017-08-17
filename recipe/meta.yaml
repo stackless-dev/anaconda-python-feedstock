@@ -1,13 +1,13 @@
 {% set version = "3.5.4" %}
+{% set md5 = "2ed4802b7a2a7e40d2e797272bf388ec" %}
 
 package:
   name: python
   version: {{ version }}
 
 source:
-  fn: Python-{{ version }}.tgz
   url: https://www.python.org/ftp/python/{{ version }}/Python-{{ version }}.tgz
-  md5: 2ed4802b7a2a7e40d2e797272bf388ec
+  md5: {{ md5 }}
   patches:
     - 0001-Add-Anaconda-Distribution-version-logic.patch
     - 0002-Darwin-Omit-PYTHONFRAMEWORK-site-packages.patch
@@ -19,9 +19,10 @@ source:
     - 0008-Do-not-pass-g-to-GCC-when-not-Py_DEBUG.patch
     - 0009-Support-cross-compiling-byte-code.patch
     - 0010-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
+    - 0011-Fallback-to-system-compilers-if-psuedo-cross-compile.patch
 
 build:
-  number: 1
+  number: 2
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
@@ -41,7 +42,7 @@ requirements:
     - tk 8.6.*          # [unix]
     - xz 5.2.*          # [unix]
     - zlib 1.2.*        # [unix]
-    - ncurses 6.0*      # [linux]
+    - ncurses 6.0.*     # [linux]
     - libffi 3.2.*      # [unix]
   build:
     - {{ compiler('c') }}
@@ -50,14 +51,13 @@ requirements:
     - {{ cdt('libx11-devel') }}
     - pkg-config        # [unix]
   run:
-    - bzip2 1.0.*       # [unix]
     - openssl 1.0.*     # [unix]
     - readline 7.*      # [unix]
     - sqlite 3.16.*     # [unix]
     - tk 8.6.*          # [unix]
     - xz 5.2.*          # [unix]
     - zlib 1.2.*        # [unix]
-    - ncurses 6.0*      # [linux]
+    - ncurses 6.0.*     # [linux]
     - libffi 3.2.*      # [unix]
     - vs2015_runtime    # [win]
 
@@ -75,7 +75,7 @@ about:
   home: http://www.python.org/
   license: PSF
   license_file: LICENSE
-  summary: General purpose programming language
+  summary: 'General purpose programming language.'
 
 extra:
   recipe-maintainers:
