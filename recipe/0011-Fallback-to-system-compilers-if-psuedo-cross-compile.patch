@@ -1,18 +1,18 @@
-From 5fe5b6498df1f20f868ca038d11cb040f0563183 Mon Sep 17 00:00:00 2001
+From 96dae3936a53d40e9ebb026a4136b075ee00d599 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Thu, 17 Aug 2017 12:49:04 +0100
-Subject: [PATCH 11/11] Fallback to system compilers if
- (psuedo-)cross-compilers not found
+Subject: [PATCH] Fallback to system compilers if (psuedo-)cross-compilers not
+ found
 
 ---
- Lib/sysconfig.py | 49 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+ Lib/sysconfig.py | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
 diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
-index 9c34be0a07..05d88d9d92 100644
+index 9c34be0a07..94af6e2aaa 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
-@@ -498,6 +498,49 @@ def get_path(name, scheme=_get_default_scheme(), vars=None, expand=True):
+@@ -498,6 +498,50 @@ def get_path(name, scheme=_get_default_scheme(), vars=None, expand=True):
      return get_paths(scheme, vars, expand)[name]
  
  
@@ -38,7 +38,8 @@ index 9c34be0a07..05d88d9d92 100644
 +            if not cc and '-' in oldcc:
 +                cc = _find_executable(oldcc.split('-')[-1])
 +            # TODO :: Careful with those .exes Eugine.
-+            replacements[oldcc] = cc
++            if cc:
++                replacements[oldcc] = cc
 +    if len(replacements) > 0:
 +        if 'HOST_GNU_TYPE' in _config_vars:
 +            # Get HOST_GNU_TYPE from cc -dumpmachine
@@ -62,7 +63,7 @@ index 9c34be0a07..05d88d9d92 100644
  def get_config_vars(*args):
      """With no arguments, return a dictionary of all configuration
      variables relevant for the current platform.
-@@ -560,6 +603,12 @@ def get_config_vars(*args):
+@@ -560,6 +604,12 @@ def get_config_vars(*args):
                  srcdir = os.path.dirname(get_makefile_filename())
          _CONFIG_VARS['srcdir'] = _safe_realpath(srcdir)
  
@@ -76,5 +77,5 @@ index 9c34be0a07..05d88d9d92 100644
          # multi-architecture, multi-os-version installers
          if sys.platform == 'darwin':
 -- 
-2.13.2
+2.11.1
 
