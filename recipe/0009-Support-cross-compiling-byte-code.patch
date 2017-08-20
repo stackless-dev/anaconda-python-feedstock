@@ -75,7 +75,7 @@ index 93a2bab6d9..b9c780b0dc 100644
  			$$ensurepip --root=$(DESTDIR)/ ; \
  	fi
  
-@@ -1436,7 +1437,7 @@ libainstall:	@DEF_MAKE_RULE@ python-config
+@@ -1434,7 +1435,7 @@ libainstall:	@DEF_MAKE_RULE@ python-config
  # Install the dynamically loadable modules
  # This goes into $(exec_prefix)
  sharedinstall: sharedmods
@@ -84,7 +84,7 @@ index 93a2bab6d9..b9c780b0dc 100644
  	   	--prefix=$(prefix) \
  		--install-scripts=$(BINDIR) \
  		--install-platlib=$(DESTSHARED) \
-@@ -1520,7 +1521,7 @@ frameworkinstallextras:
+@@ -1518,7 +1519,7 @@ frameworkinstallextras:
  # This installs a few of the useful scripts in Tools/scripts
  scriptsinstall:
  	SRCDIR=$(srcdir) $(RUNSHARED) \
