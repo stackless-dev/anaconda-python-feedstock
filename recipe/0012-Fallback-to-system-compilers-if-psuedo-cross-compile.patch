@@ -1,4 +1,4 @@
-From 5a43b36c7781bda0d91e0d44965909113979ed60 Mon Sep 17 00:00:00 2001
+From 0e780aae129cad9c33eb852678fbc5b6a5306216 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Thu, 17 Aug 2017 12:49:04 +0100
 Subject: [PATCH 12/13] Fallback to system compilers if

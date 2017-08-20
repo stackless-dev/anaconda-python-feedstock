@@ -1,4 +1,4 @@
-From 482ab036a6aa6863d885522f96bb0e2443aeea84 Mon Sep 17 00:00:00 2001
+From fb962328be81e191c6b4c6e1f55b284bea9cbf96 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 12:17:33 +0100
 Subject: [PATCH 10/13] Support cross-compiling byte-code
@@ -94,7 +94,7 @@ index df791a88ee..54175f9c8b 100644
  	--install-scripts=$(BINDIR) \
  	--root=$(DESTDIR)/
 diff --git a/configure b/configure
-index 3832b9ae67..665d941685 100755
+index 48d9656ea3..d6a8441827 100755
 --- a/configure
 +++ b/configure
 @@ -748,6 +748,7 @@ CONFIG_ARGS

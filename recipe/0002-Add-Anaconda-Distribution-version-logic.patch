@@ -1,4 +1,4 @@
-From 810a2c57d4e64eec709e4a07b8f0d886812335c4 Mon Sep 17 00:00:00 2001
+From ca4dfd64841bec45868e0f7772ec90eecae738b6 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 15 Aug 2017 22:38:19 +0100
 Subject: [PATCH 02/13] Add Anaconda Distribution version logic
