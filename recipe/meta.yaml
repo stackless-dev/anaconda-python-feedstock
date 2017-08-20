@@ -20,6 +20,7 @@ source:
     - 0009-Support-cross-compiling-byte-code.patch
     - 0010-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
     - 0011-Fallback-to-system-compilers-if-psuedo-cross-compile.patch
+    - 0012-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
 
 build:
   number: 2
