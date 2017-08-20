@@ -19,15 +19,32 @@ find "${PREFIX}/lib" -name "libbz2*${SHLIB_EXT}*" | xargs rm -fv {}
 # Prevent lib/python${VER}/_sysconfigdata_*.py from ending up with full paths to these things
 # in _build_env because _build_env will not get found during prefix replacement, only _h_env_placeh ...
 AR=$(basename "${AR}")
+
 # CC must contain the string 'gcc' or else distutils thinks it is on macOS and uses '-R' to set rpaths.
-CC=$(basename "${GCC}")
+if [[ ${HOST} =~ .*darwin.* ]]; then
+  CC=$(basename "${CC}")
+else
+  CC=$(basename "${GCC}")
+fi
 CXX=$(basename "${CXX}")
 RANLIB=$(basename "${RANLIB}")
 READELF=$(basename "${READELF}")
 
+if [[ ${HOST} =~ .*darwin.* ]]; then
+  LDFLAGS=${LDFLAGS_CC}
+fi
+
+if [[ ${HOST} =~ .*darwin.* ]] && [[ -n ${CONDA_BUILD_SYSROOT} ]]; then
+  # Python's setup.py will figure out that this is a macOS sysroot.
+  CFLAGS="-isysroot ${CONDA_BUILD_SYSROOT} "${CFLAGS}
+  LDFLAGS="-isysroot ${CONDA_BUILD_SYSROOT} "${LDFLAGS}
+  CPPFLAGS="-isysroot ${CONDA_BUILD_SYSROOT} "${CPPFLAGS}
+fi
+
 # Debian uses -O3 then resets it at the end to -O2 in _sysconfigdata.py
 export CFLAGS=$(echo "${CFLAGS}" | sed "s/-O2/-O3/g")
 export CXXFLAGS=$(echo "${CXXFLAGS}" | sed "s/-O2/-O3/g")
+export LDFLAGS
 
 if [[ ${CONDA_FORGE} == yes ]]; then
   ${SYS_PYTHON} ${RECIPE_DIR}/brand_python.py
@@ -42,7 +59,7 @@ rm -rf Lib/ensurepip
 
 export CPPFLAGS=${CPPFLAGS}" -I${PREFIX}/include"
 export LDFLAGS=${LDFLAGS}" -Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib"
-if [ $(uname) == Darwin ]; then
+if [[ ${HOST} =~ .*darwin.* ]]; then
   sed -i -e "s/@OSX_ARCH@/$ARCH/g" Lib/distutils/unixccompiler.py
 fi
 
@@ -84,9 +101,15 @@ fi
 
 # This causes setup.py to query the sysroot directories from the compiler, something which
 # IMHO should be done by default anyway with a flag to disable it to workaround broken ones.
+# Technically, setting _PYTHON_HOST_PLATFORM causes setup.py to consider it cross_compiling
 if [[ -n ${HOST} ]]; then
-  IFS='-' read -r host_arch host_vendor host_os host_libc <<<"${HOST}"
-  export _PYTHON_HOST_PLATFORM=${host_os}-${host_arch}
+  if [[ ${HOST} =~ .*darwin.* ]]; then
+    # Even if BUILD is .*darwin.* you get better isolation by cross_compiling (no /usr/local)
+    export _PYTHON_HOST_PLATFORM=darwin
+  else
+    IFS='-' read -r host_arch host_vendor host_os host_libc <<<"${HOST}"
+    export _PYTHON_HOST_PLATFORM=${host_os}-${host_arch}
+  fi
 fi
 
 # Not used at present but we should run 'make test' and finish up TESTOPTS (see debians rules).
@@ -165,9 +188,13 @@ if [[ ${_OPTIMIZED} == 1 ]]; then
           ${SYSCONFIG} \
           > ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
   # Install the shared library
-  cp -p ${_buildd_shared}/libpython${VER}m.so.1.0 ${PREFIX}/lib/
-  ln -sf ${PREFIX}/lib/libpython${VER}m.so.1.0 ${PREFIX}/lib/libpython${VER}m.so.1
-  ln -sf ${PREFIX}/lib/libpython${VER}m.so.1 ${PREFIX}/lib/libpython${VER}m.so
+  if [[ ${HOST} =~ .*linux.* ]]; then
+    cp -p ${_buildd_shared}/libpython${VER}m${SHLIB_EXT}.1.0 ${PREFIX}/lib/
+    ln -sf ${PREFIX}/lib/libpython${VER}m${SHLIB_EXT}.1.0 ${PREFIX}/lib/libpython${VER}m${SHLIB_EXT}.1
+    ln -sf ${PREFIX}/lib/libpython${VER}m${SHLIB_EXT}.1 ${PREFIX}/lib/libpython${VER}m${SHLIB_EXT}
+  elif [[ ${HOST} =~ .*darwin.* ]]; then
+    cp -p ${_buildd_shared}/libpython${VER}m${SHLIB_EXT} ${PREFIX}/lib/
+  fi
 else
   make -C ${_buildd_shared} install
 fi
@@ -197,9 +224,9 @@ pushd ${PREFIX}
   if [[ -f lib/libpython${VER}m.a ]]; then
     chmod +w lib/libpython${VER}m.a
     if [[ -n ${HOST} ]]; then
-      ${HOST}-strip lib/libpython${VER}m.a
+      ${HOST}-strip -S lib/libpython${VER}m.a
     else
-      strip lib/libpython${VER}m.a
+      strip -S lib/libpython${VER}m.a
     fi
   fi
   CONFIG_LIBPYTHON=$(find lib/python${VER}/config-${VER}m* -name "libpython${VER}m.a")
