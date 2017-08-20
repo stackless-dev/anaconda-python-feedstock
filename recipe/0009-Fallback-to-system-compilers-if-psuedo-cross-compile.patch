@@ -1,8 +1,8 @@
-From 0d4f3dc7bb873b95e1fe57c2775070e49bb84865 Mon Sep 17 00:00:00 2001
+From d3ae6732185fec30b7d95eda67634db9bde8a0d2 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Thu, 17 Aug 2017 12:49:04 +0100
-Subject: [PATCH] Fallback to system compilers if (psuedo-)cross-compilers not
- found
+Subject: [PATCH 09/10] Fallback to system compilers if
+ (psuedo-)cross-compilers not found
 
 ---
  Lib/sysconfig.py | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -19,6 +19,7 @@ source:
     - 0007-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
     - 0008-Do-not-pass-g-to-GCC-when-not-Py_DEBUG.patch
     - 0009-Fallback-to-system-compilers-if-psuedo-cross-compile.patch
+    - 0010-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
 
 build:
   number: 3

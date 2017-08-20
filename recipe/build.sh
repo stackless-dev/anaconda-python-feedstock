@@ -56,6 +56,20 @@ elif [[ ${HOST} =~ .*linux.* ]]; then
   UNICODE=ucs4
 fi
 
+# This causes setup.py to query the sysroot directories from the compiler, something which
+# IMHO should be done by default anyway with a flag to disable it to workaround broken ones.
+# Technically, setting _PYTHON_HOST_PLATFORM causes setup.py to consider it cross_compiling
+if [[ -n ${HOST} ]]; then
+  if [[ ${HOST} =~ .*darwin.* ]]; then
+    # Even if BUILD is .*darwin.* you get better isolation by cross_compiling (no /usr/local)
+    export _PYTHON_HOST_PLATFORM=darwin
+  else
+    IFS='-' read -r host_arch host_vendor host_os host_libc <<<"${HOST}"
+    export _PYTHON_HOST_PLATFORM=${host_os}-${host_arch}
+  fi
+fi
+
+
 declare -a _common_configure_args
 _common_configure_args+=(--prefix=${PREFIX})
 _common_configure_args+=(--build=${BUILD})
