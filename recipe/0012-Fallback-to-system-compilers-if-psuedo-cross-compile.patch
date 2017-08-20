@@ -1,8 +1,8 @@
-From 96dae3936a53d40e9ebb026a4136b075ee00d599 Mon Sep 17 00:00:00 2001
+From 5a43b36c7781bda0d91e0d44965909113979ed60 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Thu, 17 Aug 2017 12:49:04 +0100
-Subject: [PATCH] Fallback to system compilers if (psuedo-)cross-compilers not
- found
+Subject: [PATCH 12/13] Fallback to system compilers if
+ (psuedo-)cross-compilers not found
 
 ---
  Lib/sysconfig.py | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -77,5 +77,5 @@ index 9c34be0a07..94af6e2aaa 100644
          # multi-architecture, multi-os-version installers
          if sys.platform == 'darwin':
 -- 
-2.11.1
+2.14.1
 

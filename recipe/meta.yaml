@@ -9,21 +9,22 @@ source:
   url: https://www.python.org/ftp/python/{{ version }}/Python-{{ version }}.tgz
   md5: {{ md5 }}
   patches:
-    - 0001-Add-Anaconda-Distribution-version-logic.patch
-    - 0002-Darwin-Omit-PYTHONFRAMEWORK-site-packages.patch
-    - 0003-Darwin-Add-arch-x86_64-to-UnicCCompiler-ld_args.patch
-    - 0004-Win32-distutils-Also-look-for-executable.bat.patch
-    - 0005-Win32-Ensure-Library-bin-is-in-os.environ-PATH.patch
-    - 0006-Win32-Change-FD_SETSIZE-from-512-to-2048.patch
-    - 0007-Win32-distutils-Add-support-to-cygwinccompiler-for-V.patch
-    - 0008-Do-not-pass-g-to-GCC-when-not-Py_DEBUG.patch
-    - 0009-Support-cross-compiling-byte-code.patch
-    - 0010-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
-    - 0011-Fallback-to-system-compilers-if-psuedo-cross-compile.patch
-    - 0012-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
+    - 0001-Issue-21122-Fix-LTO-builds-on-OS-X.-Patch-by-Brett-C.patch
+    - 0002-Add-Anaconda-Distribution-version-logic.patch
+    - 0003-Darwin-Omit-PYTHONFRAMEWORK-site-packages.patch
+    - 0004-Darwin-Add-arch-x86_64-to-UnicCCompiler-ld_args.patch
+    - 0005-Win32-distutils-Also-look-for-executable.bat.patch
+    - 0006-Win32-Ensure-Library-bin-is-in-os.environ-PATH.patch
+    - 0007-Win32-Change-FD_SETSIZE-from-512-to-2048.patch
+    - 0008-Win32-distutils-Add-support-to-cygwinccompiler-for-V.patch
+    - 0009-Do-not-pass-g-to-GCC-when-not-Py_DEBUG.patch
+    - 0010-Support-cross-compiling-byte-code.patch
+    - 0011-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
+    - 0012-Fallback-to-system-compilers-if-psuedo-cross-compile.patch
+    - 0013-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
 
 build:
-  number: 2
+  number: 3
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:

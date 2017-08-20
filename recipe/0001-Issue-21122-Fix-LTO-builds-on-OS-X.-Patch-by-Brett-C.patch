@@ -1,0 +1,78 @@
+From 7c712b4686d9b06fd118f25c176164d8f8a8657b Mon Sep 17 00:00:00 2001
+From: Ned Deily <nad@python.org>
+Date: Tue, 6 Sep 2016 15:09:20 -0700
+Subject: [PATCH 01/13] Issue #21122: Fix LTO builds on OS X. Patch by Brett
+ Cannon.
+
+---
+ configure    | 20 ++++++++++++++------
+ configure.ac | 13 ++++++++++---
+ 2 files changed, 24 insertions(+), 9 deletions(-)
+
+diff --git a/configure b/configure
+index 5640c2dc12..bbe221fefd 100755
+--- a/configure
++++ b/configure
+@@ -6582,17 +6582,25 @@ fi
+ if test "$Py_LTO" = 'true' ; then
+   case $CC in
+     *clang*)
+-      # Any changes made here should be reflected in the GCC+Darwin case below
+-      LTOFLAGS="-flto"
+-      ;;
+-    *gcc*)
+       case $ac_sys_system in
+         Darwin*)
+-          LTOFLAGS="-flto"
++          # Any changes made here should be reflected in the GCC+Darwin case below
++          LTOFLAGS="-flto -Wl,-export_dynamic"
+           ;;
+         *)
+-          LTOFLAGS="-flto -fuse-linker-plugin -ffat-lto-objects -flto-partition=none"
++          LTOFLAGS="-flto"
++          ;;
++      esac
++      ;;
++      *gcc*)
++        case $ac_sys_system in
++          Darwin*)
++          LTOFLAGS="-flto -Wl,-export_dynamic"
++            ;;
++          *)
++            LTOFLAGS="-flto -fuse-linker-plugin -ffat-lto-objects -flto-partition=none"
+           ;;
++        esac
+       esac
+       ;;
+   esac
+diff --git a/configure.ac b/configure.ac
+index c9b755f0f4..4d7ed101a2 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1268,13 +1268,20 @@ fi],
+ if test "$Py_LTO" = 'true' ; then
+   case $CC in
+     *clang*)
+-      # Any changes made here should be reflected in the GCC+Darwin case below
+-      LTOFLAGS="-flto"
++      case $ac_sys_system in
++        Darwin*)
++          # Any changes made here should be reflected in the GCC+Darwin case below
++          LTOFLAGS="-flto -Wl,-export_dynamic"
++          ;;
++        *)
++          LTOFLAGS="-flto"
++          ;;
++      esac
+       ;;
+     *gcc*)
+       case $ac_sys_system in
+         Darwin*)
+-          LTOFLAGS="-flto"
++          LTOFLAGS="-flto -Wl,-export_dynamic"
+           ;;
+         *)
+           LTOFLAGS="-flto -fuse-linker-plugin -ffat-lto-objects -flto-partition=none"
+-- 
+2.14.1
+
