@@ -34,34 +34,35 @@ build:
     - vc14              # [win]
   script_env:
     - python_branding
+  # We delete the shared libraries.
+  ignore_run_exports:   # [unix]
+    - bzip2             # [unix]
 
 requirements:
-  host:
-    - 7za               # [win]
-    - bzip2 1.0.*       # [unix]
-    - curl >=7.44.0,<8              # [win]
-    - nasm 2.11.06      # [win]
-    - openssl 1.0.*     # [unix]
-    - readline 7.*      # [unix]
-    - sqlite 3.16.*     # [unix]
-    - tk 8.6.*          # [unix]
-    - xz 5.2.*          # [unix]
-    - zlib 1.2.*        # [unix]
-    - ncurses 6.0.*     # [linux]
-    - libffi 3.2.*      # [unix]
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ cdt('xorg-x11-proto-devel') }}
     - {{ cdt('libx11-devel') }}
     - pkg-config        # [unix]
+  host:
+    - xz                # [unix]
+    - zlib              # [unix]
+    - 7za               # [win]
+    - nasm 2.11.06      # [win]
+    - bzip2             # [unix]
+    - curl              # [win]
+    - openssl 1.0.*     # [unix]
+    - readline 7.*      # [unix]
+    - sqlite 3.16.*     # [unix]
+    - tk 8.6.*          # [unix]
+    - ncurses 6.0.*     # [linux]
+    - libffi 3.2.*      # [unix]
   run:
     - openssl 1.0.*     # [unix]
     - readline 7.*      # [unix]
     - sqlite 3.16.*     # [unix]
     - tk 8.6.*          # [unix]
-    - xz 5.2.*          # [unix]
-    - zlib 1.2.*        # [unix]
     - ncurses 6.0.*     # [linux]
     - libffi 3.2.*      # [unix]
     - vs2015_runtime    # [win]
