@@ -24,7 +24,7 @@ source:
     - do-not-download-externals.patch
 
 build:
-  number: 2
+  number: 4
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
@@ -46,10 +46,10 @@ requirements:
     - {{ cdt('libx11-devel') }}
     - pkg-config        # [unix]
   host:
+    - bzip2             # [unix]
     - xz                # [unix]
     - zlib              # [unix]
     - 7za               # [win]
-    - bzip2             # [unix]
     - curl              # [win]
     - openssl 1.0.*     # [unix]
     - readline 7.*      # [unix]
