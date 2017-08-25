@@ -153,7 +153,9 @@ if [[ ${_OPTIMIZED} == 1 ]]; then
   _extra_opts+=(--enable-optimizations)
   _extra_opts+=(--with-lto)
   _MAKE_TARGET=profile-opt
-  EXTRA_CFLAGS="${LTO_CFLAGS} -ffat-lto-objects"
+  if [[ ${CC} =~ .*gcc.* ]]; then
+    EXTRA_CFLAGS="${LTO_CFLAGS} -ffat-lto-objects"
+  fi
 else
   _MAKE_TARGET=
 fi
