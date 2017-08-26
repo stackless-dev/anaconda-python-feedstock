@@ -1,7 +1,7 @@
 From a117f72e98dddad5d12c397eeedd0d6ba232b291 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 11:59:00 +0100
-Subject: [PATCH 07/11] Win32: distutils: Add support to cygwinccompiler for
+Subject: [PATCH 07/12] Win32: distutils: Add support to cygwinccompiler for
  VS>=2015
 
 Really this is for mingw-w64 though
