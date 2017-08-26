@@ -1,4 +1,4 @@
-From 6843d5fc27228894a6a972f5c77b1f183426af2e Mon Sep 17 00:00:00 2001
+From 624eae522e124af42133a4b9a076c734ad391a00 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 11:45:28 +0100
 Subject: [PATCH 09/13] Do not pass -g to GCC when not Py_DEBUG
@@ -48,5 +48,5 @@ index 4d7ed101a2..22c3fd170a 100644
  	    ;;
  	*)
 -- 
-2.14.1
+2.13.2
 

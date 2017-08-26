@@ -1,4 +1,4 @@
-From d999b3107f07beb7b2f1c885ac46c04433b2185f Mon Sep 17 00:00:00 2001
+From 8cb2edd6763a6cbee6ceffa1f9838e4b2bb815c6 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 11:15:26 +0100
 Subject: [PATCH 06/13] Win32: Ensure Library\bin is in os.environ["PATH"]
@@ -24,5 +24,5 @@ index 0d33d6351b..522773aae7 100644
  # Prevent edition of sys.path when python was started with -S and
  # site is imported later.
 -- 
-2.14.1
+2.13.2
 

@@ -1,4 +1,4 @@
-From 5f2f762cab2f9f374b705a99f93bda785399ddda Mon Sep 17 00:00:00 2001
+From 7031ba60d0137d2802af6fd28a5847a93dec2db1 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 20 Aug 2017 00:22:22 +0100
 Subject: [PATCH 13/13] Darwin: Look in ${sysroot}/usr/{lib,include} if sysroot
@@ -28,5 +28,5 @@ index 40f8bf20ee..0d379af2f1 100644
                  '/lib64', '/usr/lib64',
                  '/lib', '/usr/lib',
 -- 
-2.14.1
+2.13.2
 

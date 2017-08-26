@@ -1,4 +1,4 @@
-From d86c4ac59762da01a4c9b84f19202486e825a0cb Mon Sep 17 00:00:00 2001
+From e5baa98c7b025a71eb0e44c0fa695661a49c9e13 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 11:07:08 +0100
 Subject: [PATCH 05/13] Win32: distutils: Also look for executable.bat
@@ -57,5 +57,5 @@ index 5dd415a283..bef82fb1ac 100644
      else:
          return executable
 -- 
-2.14.1
+2.13.2
 

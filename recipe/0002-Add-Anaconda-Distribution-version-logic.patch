@@ -1,4 +1,4 @@
-From ca4dfd64841bec45868e0f7772ec90eecae738b6 Mon Sep 17 00:00:00 2001
+From e950ccf607e9e1eb7930a0ddead8774c136f5417 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 15 Aug 2017 22:38:19 +0100
 Subject: [PATCH 02/13] Add Anaconda Distribution version logic
@@ -60,7 +60,7 @@ index 7bd6efd0a0..c2615ccca7 100644
 +#include "osdefs.h"
  #include "patchlevel.h"
  
-+const char *
+ const char *
 +Anaconda_GetVersion(void)
 +{
 +	#ifdef MS_WIN32
@@ -95,7 +95,7 @@ index 7bd6efd0a0..c2615ccca7 100644
 +	#undef STDLIB_DIR
 +}
 +
- const char *
++const char *
  Py_GetVersion(void)
  {
  	static char version[250];
@@ -107,5 +107,5 @@ index 7bd6efd0a0..c2615ccca7 100644
  	return version;
  }
 -- 
-2.14.1
+2.13.2
 
