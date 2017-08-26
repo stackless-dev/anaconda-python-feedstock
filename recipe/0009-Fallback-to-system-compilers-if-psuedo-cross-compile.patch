@@ -1,18 +1,18 @@
-From d3ae6732185fec30b7d95eda67634db9bde8a0d2 Mon Sep 17 00:00:00 2001
+From 54d274c383627f785f22a388b71eeb1f4dd90e5b Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Thu, 17 Aug 2017 12:49:04 +0100
 Subject: [PATCH 09/10] Fallback to system compilers if
  (psuedo-)cross-compilers not found
 
 ---
- Lib/sysconfig.py | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+ Lib/sysconfig.py | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
 diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
-index 9c8350d953..134127f2f3 100644
+index 9c8350d953..493f0185aa 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
-@@ -445,6 +445,50 @@ def get_path(name, scheme=_get_default_scheme(), vars=None, expand=True):
+@@ -445,6 +445,54 @@ def get_path(name, scheme=_get_default_scheme(), vars=None, expand=True):
      """
      return get_paths(scheme, vars, expand)[name]
  
@@ -42,11 +42,15 @@ index 9c8350d953..134127f2f3 100644
 +                replacements[oldcc] = cc
 +    if len(replacements) > 0:
 +        if 'HOST_GNU_TYPE' in _config_vars:
++            host_gnu_type = _config_vars['HOST_GNU_TYPE']
 +            # Get HOST_GNU_TYPE from cc -dumpmachine
-+            if len(_config_vars['HOST_GNU_TYPE']):
++            if len(host_gnu_type):
 +                cmd = "%s -dumpmachine" % (replacements[next(iter(replacements))],)
-+                host_gnu_type = _read_output(cmd)
-+                if host_gnu_type != _config_vars['HOST_GNU_TYPE']:
++                try:
++                    host_gnu_type = _read_output(cmd)
++                except:
++                    pass
++                if host_gnu_type and host_gnu_type != _config_vars['HOST_GNU_TYPE']:
 +                    replacements[_config_vars['HOST_GNU_TYPE']] = host_gnu_type
 +        for cv in _CONDA_CROSS_KEYS:
 +            if cv in _config_vars and cv not in os.environ:
@@ -63,7 +67,7 @@ index 9c8350d953..134127f2f3 100644
  def get_config_vars(*args):
      """With no arguments, return a dictionary of all configuration
      variables relevant for the current platform.
-@@ -502,6 +546,12 @@ def get_config_vars(*args):
+@@ -502,6 +550,12 @@ def get_config_vars(*args):
                  srcdir = os.path.join(base, _CONFIG_VARS['srcdir'])
                  _CONFIG_VARS['srcdir'] = os.path.normpath(srcdir)
  
@@ -77,5 +81,5 @@ index 9c8350d953..134127f2f3 100644
          # multi-architecture, multi-os-version installers
          if sys.platform == 'darwin':
 -- 
-2.11.1
+2.13.2
 
