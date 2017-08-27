@@ -42,6 +42,7 @@ if [[ ${HOST} =~ .*darwin.* ]] && [[ -n ${CONDA_BUILD_SYSROOT} ]]; then
 fi
 
 # Debian uses -O3 then resets it at the end to -O2 in _sysconfigdata.py
+export CPPFLAGS=$(echo "${CPPFLAGS}" | sed "s/-O2/-O3/g")
 export CFLAGS=$(echo "${CFLAGS}" | sed "s/-O2/-O3/g")
 export CXXFLAGS=$(echo "${CXXFLAGS}" | sed "s/-O2/-O3/g")
 export LDFLAGS
@@ -182,6 +183,7 @@ if [[ ${_OPTIMIZED} == 1 ]]; then
   make -C ${_buildd_static} install
   SYSCONFIG=$(find ${_buildd_shared}/$(cat ${_buildd_shared}/pybuilddir.txt) -name "_sysconfigdata*.py")
   sed -e '/^OPT/s,-O3,-O2,' \
+      -e 's/-D_FORTIFY_SOURCE=2 -O3/-D_FORTIFY_SOURCE=2 -O2/g' \
       -e 's/${LTO_CFLAGS}//g' \
       -e 's,^RUNSHARED *=.*,RUNSHARED=,' \
       -e '/BLDLIBRARY/s/-L\. //' \
