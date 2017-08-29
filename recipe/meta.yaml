@@ -24,7 +24,7 @@ source:
     - do-not-download-externals.patch
 
 build:
-  number: 7
+  number: 8
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
@@ -45,22 +45,21 @@ requirements:
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
     - {{ cdt('libx11-devel') }}          # [linux]
     - pkg-config                         # [unix]
-  host:
-    - bzip2                              # [unix]
-    - xz                                 # [unix]
-    - zlib                               # [unix]
     - 7za                                # [win]
     - curl                               # [win]
+  host:
+    - bzip2                              # [unix]
+    - sqlite                             # [unix]
+    - xz                                 # [unix]
+    - zlib                               # [unix]
     - openssl 1.0.*                      # [unix]
     - readline 7.*                       # [unix]
-    - sqlite 3.16.*                      # [unix]
     - tk 8.6.*                           # [unix]
     - ncurses 6.0.*                      # [linux]
     - libffi 3.2.*                       # [unix]
   run:
     - openssl 1.0.*                      # [unix]
     - readline 7.*                       # [unix]
-    - sqlite 3.16.*                      # [unix]
     - tk 8.6.*                           # [unix]
     - ncurses 6.0.*                      # [linux]
     - libffi 3.2.*                       # [unix]
