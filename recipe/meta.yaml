@@ -22,7 +22,7 @@ source:
     - 0010-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
 
 build:
-  number: 4
+  number: 5
   no_link:
     - bin/python2.7     # [unix]
     - DLLs/_ctypes.pyd  # [win]
@@ -43,17 +43,16 @@ requirements:
     - pkg-config                         # [unix]
   host:
     - bzip2                              # [unix]
+    - sqlite                             # [unix]
     - zlib                               # [unix]
     - openssl 1.0.*                      # [unix]
     - readline 7.*                       # [unix]
-    - sqlite 3.16.*                      # [unix]
     - tk 8.6.*                           # [unix]
     - ncurses 6.0.*                      # [linux]
     - libffi 3.2.*                       # [unix]
   run:
     - openssl 1.0.*                      # [unix]
     - readline 7.*                       # [unix]
-    - sqlite 3.16.*                      # [unix]
     - tk 8.6.*                           # [unix]
     - ncurses 6.0.*                      # [linux]
     - libffi 3.2.*                       # [unix]
