@@ -2,6 +2,7 @@
 
 # The LTO/PGO information was sourced from @pitrou and the Debian rules file in:
 # http://http.debian.net/debian/pool/main/p/python3.6/python3.6_3.6.2-2.debian.tar.xz
+# https://packages.debian.org/source/sid/python3.6
 # or:
 # http://bazaar.launchpad.net/~doko/python/pkg3.5-debian/view/head:/rules#L255
 # .. but upstream regrtest.py now has --pgo (since >= 3.6) and skips tests that are:
@@ -155,7 +156,7 @@ if [[ ${_OPTIMIZED} == 1 ]]; then
   _extra_opts+=(--with-lto)
   _MAKE_TARGET=profile-opt
   if [[ ${CC} =~ .*gcc.* ]]; then
-    EXTRA_CFLAGS="${LTO_CFLAGS} -ffat-lto-objects"
+    LTO_CFLAGS="${LTO_CFLAGS} -ffat-lto-objects"
   fi
 else
   _MAKE_TARGET=
@@ -182,14 +183,15 @@ make -j${CPU_COUNT} -C ${_buildd_shared} \
 if [[ ${_OPTIMIZED} == 1 ]]; then
   make -C ${_buildd_static} install
   SYSCONFIG=$(find ${_buildd_shared}/$(cat ${_buildd_shared}/pybuilddir.txt) -name "_sysconfigdata*.py")
-  sed -e '/^OPT/s,-O3,-O2,' \
-      -e 's/-D_FORTIFY_SOURCE=2 -O3/-D_FORTIFY_SOURCE=2 -O2/g' \
-      -e 's/${LTO_CFLAGS}//g' \
-      -e 's,^RUNSHARED *=.*,RUNSHARED=,' \
-      -e '/BLDLIBRARY/s/-L\. //' \
-      -e 's/-fprofile-use *-fprofile-correction//' \
-          ${SYSCONFIG} \
-          > ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
+  cat ${SYSCONFIG} | ${SYS_PYTHON} "${RECIPE_DIR}"/replace-word-pairs.py \
+    "-O3" "-O2"  \
+    "${LTO_CFLAGS}" ""  \
+    "RUNSHARED *=.*" "RUNSHARED="  \
+    "-fprofile-use *-fprofile-correction" ""  \
+    "-L." ""
+      > ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
+  # Check that our differences took.
+  diff -urN ${SYSCONFIG} ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
   # Install the shared library
   if [[ ${HOST} =~ .*linux.* ]]; then
     cp -p ${_buildd_shared}/libpython${VER}m${SHLIB_EXT}.1.0 ${PREFIX}/lib/
