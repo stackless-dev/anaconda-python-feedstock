@@ -1,0 +1,41 @@
+From f9d13e2b98c31413beda7123f7f6048970e40c07 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Wed, 6 Sep 2017 18:20:58 +0100
+Subject: [PATCH 13/13] Do not wrap _sysconfigvars.py as we cannot replace
+ entries easily
+
+.. and we need to do this during the build (-O3 => -O2, remove LTO flags etc)
+---
+ Lib/sysconfig.py  | 2 +-
+ PCbuild/build.bat | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
+index b1ca6e4..682899e 100644
+--- a/Lib/sysconfig.py
++++ b/Lib/sysconfig.py
+@@ -408,7 +408,7 @@ def _generate_posix_vars():
+         f.write('# system configuration generated and used by'
+                 ' the sysconfig module\n')
+         f.write('build_time_vars = ')
+-        pprint.pprint(vars, stream=f)
++        pprint.pprint(vars, stream=f, indent=1, width=65535)
+ 
+     # Create file used for sys.path fixup -- see Modules/getpath.c
+     with open('pybuilddir.txt', 'w', encoding='ascii') as f:
+diff --git a/PCbuild/build.bat b/PCbuild/build.bat
+index 81e500d..b4b606f 100644
+--- a/PCbuild/build.bat
++++ b/PCbuild/build.bat
+@@ -81,7 +81,7 @@ if "%IncludeExternals%"=="" set IncludeExternals=false
+ if "%IncludeSSL%"=="" set IncludeSSL=true
+ if "%IncludeTkinter%"=="" set IncludeTkinter=true
+ 
+-if "%IncludeExternals%"=="true" call "%dir%get_externals.bat"
++rem if "%IncludeExternals%"=="true" call "%dir%get_externals.bat"
+ 
+ if "%do_pgo%" EQU "true" if "%platf%" EQU "x64" (
+     if "%PROCESSOR_ARCHITEW6432%" NEQ "AMD64" if "%PROCESSOR_ARCHITECTURE%" NEQ "AMD64" (
+-- 
+2.10.1
+
