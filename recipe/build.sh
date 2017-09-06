@@ -54,7 +54,9 @@ fi
 
 _buildd_static=build-static
 _buildd_shared=build-shared
-LTO_CFLAGS="-g -flto -fuse-linker-plugin"
+declare -a LTO_CFLAGS
+LTO_CFLAGS+=(-flto)
+LTO_CFLAGS+=(-fuse-linker-plugin)
 
 # Remove ensurepip stubs.
 rm -rf Lib/ensurepip
@@ -155,9 +157,12 @@ if [[ ${_OPTIMIZED} == 1 ]]; then
   _extra_opts+=(--enable-optimizations)
   _extra_opts+=(--with-lto)
   _MAKE_TARGET=profile-opt
+  # To speed up build times during testing (1):
+  # _PROFILE_TASK="./python -m test.regrtest --pgo test_builtin"
   if [[ ${CC} =~ .*gcc.* ]]; then
-    LTO_CFLAGS="${LTO_CFLAGS} -ffat-lto-objects"
+    LTO_CFLAGS+=(-ffat-lto-objects)
   fi
+  export CFLAGS="${CFLAGS} ${LTO_CFLAGS[@]}"
 else
   _MAKE_TARGET=
 fi
@@ -172,6 +177,8 @@ popd
 make -j${CPU_COUNT} -C ${_buildd_static} \
         EXTRA_CFLAGS="${EXTRA_CFLAGS}" \
         ${_MAKE_TARGET}
+# To speed up build times during testing (2):
+#       ${_MAKE_TARGET} PROFILE_TASK="${_PROFILE_TASK}"
 
 make -j${CPU_COUNT} -C ${_buildd_shared} \
         EXTRA_CFLAGS="${EXTRA_CFLAGS}"
@@ -182,16 +189,22 @@ make -j${CPU_COUNT} -C ${_buildd_shared} \
 
 if [[ ${_OPTIMIZED} == 1 ]]; then
   make -C ${_buildd_static} install
-  SYSCONFIG=$(find ${_buildd_shared}/$(cat ${_buildd_shared}/pybuilddir.txt) -name "_sysconfigdata*.py")
+  SYSCONFIG=$(find ${_buildd_shared}/$(cat ${_buildd_shared}/pybuilddir.txt) -name "_sysconfigdata*.py" -print0)
+  declare -a _LTO_CFLAGS_REPLACE
+  for _LTO_CFLAG in "${LTO_CFLAGS[@]}"; do
+    _LTO_CFLAGS_REPLACE+=(${_LTO_CFLAG})
+    _LTO_CFLAGS_REPLACE+=("")
+  done
   cat ${SYSCONFIG} | ${SYS_PYTHON} "${RECIPE_DIR}"/replace-word-pairs.py \
     "-O3" "-O2"  \
-    "${LTO_CFLAGS}" ""  \
-    "RUNSHARED *=.*" "RUNSHARED="  \
-    "-fprofile-use *-fprofile-correction" ""  \
-    "-L." ""
+    "${_LTO_CFLAGS_REPLACE[@]}"  \
+    "-fprofile-use" ""  \
+    "-fprofile-correction" ""  \
+    "-L." ""  \
       > ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
-  # Check that our differences took.
-  diff -urN ${SYSCONFIG} ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
+  # Check to see that our differences took.
+  # echo diff -urN ${SYSCONFIG} ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
+  # diff -urN ${SYSCONFIG} ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
   # Install the shared library
   if [[ ${HOST} =~ .*linux.* ]]; then
     cp -p ${_buildd_shared}/libpython${VER}m${SHLIB_EXT}.1.0 ${PREFIX}/lib/
