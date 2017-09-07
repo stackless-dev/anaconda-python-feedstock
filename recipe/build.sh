@@ -205,7 +205,7 @@ if [[ ${_OPTIMIZED} == 1 ]]; then
   cat ${SYSCONFIG} | ${SYS_PYTHON} "${RECIPE_DIR}"/replace-word-pairs.py \
     "${_FLAGS_REPLACE[@]}"  \
       > ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
-  MAKEFILE=${PREFIX}/lib/python${VER}/config-${VER}m/Makefile
+  MAKEFILE=$(find ${PREFIX}/lib/python${VER}/ -path "*config-*/Makefile" -print0)
   cp ${MAKEFILE} /tmp/Makefile-$$
   cat /tmp/Makefile-$$ | ${SYS_PYTHON} "${RECIPE_DIR}"/replace-word-pairs.py \
     "${_FLAGS_REPLACE[@]}"  \
