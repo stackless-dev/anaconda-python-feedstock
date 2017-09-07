@@ -190,19 +190,28 @@ make -j${CPU_COUNT} -C ${_buildd_shared} \
 
 if [[ ${_OPTIMIZED} == 1 ]]; then
   make -C ${_buildd_static} install
-  SYSCONFIG=$(find ${_buildd_shared}/$(cat ${_buildd_shared}/pybuilddir.txt) -name "_sysconfigdata*.py" -print0)
-  declare -a _LTO_CFLAGS_REPLACE
+  declare -a _FLAGS_REPLACE
+  _FLAGS_REPLACE+=(-O3)
+  _FLAGS_REPLACE+=(-O2)
+  _FLAGS_REPLACE+=("-fprofile-use")
+  _FLAGS_REPLACE+=("")
+  _FLAGS_REPLACE+=("-fprofile-correction")
+  _FLAGS_REPLACE+=("")
+  _FLAGS_REPLACE+=("-L.")
+  _FLAGS_REPLACE+=("")
   for _LTO_CFLAG in "${LTO_CFLAGS[@]}"; do
-    _LTO_CFLAGS_REPLACE+=(${_LTO_CFLAG})
-    _LTO_CFLAGS_REPLACE+=("")
+    _FLAGS_REPLACE+=(${_LTO_CFLAG})
+    _FLAGS_REPLACE+=("")
   done
+  SYSCONFIG=$(find ${_buildd_shared}/$(cat ${_buildd_shared}/pybuilddir.txt) -name "_sysconfigdata*.py" -print0)
   cat ${SYSCONFIG} | ${SYS_PYTHON} "${RECIPE_DIR}"/replace-word-pairs.py \
-    "-O3" "-O2"  \
-    "${_LTO_CFLAGS_REPLACE[@]}"  \
-    "-fprofile-use" ""  \
-    "-fprofile-correction" ""  \
-    "-L." ""  \
+    "${_FLAGS_REPLACE[@]}"  \
       > ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
+  MAKEFILE=$(find ${_buildd_shared}/$(cat ${_buildd_shared}/pybuilddir.txt) -name "Makefile" -print0)
+  cp ${MAKEFILE} /tmp/Makefile-$$
+  cat /tmp/Makefile-$$ | ${SYS_PYTHON} "${RECIPE_DIR}"/replace-word-pairs.py \
+    "${_FLAGS_REPLACE[@]}"  \
+      > ${MAKEFILE}
   # Check to see that our differences took.
   # echo diff -urN ${SYSCONFIG} ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
   # diff -urN ${SYSCONFIG} ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
