@@ -21,7 +21,7 @@ source:
     - 0010-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
     - 0011-Fallback-to-system-compilers-if-psuedo-cross-compile.patch
     - 0012-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
-    - do-not-download-externals.patch
+    - 0013-Win32-Do-not-download-externals.patch
 
 build:
   number: 10
