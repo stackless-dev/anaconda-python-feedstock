@@ -8,6 +8,19 @@ CONDA_FORGE=no
 # This is important in cases where conda
 # tries to update bzip2.
 find "${PREFIX}/lib" -name "libbz2*${SHLIB_EXT}*" | xargs rm -fv {}
+# Remove openssl's shared library too. This
+# is because during installation we cannot
+# import hashlib until openssl and libgcc-ng
+# have been installed. If this does not work
+# then we will need to hack LD_LIBRARY_PATH
+# to include the package cache libdir of both
+# of these packages instead. A final alternative
+# may be to build a static interpreter since the
+# problem does not happen then.
+if [[ ${HOST} =~ .*linux.* ]]; then
+  find "${PREFIX}/lib" -name "libssl*${SHLIB_EXT}*" | xargs rm -fv {}
+  find "${PREFIX}/lib" -name "libcrypto*${SHLIB_EXT}*" | xargs rm -fv {}
+fi
 
 # Prevent lib/python${VER}/_sysconfigdata_*.py from ending up with full paths to these things
 # in _build_env because _build_env will not get found during prefix replacement, only _h_env_placeh ...

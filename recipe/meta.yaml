@@ -22,7 +22,7 @@ source:
     - 0010-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
 
 build:
-  number: 5
+  number: 7
   no_link:
     - bin/python2.7     # [unix]
     - DLLs/_ctypes.pyd  # [win]
