@@ -73,7 +73,7 @@ index 7bd6efd0a0..ed75bd5732 100644
 +
 +	f = fopen(path, "rb");
 +	if (f == NULL) {
-+		strcpy(res, "Continuum Analytics, Inc.");
++		strcpy(res, "Anaconda, Inc.");
 +	} else {
 +		i = 0;
 +		while (i + 1 < sizeof(res)) {
