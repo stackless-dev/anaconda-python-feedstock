@@ -24,7 +24,7 @@ source:
     - 0013-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
 
 build:
-  number: 10
+  number: 11
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
