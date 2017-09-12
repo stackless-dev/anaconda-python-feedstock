@@ -14,6 +14,7 @@ source:
     - 0002-Darwin-Hack-sys.-exec_-prefix-if-run-from-python.app.patch
     - 0003-Darwin-Add-arch-x86_64-to-UnicCCompiler-ld_args.patch
     - 0004-Win32-distutils-Also-look-for-executable.bat.patch
+    # TODO :: This breaks conda activate and deactivate.
     - 0005-Win32-Ensure-Library-bin-is-in-os.environ-PATH.patch
     - 0006-Win32-Change-FD_SETSIZE-from-512-to-2048.patch
     - 0007-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
