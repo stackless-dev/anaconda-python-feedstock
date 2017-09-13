@@ -29,8 +29,8 @@ build:
     - DLLs/_ctypes.pyd  # [win]
   track_features:
     - vc9               # [win]
-  script_env:
-    - python_branding
+  # script_env:
+  #   - python_branding
   # We delete the shared libraries.
   ignore_run_exports:   # [unix]
     - bzip2             # [unix]
