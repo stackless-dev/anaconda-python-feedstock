@@ -1,6 +1,6 @@
 REM brand Python with conda-forge startup message
-%SYS_PYTHON% %RECIPE_DIR%\brand_python.py
-if errorlevel 1 exit 1
+REM %SYS_PYTHON% %RECIPE_DIR%\brand_python.py
+REM if errorlevel 1 exit 1
 
 REM Compile python, extensions and external libraries
 if "%ARCH%"=="64" (

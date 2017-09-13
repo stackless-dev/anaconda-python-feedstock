@@ -56,6 +56,10 @@ build:
   no_link:
     - DLLs/_ctypes.pyd  # [win]
     - bin/python3.6     # [unix]
+  track_features:
+    - vc14              # [win]
+  # script_env:
+  #   - python_branding
   # We delete the shared libraries.
   ignore_run_exports:   # [unix]
     - bzip2             # [unix]
