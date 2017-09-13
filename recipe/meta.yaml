@@ -34,6 +34,7 @@ build:
   # We delete the shared libraries.
   ignore_run_exports:   # [unix]
     - bzip2             # [unix]
+  skip: True            # [win and vc != 9]
 
 requirements:
   build:
