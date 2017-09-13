@@ -1,8 +1,6 @@
-echo on
 REM brand Python with conda-forge startup message
-python %RECIPE_DIR%\brand_python.py
-if errorlevel 1 exit 1
-
+REM %SYS_PYTHON% %RECIPE_DIR%\brand_python.py
+REM if errorlevel 1 exit 1
 
 REM Compile python, extensions and external libraries
 if "%ARCH%"=="64" (
@@ -16,7 +14,7 @@ if "%ARCH%"=="64" (
 )
 
 cd PCbuild
-call build.bat -e -p %PLATFORM%
+call build.bat --pgo -m -e -p %PLATFORM%
 if errorlevel 1 exit 1
 cd ..
 
@@ -149,7 +147,6 @@ if errorlevel 1 exit 1
 :: Remove ensurepip stubs.
 rd /s /q %PREFIX%\Lib\ensurepip
 if errorlevel 1 exit 1
-
 
 REM bytecode compile the standard library
 
