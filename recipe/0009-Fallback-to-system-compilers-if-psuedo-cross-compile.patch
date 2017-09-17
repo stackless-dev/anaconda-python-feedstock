@@ -1,4 +1,4 @@
-From 54d274c383627f785f22a388b71eeb1f4dd90e5b Mon Sep 17 00:00:00 2001
+From 33deefc5b4ae15b0a4cd859e1eb3717cbc6cbece Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Thu, 17 Aug 2017 12:49:04 +0100
 Subject: [PATCH 09/10] Fallback to system compilers if
@@ -81,5 +81,5 @@ index 9c8350d953..493f0185aa 100644
          # multi-architecture, multi-os-version installers
          if sys.platform == 'darwin':
 -- 
-2.13.2
+2.14.1
 

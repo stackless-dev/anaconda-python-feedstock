@@ -1,4 +1,4 @@
-From 857d1a7748c6b309b98d1b60b57a72345d956e2d Mon Sep 17 00:00:00 2001
+From 362e62b290043228e68632132cbcedbc019410ed Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 13:19:07 +0100
 Subject: [PATCH 03/10] Darwin: Add -arch x86_64 to UnicCCompiler ld_args
@@ -20,5 +20,5 @@ index 3af540e581..8734e7e649 100644
                  self.spawn(linker + ld_args)
              except DistutilsExecError, msg:
 -- 
-2.13.2
+2.14.1
 
