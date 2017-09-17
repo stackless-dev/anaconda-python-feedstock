@@ -17,7 +17,7 @@ find "${PREFIX}/lib" -name "libbz2*${SHLIB_EXT}*" | xargs rm -fv {}
 # of these packages instead. A final alternative
 # may be to build a static interpreter since the
 # problem does not happen then.
-if [[ ${HOST} =~ .*linux.* ]]; then
+if [[ ${HOST} =~ .*linux.* ]] || [[ ${HOST} =~ .*darwin.* ]]; then
   find "${PREFIX}/lib" -name "libssl*${SHLIB_EXT}*" | xargs rm -fv {}
   find "${PREFIX}/lib" -name "libcrypto*${SHLIB_EXT}*" | xargs rm -fv {}
 fi
