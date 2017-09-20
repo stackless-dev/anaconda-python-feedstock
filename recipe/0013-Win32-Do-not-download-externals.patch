@@ -11,7 +11,7 @@ diff --git a/PCbuild/build.bat b/PCbuild/build.bat
 index 81e500d..b4b606f 100644
 --- a/PCbuild/build.bat
 +++ b/PCbuild/build.bat
-@@ -81,7 +81,7 @@ if "%IncludeExternals%"=="" set IncludeExternals=false
+@@ -83,7 +83,7 @@ if "%IncludeExternals%"=="" set IncludeExternals=false
  if "%IncludeSSL%"=="" set IncludeSSL=true
  if "%IncludeTkinter%"=="" set IncludeTkinter=true
  
