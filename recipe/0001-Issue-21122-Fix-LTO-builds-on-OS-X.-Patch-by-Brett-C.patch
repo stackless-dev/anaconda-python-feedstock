@@ -1,7 +1,7 @@
-From 8be3c6ac30d91c3da053fa094f27e49b74c0f30b Mon Sep 17 00:00:00 2001
+From 406f96a623a3fbf2088dbf10d42f86d8663f4fac Mon Sep 17 00:00:00 2001
 From: Ned Deily <nad@python.org>
 Date: Tue, 6 Sep 2016 15:09:20 -0700
-Subject: [PATCH 01/13] Issue #21122: Fix LTO builds on OS X. Patch by Brett
+Subject: [PATCH 01/12] Issue #21122: Fix LTO builds on OS X. Patch by Brett
  Cannon.
 
 ---
@@ -66,5 +66,5 @@ index c9b755f0f4..4d7ed101a2 100644
          *)
            LTOFLAGS="-flto -fuse-linker-plugin -ffat-lto-objects -flto-partition=none"
 -- 
-2.13.2
+2.13.3
 
