@@ -1,7 +1,7 @@
-From 43c81cab40acabbdfacb1b0436bce96a91233335 Mon Sep 17 00:00:00 2001
+From 9f9533a0db4f329dd1389301f34d9089b9a0f48c Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 12:17:33 +0100
-Subject: [PATCH 09/12] Support cross-compiling byte-code
+Subject: [PATCH 09/13] Support cross-compiling byte-code
 
 https://bugs.python.org/issue22724
 ---
@@ -11,7 +11,7 @@ https://bugs.python.org/issue22724
  3 files changed, 15 insertions(+), 10 deletions(-)
 
 diff --git a/Makefile.pre.in b/Makefile.pre.in
-index 93a2bab6d9..b9c780b0dc 100644
+index 6cb0c63..50f0dea 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
 @@ -230,6 +230,7 @@ PYTHON=		python$(EXE)
@@ -57,7 +57,7 @@ index 93a2bab6d9..b9c780b0dc 100644
  
  
  # Build static library
-@@ -1055,7 +1056,7 @@ install: @FRAMEWORKINSTALLFIRST@ commoninstall bininstall maninstall @FRAMEWORKI
+@@ -1067,7 +1068,7 @@ install: @FRAMEWORKINSTALLFIRST@ commoninstall bininstall maninstall @FRAMEWORKI
  			upgrade) ensurepip="--upgrade" ;; \
  			install|*) ensurepip="" ;; \
  		esac; \
@@ -66,7 +66,7 @@ index 93a2bab6d9..b9c780b0dc 100644
  			$$ensurepip --root=$(DESTDIR)/ ; \
  	fi
  
-@@ -1065,7 +1066,7 @@ altinstall: commoninstall
+@@ -1077,7 +1078,7 @@ altinstall: commoninstall
  			upgrade) ensurepip="--altinstall --upgrade" ;; \
  			install|*) ensurepip="--altinstall" ;; \
  		esac; \
@@ -75,7 +75,7 @@ index 93a2bab6d9..b9c780b0dc 100644
  			$$ensurepip --root=$(DESTDIR)/ ; \
  	fi
  
-@@ -1436,7 +1437,7 @@ libainstall:	@DEF_MAKE_RULE@ python-config
+@@ -1448,7 +1449,7 @@ libainstall:	@DEF_MAKE_RULE@ python-config
  # Install the dynamically loadable modules
  # This goes into $(exec_prefix)
  sharedinstall: sharedmods
@@ -84,7 +84,7 @@ index 93a2bab6d9..b9c780b0dc 100644
  	   	--prefix=$(prefix) \
  		--install-scripts=$(BINDIR) \
  		--install-platlib=$(DESTSHARED) \
-@@ -1520,7 +1521,7 @@ frameworkinstallextras:
+@@ -1532,7 +1533,7 @@ frameworkinstallextras:
  # This installs a few of the useful scripts in Tools/scripts
  scriptsinstall:
  	SRCDIR=$(srcdir) $(RUNSHARED) \
@@ -94,7 +94,7 @@ index 93a2bab6d9..b9c780b0dc 100644
  	--install-scripts=$(BINDIR) \
  	--root=$(DESTDIR)/
 diff --git a/configure b/configure
-index 1822772d4e..ee36227f63 100755
+index 22959bd..2ec1dd6 100755
 --- a/configure
 +++ b/configure
 @@ -751,6 +751,7 @@ CONFIG_ARGS
@@ -116,7 +116,7 @@ index 1822772d4e..ee36227f63 100755
  elif test "$cross_compiling" = maybe; then
      as_fn_error $? "Cross compiling required --host=HOST-TUPLE and --build=ARCH" "$LINENO" 5
 diff --git a/configure.ac b/configure.ac
-index 92adce5987..ced0082601 100644
+index 543085c..9546506 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -73,13 +73,15 @@ if test "$cross_compiling" = yes; then
@@ -137,5 +137,5 @@ index 92adce5987..ced0082601 100644
  
  dnl Ensure that if prefix is specified, it does not end in a slash. If
 -- 
-2.13.2
+1.8.3.1
 
