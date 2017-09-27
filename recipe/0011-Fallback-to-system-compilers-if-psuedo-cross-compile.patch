@@ -27,7 +27,7 @@ diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
 index 9314e71..d7c390e 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
-@@ -512,6 +512,68 @@ def get_path(name, scheme=_get_default_scheme(), vars=None, expand=True):
+@@ -512,6 +512,69 @@ def get_path(name, scheme=_get_default_scheme(), vars=None, expand=True):
      return get_paths(scheme, vars, expand)[name]
  
  
@@ -66,6 +66,7 @@ index 9314e71..d7c390e 100644
 +        if is_gcc:
 +            replacements['-fno-plt'] = ''
 +            replacements['-mtune=haswell'] = ''
++            replacements['-fstack-protector-strong'] = ''
 +        if 'HOST_GNU_TYPE' in _config_vars:
 +            host_gnu_type = _config_vars['HOST_GNU_TYPE']
 +            # Get HOST_GNU_TYPE from cc -dumpmachine
