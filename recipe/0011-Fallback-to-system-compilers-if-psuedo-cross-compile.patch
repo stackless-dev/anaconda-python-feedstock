@@ -1,18 +1,33 @@
-From 0094495f05e33e9eb58eebf082c9bbf769ee4566 Mon Sep 17 00:00:00 2001
-From: Kale Franz <kfranz@continuum.io>
+From 1ec45ea09af69c70e93fccdeb6b5a9d9a542a128 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
 Date: Thu, 21 Sep 2017 16:58:54 -0500
-Subject: [PATCH] 0011 Fallback to system compilers if (psuedo-)cross-compilers
- not found
+Subject: [PATCH 11/13] Fallback to system compilers if
+ (psuedo-)cross-compilers not found
 
 ---
- Lib/sysconfig.py | 58 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
+ Lib/distutils/sysconfig.py |  3 ++
+ Lib/sysconfig.py           | 68 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 71 insertions(+)
 
+diff --git a/Lib/distutils/sysconfig.py b/Lib/distutils/sysconfig.py
+index 2bcd1dd..80f0193 100644
+--- a/Lib/distutils/sysconfig.py
++++ b/Lib/distutils/sysconfig.py
+@@ -512,6 +512,9 @@ def get_config_vars(*args):
+         if sys.platform == 'darwin':
+             import _osx_support
+             _osx_support.customize_config_vars(_config_vars)
++        if sys.platform in ('darwin', 'linux'):
++            from sysconfig import conda_customize_compiler
++            conda_customize_compiler(_config_vars)
+ 
+     if args:
+         vals = []
 diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
-index 8dfe1a714d..8742e33154 100644
+index 9314e71..d7c390e 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
-@@ -506,6 +506,58 @@ def get_path(name, scheme=_get_default_scheme(), vars=None, expand=True):
+@@ -512,6 +512,68 @@ def get_path(name, scheme=_get_default_scheme(), vars=None, expand=True):
      return get_paths(scheme, vars, expand)[name]
  
  
@@ -23,24 +38,34 @@ index 8dfe1a714d..8742e33154 100644
 +    time is not compromised when not compiling. Then again
 +    _find_executable would be sped up if that was important.
 +    """
-+    _CONDA_CROSS_KEYS = ('AR', 'BLDSHARED', 'BLDSHARED', 'CC', 'CXX' 'CONFIG_ARGS',
-+                         'CXX', 'HOST_GNU_TYPE', 'LDCXXSHARED', 'LDSHARED', 'LINKCC',
-+                         'MAINCC', 'RANLIB', 'READELF')
++    _CONDA_CROSS_KEYS = ('AR', 'BLDSHARED', 'BLDSHARED', 'CC', 'CFLAGS', 'CXX',
++                         'CONFIG_ARGS', 'CXX', 'HOST_GNU_TYPE', 'LDCXXSHARED',
++                         'LDSHARED', 'LINKCC', 'MAINCC', 'RANLIB', 'READELF')
 +    # skip checks if the compiler was overridden with a CC env variable
 +    if 'CC' in os.environ and 'CXX' in os.environ:
 +        return _config_vars
 +    from _osx_support import _find_executable
 +    replacements = dict({})
++    is_gcc = False
 +    for compiler in ('CC', 'CXX'):
-+        if compiler in _config_vars and compiler not in os.environ:
++        if compiler in _config_vars:
 +            oldcc = _config_vars[compiler].split()[0]
-+            cc = _find_executable(oldcc)
-+            if not cc and '-' in oldcc:
-+                cc = _find_executable(oldcc.split('-')[-1])
-+            # TODO :: Careful with those .exes Eugine.
-+            if cc:
-+                replacements[oldcc] = cc
++            if compiler in os.environ:
++                replacements[oldcc] = os.environ[compiler]
++            else:
++                cc = _find_executable(oldcc)
++                if not cc and '-' in oldcc:
++                    cc = _find_executable(oldcc.split('-')[-1])
++                # TODO :: Careful with those .exes Eugine.
++                if cc:
++                    replacements[oldcc] = cc
++            if oldcc in replacements and 'gcc' in replacements[oldcc]:
++                is_gcc = True
 +    if len(replacements) > 0:
++        # Remove some flags that older GCCs do not support
++        if is_gcc:
++            replacements['-fno-plt'] = ''
++            replacements['-mtune=haswell'] = ''
 +        if 'HOST_GNU_TYPE' in _config_vars:
 +            host_gnu_type = _config_vars['HOST_GNU_TYPE']
 +            # Get HOST_GNU_TYPE from cc -dumpmachine
@@ -71,7 +96,7 @@ index 8dfe1a714d..8742e33154 100644
  def get_config_vars(*args):
      """With no arguments, return a dictionary of all configuration
      variables relevant for the current platform.
-@@ -568,6 +620,12 @@ def get_config_vars(*args):
+@@ -574,6 +636,12 @@ def get_config_vars(*args):
                  srcdir = os.path.dirname(get_makefile_filename())
          _CONFIG_VARS['srcdir'] = _safe_realpath(srcdir)
  
@@ -85,5 +110,5 @@ index 8dfe1a714d..8742e33154 100644
          # multi-architecture, multi-os-version installers
          if sys.platform == 'darwin':
 -- 
-2.13.3
+1.8.3.1
 
