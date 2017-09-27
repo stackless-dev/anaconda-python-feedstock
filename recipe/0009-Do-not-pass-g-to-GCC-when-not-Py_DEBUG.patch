@@ -1,7 +1,7 @@
-From 30967bd0261e751e4945cc20482b9942bfe463d3 Mon Sep 17 00:00:00 2001
+From 2be380417886eae8dea06b4c4b5efb6e64b0d262 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 11:45:28 +0100
-Subject: [PATCH 09/12] Do not pass -g to GCC when not Py_DEBUG
+Subject: [PATCH 09/14] Do not pass -g to GCC when not Py_DEBUG
 
 This bloats our exe and our modules a lot.
 ---
@@ -10,7 +10,7 @@ This bloats our exe and our modules a lot.
  2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/configure b/configure
-index 191425c1b8..48d9656ea3 100755
+index 191425c..48d9656 100755
 --- a/configure
 +++ b/configure
 @@ -4388,9 +4388,9 @@ if test "$ac_test_CFLAGS" = set; then
@@ -35,7 +35,7 @@ index 191425c1b8..48d9656ea3 100755
  	    ;;
  	*)
 diff --git a/configure.ac b/configure.ac
-index 4d7ed101a2..22c3fd170a 100644
+index 4d7ed10..22c3fd1 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1447,7 +1447,7 @@ then
@@ -48,5 +48,5 @@ index 4d7ed101a2..22c3fd170a 100644
  	    ;;
  	*)
 -- 
-2.13.3
+1.8.3.1
 
