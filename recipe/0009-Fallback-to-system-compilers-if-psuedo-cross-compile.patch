@@ -1,18 +1,33 @@
-From 33deefc5b4ae15b0a4cd859e1eb3717cbc6cbece Mon Sep 17 00:00:00 2001
+From 299683c71f2c26acb0fa52a0d4f2067cad6a4a1e Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
-Date: Thu, 17 Aug 2017 12:49:04 +0100
+Date: Thu, 21 Sep 2017 19:11:38 -0500
 Subject: [PATCH 09/10] Fallback to system compilers if
  (psuedo-)cross-compilers not found
 
 ---
- Lib/sysconfig.py | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ Lib/distutils/sysconfig.py |  3 +++
+ Lib/sysconfig.py           | 67 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 70 insertions(+)
 
+diff --git a/Lib/distutils/sysconfig.py b/Lib/distutils/sysconfig.py
+index de7da1d..45d0c20 100644
+--- a/Lib/distutils/sysconfig.py
++++ b/Lib/distutils/sysconfig.py
+@@ -466,6 +466,9 @@ def get_config_vars(*args):
+         if sys.platform == 'darwin':
+             import _osx_support
+             _osx_support.customize_config_vars(_config_vars)
++        if sys.platform in ('darwin', 'linux'):
++            from sysconfig import conda_customize_compiler
++            conda_customize_compiler(_config_vars)
+ 
+     if args:
+         vals = []
 diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
-index 9c8350d953..493f0185aa 100644
+index 9c8350d..99fc70a 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
-@@ -445,6 +445,54 @@ def get_path(name, scheme=_get_default_scheme(), vars=None, expand=True):
+@@ -445,6 +445,67 @@ def get_path(name, scheme=_get_default_scheme(), vars=None, expand=True):
      """
      return get_paths(scheme, vars, expand)[name]
  
@@ -23,33 +38,46 @@ index 9c8350d953..493f0185aa 100644
 +    time is not compromised when not compiling. Then again
 +    _find_executable would be sped up if that was important.
 +    """
-+    from _osx_support import (_find_executable, _read_output)
-+    _CONDA_CROSS_KEYS = ('AR', 'BLDSHARED', 'BLDSHARED', 'CC', 'CXX' 'CONFIG_ARGS',
-+                         'CXX', 'HOST_GNU_TYPE', 'LDCXXSHARED', 'LDSHARED', 'LINKCC',
-+                         'MAINCC', 'RANLIB', 'READELF')
++    _CONDA_CROSS_KEYS = ('AR', 'BLDSHARED', 'BLDSHARED', 'CC', 'CFLAGS', 'CXX',
++                         'CONFIG_ARGS', 'CXX', 'HOST_GNU_TYPE', 'LDCXXSHARED',
++                         'LDSHARED', 'LINKCC', 'MAINCC', 'RANLIB', 'READELF')
 +    # skip checks if the compiler was overridden with a CC env variable
 +    if 'CC' in os.environ and 'CXX' in os.environ:
 +        return _config_vars
++    from _osx_support import _find_executable
 +    replacements = dict({})
++    is_gcc = False
 +    for compiler in ('CC', 'CXX'):
-+        if compiler in _config_vars and compiler not in os.environ:
++        if compiler in _config_vars:
 +            oldcc = _config_vars[compiler].split()[0]
-+            cc = _find_executable(oldcc)
-+            if not cc and '-' in oldcc:
-+                cc = _find_executable(oldcc.split('-')[-1])
-+            # TODO :: Careful with those .exes Eugine.
-+            if cc:
-+                replacements[oldcc] = cc
++            if compiler in os.environ:
++                replacements[oldcc] = os.environ[compiler]
++            else:
++                cc = _find_executable(oldcc)
++                if not cc and '-' in oldcc:
++                    cc = _find_executable(oldcc.split('-')[-1])
++                # TODO :: Careful with those .exes Eugine.
++                if cc:
++                    replacements[oldcc] = cc
++            if oldcc in replacements and 'gcc' in replacements[oldcc]:
++                is_gcc = True
 +    if len(replacements) > 0:
++        # Remove some flags that older GCCs do not support
++        if is_gcc:
++            replacements['-fno-plt'] = ''
++            replacements['-mtune=haswell'] = ''
 +        if 'HOST_GNU_TYPE' in _config_vars:
 +            host_gnu_type = _config_vars['HOST_GNU_TYPE']
 +            # Get HOST_GNU_TYPE from cc -dumpmachine
 +            if len(host_gnu_type):
-+                cmd = "%s -dumpmachine" % (replacements[next(iter(replacements))],)
-+                try:
-+                    host_gnu_type = _read_output(cmd)
-+                except:
-+                    pass
++                if sys.platform == 'darwin':
++                    from platform import release
++                    host_gnu_type = 'x86_64-apple-darwin%s' % release()
++                elif sys.platform.startswith('linux'):
++                    if 32 == 8 * tuple.__itemsize__:
++                        host_gnu_type = 'i686-redhat-linux'
++                    else:
++                        host_gnu_type = 'x86_64-redhat-linux'
 +                if host_gnu_type and host_gnu_type != _config_vars['HOST_GNU_TYPE']:
 +                    replacements[_config_vars['HOST_GNU_TYPE']] = host_gnu_type
 +        for cv in _CONDA_CROSS_KEYS:
@@ -62,12 +90,12 @@ index 9c8350d953..493f0185aa 100644
 +                    # TODO :: Take care about _INITPRE (backup of original values in _osx_support,
 +                    #         read comment in get_platform_osx. Do we need to do this? I hope not.
 +                    _config_vars[cv] = newcv
-+
++    return _config_vars
 +
  def get_config_vars(*args):
      """With no arguments, return a dictionary of all configuration
      variables relevant for the current platform.
-@@ -502,6 +550,12 @@ def get_config_vars(*args):
+@@ -502,6 +563,12 @@ def get_config_vars(*args):
                  srcdir = os.path.join(base, _CONFIG_VARS['srcdir'])
                  _CONFIG_VARS['srcdir'] = os.path.normpath(srcdir)
  
@@ -81,5 +109,5 @@ index 9c8350d953..493f0185aa 100644
          # multi-architecture, multi-os-version installers
          if sys.platform == 'darwin':
 -- 
-2.14.1
+1.8.3.1
 
