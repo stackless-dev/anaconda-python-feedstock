@@ -136,3 +136,12 @@ pushd ${PREFIX}
 	fi
   fi
 popd
+
+# Move the _sysconfigdata.py file and replace with a version with a
+# configuration more typical of what a user would expect to be in a "standard"
+# python build. This results in the system toolchain and
+# The original configuration with the crosstool-ng compilers from the conda
+# package can be selected by setting the _PYTHON_SYSCONFIGDATA_NAME
+# environmental variable to _sysconfigdata_special
+mv ${STDLIB_DIR}/_sysconfigdata.py ${STDLIB_DIR}/_sysconfigdata_special.py
+cp ${RECIPE_DIR}/default_sysconfig_linux.py ${STDLIB_DIR}/_sysconfigdata.py
