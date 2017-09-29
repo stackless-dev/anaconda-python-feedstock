@@ -68,7 +68,7 @@ test:
     - python-config --help  # [unix]
     - idle -h
     - python -c "import sysconfig; print sysconfig.get_config_var('CC')"
-    -  _PYTHON_SYSCONFIGDATA_NAME=_sysconfig_x86_64_conda_cos6_linux_gnu python -c "import sysconfig; print sysconfig.get_config_var('CC')"  # [linux]
+    -  _PYTHON_SYSCONFIGDATA_NAME=_sysconfig_x86_64_conda_cos6_linux_gnu python -c "import sysconfig; print sysconfig.get_config_var('CC')"  # [linux64]
 
 about:
   home: http://www.python.org/
