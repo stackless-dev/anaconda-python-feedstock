@@ -262,3 +262,21 @@ pushd ${PREFIX}
     ln -s ../../libpython${VER}m.a ${CONFIG_LIBPYTHON}
   fi
 popd
+
+
+# Copy sysconfig that gets recorded to a non-default name
+#   using the new compilers with python will require setting _PYTHON_SYSCONFIGDATA_NAME
+#   to the name of this file (minus the .py extension)
+pushd $PREFIX/lib/python3.6
+recorded_name=$(find . -name "_sysconfig*.py")
+mv $recorded_name site-packages/_sysconfig_${HOST//-/_}.py
+if [[ ${HOST} =~ .*darwin.* ]]; then
+    cp $RECIPE_DIR/default_sysconfig_osx.py $recorded_name
+    sed -i '' -e 's/@BUILD_PREFIX@/$PREFIX/' $recorded_name
+else
+    cp $RECIPE_DIR/default_sysconfig_linux.py $recorded_name
+    sed -i -e 's/@BUILD_PREFIX@/$PREFIX/' $recorded_name
+    cp $LD $PREFIX/bin/ld
+fi
+popd
+
