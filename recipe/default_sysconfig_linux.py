@@ -8,17 +8,17 @@ build_time_vars = {'ABIFLAGS': 'm',
  'BASECFLAGS': '-Wsign-compare',
  'BASECPPFLAGS': '',
  'BASEMODLIBS': '',
- 'BINDIR': '@BUILD_PREFIX@/bin',
- 'BINLIBDEST': '@BUILD_PREFIX@/lib/python3.6',
+ 'BINDIR': '/opt/anaconda1anaconda2anaconda3/bin',
+ 'BINLIBDEST': '/opt/anaconda1anaconda2anaconda3/lib/python3.6',
  'BLDLIBRARY': '-L. -lpython3.6m',
- 'BLDSHARED': 'gcc -pthread -shared -B @BUILD_PREFIX@/bin '
-              '-L@BUILD_PREFIX@/lib '
-              '-Wl,-rpath=@BUILD_PREFIX@/lib,--no-as-needed',
+ 'BLDSHARED': 'gcc -pthread -shared -B /opt/anaconda1anaconda2anaconda3/bin '
+              '-L/opt/anaconda1anaconda2anaconda3/lib '
+              '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib,--no-as-needed',
  'BUILDEXE': '',
  'BUILDPYTHON': 'python',
  'BUILD_GNU_TYPE': 'x86_64-pc-linux-gnu',
  'BYTESTR_DEPS': '\\',
- 'CC': 'gcc -pthread -B @BUILD_PREFIX@/bin ',
+ 'CC': 'gcc -pthread -B /opt/anaconda1anaconda2anaconda3/bin ',
  'CCSHARED': '-fPIC',
  'CFLAGS': '-Wsign-compare -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes',
  'CFLAGSFORSHARED': '-fPIC',
@@ -29,35 +29,35 @@ build_time_vars = {'ABIFLAGS': 'm',
  'CONFIGURE_CFLAGS': '',
  'CONFIGURE_CFLAGS_NODIST': '-std=c99 -Wextra -Wno-unused-parameter '
                             '-Wno-missing-field-initializers',
- 'CONFIGURE_CPPFLAGS': '-I@BUILD_PREFIX@/include',
- 'CONFIGURE_LDFLAGS': '-L@BUILD_PREFIX@/lib '
-                      '-Wl,-rpath=@BUILD_PREFIX@/lib,--no-as-needed',
+ 'CONFIGURE_CPPFLAGS': '-I/opt/anaconda1anaconda2anaconda3/include',
+ 'CONFIGURE_LDFLAGS': '-L/opt/anaconda1anaconda2anaconda3/lib '
+                      '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib,--no-as-needed',
  'CONFIG_ARGS': "'--enable-shared' '--enable-ipv6' '--with-ensurepip=no' "
-                "'--prefix=@BUILD_PREFIX@' "
-                "'--with-tcltk-includes=-I@BUILD_PREFIX@/include' "
-                "'--with-tcltk-libs=-L@BUILD_PREFIX@/lib "
+                "'--prefix=/opt/anaconda1anaconda2anaconda3' "
+                "'--with-tcltk-includes=-I/opt/anaconda1anaconda2anaconda3/include' "
+                "'--with-tcltk-libs=-L/opt/anaconda1anaconda2anaconda3/lib "
                 "-ltcl8.5 -ltk8.5' "
-                "'CPPFLAGS=-I@BUILD_PREFIX@/include' "
-                "'LDFLAGS=-L@BUILD_PREFIX@/lib "
-                "-Wl,-rpath=@BUILD_PREFIX@/lib,--no-as-needed' "
-                "'PKG_CONFIG_PATH=@BUILD_PREFIX@/lib/pkgconfig'",
- 'CONFINCLUDEDIR': '@BUILD_PREFIX@/include',
- 'CONFINCLUDEPY': '@BUILD_PREFIX@/include/python3.6m',
+                "'CPPFLAGS=-I/opt/anaconda1anaconda2anaconda3/include' "
+                "'LDFLAGS=-L/opt/anaconda1anaconda2anaconda3/lib "
+                "-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib,--no-as-needed' "
+                "'PKG_CONFIG_PATH=/opt/anaconda1anaconda2anaconda3/lib/pkgconfig'",
+ 'CONFINCLUDEDIR': '/opt/anaconda1anaconda2anaconda3/include',
+ 'CONFINCLUDEPY': '/opt/anaconda1anaconda2anaconda3/include/python3.6m',
  'COREPYTHONPATH': ':',
- 'COVERAGE_INFO': '@BUILD_PREFIX@/Python-3.6.2/coverage.info',
- 'COVERAGE_REPORT': '@BUILD_PREFIX@/Python-3.6.2/lcov-report',
+ 'COVERAGE_INFO': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.2/coverage.info',
+ 'COVERAGE_REPORT': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.2/lcov-report',
  'COVERAGE_REPORT_OPTIONS': '--no-branch-coverage --title "CPython lcov '
                             'report"',
  'CPPFLAGS': '-I. -I./Include '
-             '-I@BUILD_PREFIX@/include',
- 'CXX': 'g++ -pthread -B @BUILD_PREFIX@/bin ',
- 'DESTDIRS': '@BUILD_PREFIX@ '
-             '@BUILD_PREFIX@/lib '
-             '@BUILD_PREFIX@/lib/python3.6 '
-             '@BUILD_PREFIX@/lib/python3.6/lib-dynload',
- 'DESTLIB': '@BUILD_PREFIX@/lib/python3.6',
+             '-I/opt/anaconda1anaconda2anaconda3/include',
+ 'CXX': 'g++ -pthread -B /opt/anaconda1anaconda2anaconda3/bin ',
+ 'DESTDIRS': '/opt/anaconda1anaconda2anaconda3 '
+             '/opt/anaconda1anaconda2anaconda3/lib '
+             '/opt/anaconda1anaconda2anaconda3/lib/python3.6 '
+             '/opt/anaconda1anaconda2anaconda3/lib/python3.6/lib-dynload',
+ 'DESTLIB': '/opt/anaconda1anaconda2anaconda3/lib/python3.6',
  'DESTPATH': '',
- 'DESTSHARED': '@BUILD_PREFIX@/lib/python3.6/lib-dynload',
+ 'DESTSHARED': '/opt/anaconda1anaconda2anaconda3/lib/python3.6/lib-dynload',
  'DFLAGS': '',
  'DIRMODE': 755,
  'DIST': 'README ChangeLog configure configure.ac acconfig.h pyconfig.h.in '
@@ -471,12 +471,12 @@ build_time_vars = {'ABIFLAGS': 'm',
  'HAVE_ZLIB_COPY': 1,
  'HAVE__GETPTY': 0,
  'HOST_GNU_TYPE': 'x86_64-pc-linux-gnu',
- 'INCLDIRSTOMAKE': '@BUILD_PREFIX@/include '
-                   '@BUILD_PREFIX@/include '
-                   '@BUILD_PREFIX@/include/python3.6m '
-                   '@BUILD_PREFIX@/include/python3.6m',
- 'INCLUDEDIR': '@BUILD_PREFIX@/include',
- 'INCLUDEPY': '@BUILD_PREFIX@/include/python3.6m',
+ 'INCLDIRSTOMAKE': '/opt/anaconda1anaconda2anaconda3/include '
+                   '/opt/anaconda1anaconda2anaconda3/include '
+                   '/opt/anaconda1anaconda2anaconda3/include/python3.6m '
+                   '/opt/anaconda1anaconda2anaconda3/include/python3.6m',
+ 'INCLUDEDIR': '/opt/anaconda1anaconda2anaconda3/include',
+ 'INCLUDEPY': '/opt/anaconda1anaconda2anaconda3/include/python3.6m',
  'INSTALL': '/usr/bin/install -c',
  'INSTALL_DATA': '/usr/bin/install -c -m 644',
  'INSTALL_PROGRAM': '/usr/bin/install -c',
@@ -485,31 +485,31 @@ build_time_vars = {'ABIFLAGS': 'm',
  'INSTSONAME': 'libpython3.6m.so.1.0',
  'IO_H': 'Modules/_io/_iomodule.h',
  'IO_OBJS': '\\',
- 'LDCXXSHARED': 'g++ -pthread -shared -B @BUILD_PREFIX@/bin ',
- 'LDFLAGS': '-L@BUILD_PREFIX@/lib '
-            '-Wl,-rpath=@BUILD_PREFIX@/lib,--no-as-needed',
+ 'LDCXXSHARED': 'g++ -pthread -shared -B /opt/anaconda1anaconda2anaconda3/bin ',
+ 'LDFLAGS': '-L/opt/anaconda1anaconda2anaconda3/lib '
+            '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib,--no-as-needed',
  'LDLAST': '',
  'LDLIBRARY': 'libpython3.6m.so',
  'LDLIBRARYDIR': '',
- 'LDSHARED': 'gcc -pthread -shared  -B @BUILD_PREFIX@/bin '
-             '-L@BUILD_PREFIX@/lib '
-             '-Wl,-rpath=@BUILD_PREFIX@/lib,--no-as-needed',
+ 'LDSHARED': 'gcc -pthread -shared  -B /opt/anaconda1anaconda2anaconda3/bin '
+             '-L/opt/anaconda1anaconda2anaconda3/lib '
+             '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib,--no-as-needed',
  'LDVERSION': '3.6m',
  'LIBC': '',
- 'LIBDEST': '@BUILD_PREFIX@/lib/python3.6',
- 'LIBDIR': '@BUILD_PREFIX@/lib',
+ 'LIBDEST': '/opt/anaconda1anaconda2anaconda3/lib/python3.6',
+ 'LIBDIR': '/opt/anaconda1anaconda2anaconda3/lib',
  'LIBFFI_INCLUDEDIR': '',
  'LIBM': '-lm',
  'LIBOBJDIR': 'Python/',
  'LIBOBJS': '',
- 'LIBPC': '@BUILD_PREFIX@/lib/pkgconfig',
- 'LIBPL': '@BUILD_PREFIX@/lib/python3.6/config-3.6m-x86_64-linux-gnu',
+ 'LIBPC': '/opt/anaconda1anaconda2anaconda3/lib/pkgconfig',
+ 'LIBPL': '/opt/anaconda1anaconda2anaconda3/lib/python3.6/config-3.6m-x86_64-linux-gnu',
  'LIBRARY': 'libpython3.6m.a',
  'LIBRARY_OBJS': '\\',
  'LIBRARY_OBJS_OMIT_FROZEN': '\\',
  'LIBS': '-lpthread -ldl  -lutil -lrt',
  'LIBSUBDIRS': 'tkinter tkinter/test tkinter/test/test_tkinter \\',
- 'LINKCC': 'gcc -pthread -B @BUILD_PREFIX@/bin ',
+ 'LINKCC': 'gcc -pthread -B /opt/anaconda1anaconda2anaconda3/bin ',
  'LINKFORSHARED': '-Xlinker -export-dynamic',
  'LIPO_32BIT_FLAGS': '',
  'LLVM_PROF_ERR': 'no',
@@ -521,13 +521,13 @@ build_time_vars = {'ABIFLAGS': 'm',
  'MACHDEP': 'linux',
  'MACHDEPPATH': ':',
  'MACHDEP_OBJS': '',
- 'MACHDESTLIB': '@BUILD_PREFIX@/lib/python3.6',
+ 'MACHDESTLIB': '/opt/anaconda1anaconda2anaconda3/lib/python3.6',
  'MACOSX_DEPLOYMENT_TARGET': '',
- 'MAINCC': 'gcc -pthread -B @BUILD_PREFIX@/bin ',
+ 'MAINCC': 'gcc -pthread -B /opt/anaconda1anaconda2anaconda3/bin ',
  'MAJOR_IN_MKDEV': 0,
  'MAJOR_IN_SYSMACROS': 0,
  'MAKESETUP': './Modules/makesetup',
- 'MANDIR': '@BUILD_PREFIX@/share/man',
+ 'MANDIR': '/opt/anaconda1anaconda2anaconda3/share/man',
  'MKDIR_P': '/bin/mkdir -p',
  'MODLIBS': '',
  'MODNAMES': '_thread posix errno pwd _sre _codecs _weakref _functools '
@@ -592,13 +592,13 @@ build_time_vars = {'ABIFLAGS': 'm',
  'PY_CORE_CFLAGS': '-Wsign-compare -DNDEBUG -g -fwrapv -O3 -Wall '
                    '-Wstrict-prototypes -std=c99 -Wextra -Wno-unused-parameter '
                    '-Wno-missing-field-initializers -I. -I./Include '
-                   '-I@BUILD_PREFIX@/include '
+                   '-I/opt/anaconda1anaconda2anaconda3/include '
                    '-fPIC -DPy_BUILD_CORE',
  'PY_CPPFLAGS': '-I. -I./Include '
-                '-I@BUILD_PREFIX@/include',
+                '-I/opt/anaconda1anaconda2anaconda3/include',
  'PY_FORMAT_SIZE_T': '"z"',
- 'PY_LDFLAGS': '-L@BUILD_PREFIX@/lib '
-               '-Wl,-rpath=@BUILD_PREFIX@/lib,--no-as-needed',
+ 'PY_LDFLAGS': '-L/opt/anaconda1anaconda2anaconda3/lib '
+               '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib,--no-as-needed',
  'Py_DEBUG': 0,
  'Py_ENABLE_SHARED': 1,
  'Py_HASH_ALGORITHM': 0,
@@ -607,8 +607,8 @@ build_time_vars = {'ABIFLAGS': 'm',
  'READELF': 'readelf',
  'RESSRCDIR': 'Mac/Resources/framework',
  'RETSIGTYPE': 'void',
- 'RUNSHARED': 'LD_LIBRARY_PATH=@BUILD_PREFIX@/Python-3.6.2',
- 'SCRIPTDIR': '@BUILD_PREFIX@/lib',
+ 'RUNSHARED': 'LD_LIBRARY_PATH=/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.2',
+ 'SCRIPTDIR': '/opt/anaconda1anaconda2anaconda3/lib',
  'SETPGRP_HAVE_ARG': 0,
  'SGI_ABI': '',
  'SHELL': '/bin/sh',
@@ -644,15 +644,15 @@ build_time_vars = {'ABIFLAGS': 'm',
  'SYSLIBS': '-lm',
  'SYS_SELECT_WITH_SYS_TIME': 1,
  'TANH_PRESERVES_ZERO_SIGN': 1,
- 'TCLTK_INCLUDES': '-I@BUILD_PREFIX@/include',
- 'TCLTK_LIBS': '-L@BUILD_PREFIX@/lib '
+ 'TCLTK_INCLUDES': '-I/opt/anaconda1anaconda2anaconda3/include',
+ 'TCLTK_LIBS': '-L/opt/anaconda1anaconda2anaconda3/lib '
                '-ltcl8.5 -ltk8.5',
  'TESTOPTS': '',
  'TESTPATH': '',
- 'TESTPYTHON': 'LD_LIBRARY_PATH=@BUILD_PREFIX@/Python-3.6.2 '
+ 'TESTPYTHON': 'LD_LIBRARY_PATH=/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.2 '
                './python',
  'TESTPYTHONOPTS': '',
- 'TESTRUNNER': 'LD_LIBRARY_PATH=@BUILD_PREFIX@/Python-3.6.2 '
+ 'TESTRUNNER': 'LD_LIBRARY_PATH=/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.2 '
                './python ./Tools/scripts/run_tests.py',
  'TESTTIMEOUT': 1200,
  'THREADOBJ': 'Python/thread.o',
@@ -676,9 +676,9 @@ build_time_vars = {'ABIFLAGS': 'm',
  'WITH_VALGRIND': 0,
  'X87_DOUBLE_ROUNDING': 0,
  'XMLLIBSUBDIRS': 'xml xml/dom xml/etree xml/parsers xml/sax',
- 'abs_builddir': '@BUILD_PREFIX@/Python-3.6.2',
- 'abs_srcdir': '@BUILD_PREFIX@/Python-3.6.2',
- 'datarootdir': '@BUILD_PREFIX@/share',
- 'exec_prefix': '@BUILD_PREFIX@',
- 'prefix': '@BUILD_PREFIX@',
+ 'abs_builddir': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.2',
+ 'abs_srcdir': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.2',
+ 'datarootdir': '/opt/anaconda1anaconda2anaconda3/share',
+ 'exec_prefix': '/opt/anaconda1anaconda2anaconda3',
+ 'prefix': '/opt/anaconda1anaconda2anaconda3',
  'srcdir': '.'}
