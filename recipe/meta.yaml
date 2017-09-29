@@ -21,7 +21,6 @@ source:
       - 0009-Do-not-pass-g-to-GCC-when-not-Py_DEBUG.patch
       - 0010-Support-cross-compiling-byte-code.patch
       - 0011-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
-      - 0012-Fallback-to-system-compilers-if-psuedo-cross-compile.patch
       - 0013-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
       # TODO :: Fix this so we can re-enable 0014 We get a failure at building Tcl currently:
       # NMAKE : fatal error U1052: file 'makefile.vc' not found [C:\Users\builder\mc3\conda-bld\python_1505378303698\work\PCbuild\tcl.vcxproj]

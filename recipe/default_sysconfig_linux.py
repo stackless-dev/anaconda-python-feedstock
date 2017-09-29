@@ -14,11 +14,11 @@ build_time_vars = {'ABIFLAGS': 'm',
  'BASECFLAGS': '-Wsign-compare',
  'BASECPPFLAGS': '',
  'BASEMODLIBS': '',
- 'BINDIR': '/opt/conda/envs/py35/bin',
- 'BINLIBDEST': '/opt/conda/envs/py35/lib/python3.5',
+ 'BINDIR': '/opt/anaconda1anaconda2anaconda3/bin',
+ 'BINLIBDEST': '/opt/anaconda1anaconda2anaconda3/lib/python3.5',
  'BLDLIBRARY': '-L. -lpython3.5m',
- 'BLDSHARED': 'gcc -pthread -shared -L/opt/conda/envs/py35/lib '
-              '-Wl,-rpath=/opt/conda/envs/py35/lib,--no-as-needed',
+ 'BLDSHARED': 'gcc -pthread -shared -L/opt/anaconda1anaconda2anaconda3/lib '
+              '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib,--no-as-needed',
  'BUILDEXE': '',
  'BUILDPYTHON': 'python',
  'BUILD_GNU_TYPE': 'x86_64-unknown-linux-gnu',
@@ -32,35 +32,35 @@ build_time_vars = {'ABIFLAGS': 'm',
                 'Makefile.pre.in',
  'CONFIGURE_CFLAGS': '',
  'CONFIGURE_CFLAGS_NODIST': '',
- 'CONFIGURE_CPPFLAGS': '-I/opt/conda/envs/py35/include',
- 'CONFIGURE_LDFLAGS': '-L/opt/conda/envs/py35/lib '
-                      '-Wl,-rpath=/opt/conda/envs/py35/lib,--no-as-needed',
+ 'CONFIGURE_CPPFLAGS': '-I/opt/anaconda1anaconda2anaconda3/include',
+ 'CONFIGURE_LDFLAGS': '-L/opt/anaconda1anaconda2anaconda3/lib '
+                      '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib,--no-as-needed',
  'CONFIG_ARGS': "'--enable-shared' '--enable-ipv6' '--with-ensurepip=no' "
-                "'--prefix=/opt/conda/envs/py35' "
-                "'--with-tcltk-includes=-I/opt/conda/envs/py35/include' "
-                "'--with-tcltk-libs=-L/opt/conda/envs/py35/lib "
+                "'--prefix=/opt/anaconda1anaconda2anaconda3' "
+                "'--with-tcltk-includes=-I/opt/anaconda1anaconda2anaconda3/include' "
+                "'--with-tcltk-libs=-L/opt/anaconda1anaconda2anaconda3/lib "
                 "-ltcl8.5 -ltk8.5' "
-                "'CPPFLAGS=-I/opt/conda/envs/py35/include' "
-                "'LDFLAGS=-L/opt/conda/envs/py35/lib "
-                "-Wl,-rpath=/opt/conda/envs/py35/lib,--no-as-needed' "
-                "'PKG_CONFIG_PATH=/opt/conda/envs/py35/lib/pkgconfig'",
- 'CONFINCLUDEDIR': '/opt/conda/envs/py35/include',
- 'CONFINCLUDEPY': '/opt/conda/envs/py35/include/python3.5m',
+                "'CPPFLAGS=-I/opt/anaconda1anaconda2anaconda3/include' "
+                "'LDFLAGS=-L/opt/anaconda1anaconda2anaconda3/lib "
+                "-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib,--no-as-needed' "
+                "'PKG_CONFIG_PATH=/opt/anaconda1anaconda2anaconda3/lib/pkgconfig'",
+ 'CONFINCLUDEDIR': '/opt/anaconda1anaconda2anaconda3/include',
+ 'CONFINCLUDEPY': '/opt/anaconda1anaconda2anaconda3/include/python3.5m',
  'COREPYTHONPATH': ':plat-linux',
- 'COVERAGE_INFO': '/home/ilan/minonda/conda-bld/work/Python-3.5.2/coverage.info',
- 'COVERAGE_REPORT': '/home/ilan/minonda/conda-bld/work/Python-3.5.2/lcov-report',
+ 'COVERAGE_INFO': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.5.2/coverage.info',
+ 'COVERAGE_REPORT': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.5.2/lcov-report',
  'COVERAGE_REPORT_OPTIONS': '--no-branch-coverage --title "CPython lcov '
                             'report"',
  'CPPFLAGS': '-I. -IInclude -I./Include '
-             '-I/opt/conda/envs/py35/include',
+             '-I/opt/anaconda1anaconda2anaconda3/include',
  'CXX': 'g++ -pthread',
- 'DESTDIRS': '/opt/conda/envs/py35 '
-             '/opt/conda/envs/py35/lib '
-             '/opt/conda/envs/py35/lib/python3.5 '
-             '/opt/conda/envs/py35/lib/python3.5/lib-dynload',
- 'DESTLIB': '/opt/conda/envs/py35/lib/python3.5',
+ 'DESTDIRS': '/opt/anaconda1anaconda2anaconda3 '
+             '/opt/anaconda1anaconda2anaconda3/lib '
+             '/opt/anaconda1anaconda2anaconda3/lib/python3.5 '
+             '/opt/anaconda1anaconda2anaconda3/lib/python3.5/lib-dynload',
+ 'DESTLIB': '/opt/anaconda1anaconda2anaconda3/lib/python3.5',
  'DESTPATH': '',
- 'DESTSHARED': '/opt/conda/envs/py35/lib/python3.5/lib-dynload',
+ 'DESTSHARED': '/opt/anaconda1anaconda2anaconda3/lib/python3.5/lib-dynload',
  'DIRMODE': 755,
  'DIST': 'README ChangeLog configure configure.ac acconfig.h pyconfig.h.in '
          'Makefile.pre.in Include Lib Misc Ext-dummy',
@@ -469,12 +469,12 @@ build_time_vars = {'ABIFLAGS': 'm',
  'HGTAG': '',
  'HGVERSION': '',
  'HOST_GNU_TYPE': 'x86_64-unknown-linux-gnu',
- 'INCLDIRSTOMAKE': '/opt/conda/envs/py35/include '
-                   '/opt/conda/envs/py35/include '
-                   '/opt/conda/envs/py35/include/python3.5m '
-                   '/opt/conda/envs/py35/include/python3.5m',
- 'INCLUDEDIR': '/opt/conda/envs/py35/include',
- 'INCLUDEPY': '/opt/conda/envs/py35/include/python3.5m',
+ 'INCLDIRSTOMAKE': '/opt/anaconda1anaconda2anaconda3/include '
+                   '/opt/anaconda1anaconda2anaconda3/include '
+                   '/opt/anaconda1anaconda2anaconda3/include/python3.5m '
+                   '/opt/anaconda1anaconda2anaconda3/include/python3.5m',
+ 'INCLUDEDIR': '/opt/anaconda1anaconda2anaconda3/include',
+ 'INCLUDEPY': '/opt/anaconda1anaconda2anaconda3/include/python3.5m',
  'INSTALL': '/usr/bin/install -c',
  'INSTALL_DATA': '/usr/bin/install -c -m 644',
  'INSTALL_PROGRAM': '/usr/bin/install -c',
@@ -484,23 +484,23 @@ build_time_vars = {'ABIFLAGS': 'm',
  'IO_H': 'Modules/_io/_iomodule.h',
  'IO_OBJS': '\\',
  'LDCXXSHARED': 'g++ -pthread -shared',
- 'LDFLAGS': '-L/opt/conda/envs/py35/lib '
-            '-Wl,-rpath=/opt/conda/envs/py35/lib,--no-as-needed',
+ 'LDFLAGS': '-L/opt/anaconda1anaconda2anaconda3/lib '
+            '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib,--no-as-needed',
  'LDLAST': '',
  'LDLIBRARY': 'libpython3.5m.so',
  'LDLIBRARYDIR': '',
- 'LDSHARED': 'gcc -pthread -shared -L/opt/conda/envs/py35/lib '
-             '-Wl,-rpath=/opt/conda/envs/py35/lib,--no-as-needed',
+ 'LDSHARED': 'gcc -pthread -shared -L/opt/anaconda1anaconda2anaconda3/lib '
+             '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib,--no-as-needed',
  'LDVERSION': '3.5m',
  'LIBC': '',
- 'LIBDEST': '/opt/conda/envs/py35/lib/python3.5',
- 'LIBDIR': '/opt/conda/envs/py35/lib',
+ 'LIBDEST': '/opt/anaconda1anaconda2anaconda3/lib/python3.5',
+ 'LIBDIR': '/opt/anaconda1anaconda2anaconda3/lib',
  'LIBFFI_INCLUDEDIR': '',
  'LIBM': '-lm',
  'LIBOBJDIR': 'Python/',
  'LIBOBJS': '',
- 'LIBPC': '/opt/conda/envs/py35/lib/pkgconfig',
- 'LIBPL': '/opt/conda/envs/py35/lib/python3.5/config-3.5m',
+ 'LIBPC': '/opt/anaconda1anaconda2anaconda3/lib/pkgconfig',
+ 'LIBPL': '/opt/anaconda1anaconda2anaconda3/lib/python3.5/config-3.5m',
  'LIBRARY': 'libpython3.5m.a',
  'LIBRARY_OBJS': '\\',
  'LIBRARY_OBJS_OMIT_FROZEN': '\\',
@@ -519,13 +519,13 @@ build_time_vars = {'ABIFLAGS': 'm',
  'MACHDEPPATH': ':plat-linux',
  'MACHDEPS': 'plat-linux',
  'MACHDEP_OBJS': '',
- 'MACHDESTLIB': '/opt/conda/envs/py35/lib/python3.5',
+ 'MACHDESTLIB': '/opt/anaconda1anaconda2anaconda3/lib/python3.5',
  'MACOSX_DEPLOYMENT_TARGET': '',
  'MAINCC': 'gcc -pthread',
  'MAJOR_IN_MKDEV': 0,
  'MAJOR_IN_SYSMACROS': 0,
  'MAKESETUP': './Modules/makesetup',
- 'MANDIR': '/opt/conda/envs/py35/share/man',
+ 'MANDIR': '/opt/anaconda1anaconda2anaconda3/share/man',
  'MKDIR_P': '/bin/mkdir -p',
  'MODLIBS': '',
  'MODOBJS': 'Modules/_threadmodule.o  Modules/signalmodule.o  '
@@ -597,14 +597,14 @@ build_time_vars = {'ABIFLAGS': 'm',
  'PY_CORE_CFLAGS': '-Wsign-compare -DNDEBUG -g -fwrapv -O3 -Wall '
                    '-Wstrict-prototypes  '
                    '-I. -IInclude -I./Include '
-                   '-I/opt/conda/envs/py35/include -fPIC '
+                   '-I/opt/anaconda1anaconda2anaconda3/include -fPIC '
                    '-DPy_BUILD_CORE',
  'PY_CPPFLAGS': '-I. -IInclude -I./Include '
-                '-I/opt/conda/envs/py35/include',
+                '-I/opt/anaconda1anaconda2anaconda3/include',
  'PY_FORMAT_LONG_LONG': '"ll"',
  'PY_FORMAT_SIZE_T': '"z"',
- 'PY_LDFLAGS': '-L/opt/conda/envs/py35/lib '
-               '-Wl,-rpath=/opt/conda/envs/py35/lib,--no-as-needed',
+ 'PY_LDFLAGS': '-L/opt/anaconda1anaconda2anaconda3/lib '
+               '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib,--no-as-needed',
  'Py_DEBUG': 0,
  'Py_ENABLE_SHARED': 1,
  'Py_HASH_ALGORITHM': 0,
@@ -613,8 +613,8 @@ build_time_vars = {'ABIFLAGS': 'm',
  'READELF': 'readelf',
  'RESSRCDIR': 'Mac/Resources/framework',
  'RETSIGTYPE': 'void',
- 'RUNSHARED': 'LD_LIBRARY_PATH=/home/ilan/minonda/conda-bld/work/Python-3.5.2',
- 'SCRIPTDIR': '/opt/conda/envs/py35/lib',
+ 'RUNSHARED': 'LD_LIBRARY_PATH=/opt/anaconda1anaconda2anaconda3/../work/Python-3.5.2',
+ 'SCRIPTDIR': '/opt/anaconda1anaconda2anaconda3/lib',
  'SETPGRP_HAVE_ARG': 0,
  'SGI_ABI': '',
  'SHELL': '/bin/sh',
@@ -651,14 +651,14 @@ build_time_vars = {'ABIFLAGS': 'm',
  'SYSLIBS': '-lm',
  'SYS_SELECT_WITH_SYS_TIME': 1,
  'TANH_PRESERVES_ZERO_SIGN': 1,
- 'TCLTK_INCLUDES': '-I/opt/conda/envs/py35/include',
- 'TCLTK_LIBS': '-L/opt/conda/envs/py35/lib -ltcl8.5 -ltk8.5',
+ 'TCLTK_INCLUDES': '-I/opt/anaconda1anaconda2anaconda3/include',
+ 'TCLTK_LIBS': '-L/opt/anaconda1anaconda2anaconda3/lib -ltcl8.5 -ltk8.5',
  'TESTOPTS': '',
  'TESTPATH': '',
- 'TESTPYTHON': 'LD_LIBRARY_PATH=/home/ilan/minonda/conda-bld/work/Python-3.5.2 '
+ 'TESTPYTHON': 'LD_LIBRARY_PATH=/opt/anaconda1anaconda2anaconda3/../work/Python-3.5.2 '
                './python',
  'TESTPYTHONOPTS': '',
- 'TESTRUNNER': 'LD_LIBRARY_PATH=/home/ilan/minonda/conda-bld/work/Python-3.5.2 '
+ 'TESTRUNNER': 'LD_LIBRARY_PATH=/opt/anaconda1anaconda2anaconda3/../work/Python-3.5.2 '
                './python ./Tools/scripts/run_tests.py',
  'TESTTIMEOUT': 3600,
  'THREADOBJ': 'Python/thread.o',
@@ -683,10 +683,10 @@ build_time_vars = {'ABIFLAGS': 'm',
  'WITH_VALGRIND': 0,
  'X87_DOUBLE_ROUNDING': 0,
  'XMLLIBSUBDIRS': 'xml xml/dom xml/etree xml/parsers xml/sax',
- 'abs_builddir': '/home/ilan/minonda/conda-bld/work/Python-3.5.2',
- 'abs_srcdir': '/home/ilan/minonda/conda-bld/work/Python-3.5.2',
+ 'abs_builddir': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.5.2',
+ 'abs_srcdir': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.5.2',
  'cross_compiling': 'no',
- 'datarootdir': '/opt/conda/envs/py35/share',
- 'exec_prefix': '/opt/conda/envs/py35',
- 'prefix': '/opt/conda/envs/py35',
+ 'datarootdir': '/opt/anaconda1anaconda2anaconda3/share',
+ 'exec_prefix': '/opt/anaconda1anaconda2anaconda3',
+ 'prefix': '/opt/anaconda1anaconda2anaconda3',
  'srcdir': '.'}

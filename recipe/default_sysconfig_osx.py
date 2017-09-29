@@ -14,12 +14,12 @@ build_time_vars = {'ABIFLAGS': 'm',
  'BASECFLAGS': '-Wno-unused-result -Wsign-compare -Wunreachable-code',
  'BASECPPFLAGS': '',
  'BASEMODLIBS': '',
- 'BINDIR': '/Users/msarahan/miniconda3/envs/py35/bin',
- 'BINLIBDEST': '/Users/msarahan/miniconda3/envs/py35/lib/python3.5',
+ 'BINDIR': '/opt/anaconda1anaconda2anaconda3/bin',
+ 'BINLIBDEST': '/opt/anaconda1anaconda2anaconda3/lib/python3.5',
  'BLDLIBRARY': '-L. -lpython3.5m',
  'BLDSHARED': '/usr/bin/clang -bundle -undefined dynamic_lookup '
-              '-L/Users/msarahan/miniconda3/envs/py35/lib  -arch x86_64 '
-              '-L/Users/msarahan/miniconda3/envs/py35/lib  -arch x86_64',
+              '-L/opt/anaconda1anaconda2anaconda3/lib  -arch x86_64 '
+              '-L/opt/anaconda1anaconda2anaconda3/lib  -arch x86_64',
  'BUILDEXE': '.exe',
  'BUILDPYTHON': 'python.exe',
  'BUILD_GNU_TYPE': 'x86_64-apple-darwin11.4.2',
@@ -28,38 +28,38 @@ build_time_vars = {'ABIFLAGS': 'm',
  'CCSHARED': '',
  'CFLAGS': '-Wno-unused-result -Wsign-compare -Wunreachable-code -DNDEBUG -g '
            '-fwrapv -O3 -Wall -Wstrict-prototypes '
-           '-I/Users/msarahan/miniconda3/envs/py35/include  -arch x86_64 '
-           '-I/Users/msarahan/miniconda3/envs/py35/include  -arch x86_64',
+           '-I/opt/anaconda1anaconda2anaconda3/include  -arch x86_64 '
+           '-I/opt/anaconda1anaconda2anaconda3/include  -arch x86_64',
  'CFLAGSFORSHARED': '',
  'CFLAGS_NODIST': '',
  'CONFIGFILES': 'configure configure.ac acconfig.h pyconfig.h.in '
                 'Makefile.pre.in',
- 'CONFIGURE_CFLAGS': '-I/Users/msarahan/miniconda3/envs/py35/include  -arch x86_64',
+ 'CONFIGURE_CFLAGS': '-I/opt/anaconda1anaconda2anaconda3/include  -arch x86_64',
  'CONFIGURE_CFLAGS_NODIST': '',
  'CONFIGURE_CPPFLAGS': '',
- 'CONFIGURE_LDFLAGS': '-L/Users/msarahan/miniconda3/envs/py35/lib  -arch x86_64',
+ 'CONFIGURE_LDFLAGS': '-L/opt/anaconda1anaconda2anaconda3/lib  -arch x86_64',
  'CONFIG_ARGS': "'--enable-shared' '--enable-ipv6' '--with-ensurepip=no' "
-                "'--prefix=/Users/msarahan/miniconda3/envs/py35' "
-                "'CFLAGS=-I/Users/msarahan/miniconda3/envs/py35/include  -arch "
-                "x86_64' 'LDFLAGS=-L/Users/msarahan/miniconda3/envs/py35/lib  -arch "
+                "'--prefix=/opt/anaconda1anaconda2anaconda3' "
+                "'CFLAGS=-I/opt/anaconda1anaconda2anaconda3/include  -arch "
+                "x86_64' 'LDFLAGS=-L/opt/anaconda1anaconda2anaconda3/lib  -arch "
                 "x86_64' "
-                "'PKG_CONFIG_PATH=/Users/msarahan/miniconda3/envs/py35/lib/pkgconfig'",
- 'CONFINCLUDEDIR': '/Users/msarahan/miniconda3/envs/py35/include',
- 'CONFINCLUDEPY': '/Users/msarahan/miniconda3/envs/py35/include/python3.5m',
+                "'PKG_CONFIG_PATH=/opt/anaconda1anaconda2anaconda3/lib/pkgconfig'",
+ 'CONFINCLUDEDIR': '/opt/anaconda1anaconda2anaconda3/include',
+ 'CONFINCLUDEPY': '/opt/anaconda1anaconda2anaconda3/include/python3.5m',
  'COREPYTHONPATH': ':plat-darwin',
- 'COVERAGE_INFO': '/Users/ilan/minonda/conda-bld/work/Python-3.5.2/coverage.info',
- 'COVERAGE_REPORT': '/Users/ilan/minonda/conda-bld/work/Python-3.5.2/lcov-report',
+ 'COVERAGE_INFO': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.5.2/coverage.info',
+ 'COVERAGE_REPORT': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.5.2/lcov-report',
  'COVERAGE_REPORT_OPTIONS': '--no-branch-coverage --title "CPython lcov '
                             'report"',
  'CPPFLAGS': '-I. -IInclude -I./Include',
  'CXX': '/usr/bin/clang++',
- 'DESTDIRS': '/Users/msarahan/miniconda3/envs/py35 '
-             '/Users/msarahan/miniconda3/envs/py35/lib '
-             '/Users/msarahan/miniconda3/envs/py35/lib/python3.5 '
-             '/Users/msarahan/miniconda3/envs/py35/lib/python3.5/lib-dynload',
- 'DESTLIB': '/Users/msarahan/miniconda3/envs/py35/lib/python3.5',
+ 'DESTDIRS': '/opt/anaconda1anaconda2anaconda3 '
+             '/opt/anaconda1anaconda2anaconda3/lib '
+             '/opt/anaconda1anaconda2anaconda3/lib/python3.5 '
+             '/opt/anaconda1anaconda2anaconda3/lib/python3.5/lib-dynload',
+ 'DESTLIB': '/opt/anaconda1anaconda2anaconda3/lib/python3.5',
  'DESTPATH': '',
- 'DESTSHARED': '/Users/msarahan/miniconda3/envs/py35/lib/python3.5/lib-dynload',
+ 'DESTSHARED': '/opt/anaconda1anaconda2anaconda3/lib/python3.5/lib-dynload',
  'DIRMODE': 755,
  'DIST': 'README ChangeLog configure configure.ac acconfig.h pyconfig.h.in '
          'Makefile.pre.in Include Lib Misc Ext-dummy',
@@ -467,12 +467,12 @@ build_time_vars = {'ABIFLAGS': 'm',
  'HGTAG': '',
  'HGVERSION': '',
  'HOST_GNU_TYPE': 'x86_64-apple-darwin11.4.2',
- 'INCLDIRSTOMAKE': '/Users/msarahan/miniconda3/envs/py35/include '
-                   '/Users/msarahan/miniconda3/envs/py35/include '
-                   '/Users/msarahan/miniconda3/envs/py35/include/python3.5m '
-                   '/Users/msarahan/miniconda3/envs/py35/include/python3.5m',
- 'INCLUDEDIR': '/Users/msarahan/miniconda3/envs/py35/include',
- 'INCLUDEPY': '/Users/msarahan/miniconda3/envs/py35/include/python3.5m',
+ 'INCLDIRSTOMAKE': '/opt/anaconda1anaconda2anaconda3/include '
+                   '/opt/anaconda1anaconda2anaconda3/include '
+                   '/opt/anaconda1anaconda2anaconda3/include/python3.5m '
+                   '/opt/anaconda1anaconda2anaconda3/include/python3.5m',
+ 'INCLUDEDIR': '/opt/anaconda1anaconda2anaconda3/include',
+ 'INCLUDEPY': '/opt/anaconda1anaconda2anaconda3/include/python3.5m',
  'INSTALL': '/usr/bin/install -c',
  'INSTALL_DATA': '/usr/bin/install -c -m 644',
  'INSTALL_PROGRAM': '/usr/bin/install -c',
@@ -482,24 +482,24 @@ build_time_vars = {'ABIFLAGS': 'm',
  'IO_H': 'Modules/_io/_iomodule.h',
  'IO_OBJS': '\\',
  'LDCXXSHARED': '/usr/bin/clang++ -bundle -undefined dynamic_lookup',
- 'LDFLAGS': '-L/Users/msarahan/miniconda3/envs/py35/lib  -arch x86_64 '
-            '-L/Users/msarahan/miniconda3/envs/py35/lib  -arch x86_64',
+ 'LDFLAGS': '-L/opt/anaconda1anaconda2anaconda3/lib  -arch x86_64 '
+            '-L/opt/anaconda1anaconda2anaconda3/lib  -arch x86_64',
  'LDLAST': '',
  'LDLIBRARY': 'libpython3.5m.dylib',
  'LDLIBRARYDIR': '',
  'LDSHARED': '/usr/bin/clang -bundle -undefined dynamic_lookup '
-             '-L/Users/msarahan/miniconda3/envs/py35/lib  -arch x86_64 '
-             '-L/Users/msarahan/miniconda3/envs/py35/lib  -arch x86_64',
+             '-L/opt/anaconda1anaconda2anaconda3/lib  -arch x86_64 '
+             '-L/opt/anaconda1anaconda2anaconda3/lib  -arch x86_64',
  'LDVERSION': '3.5m',
  'LIBC': '',
- 'LIBDEST': '/Users/msarahan/miniconda3/envs/py35/lib/python3.5',
- 'LIBDIR': '/Users/msarahan/miniconda3/envs/py35/lib',
+ 'LIBDEST': '/opt/anaconda1anaconda2anaconda3/lib/python3.5',
+ 'LIBDIR': '/opt/anaconda1anaconda2anaconda3/lib',
  'LIBFFI_INCLUDEDIR': '',
  'LIBM': '',
  'LIBOBJDIR': 'Python/',
  'LIBOBJS': '',
- 'LIBPC': '/Users/msarahan/miniconda3/envs/py35/lib/pkgconfig',
- 'LIBPL': '/Users/msarahan/miniconda3/envs/py35/lib/python3.5/config-3.5m',
+ 'LIBPC': '/opt/anaconda1anaconda2anaconda3/lib/pkgconfig',
+ 'LIBPL': '/opt/anaconda1anaconda2anaconda3/lib/python3.5/config-3.5m',
  'LIBRARY': 'libpython3.5m.a',
  'LIBRARY_OBJS': '\\',
  'LIBRARY_OBJS_OMIT_FROZEN': '\\',
@@ -518,13 +518,13 @@ build_time_vars = {'ABIFLAGS': 'm',
  'MACHDEPPATH': ':plat-darwin',
  'MACHDEPS': 'plat-darwin',
  'MACHDEP_OBJS': '',
- 'MACHDESTLIB': '/Users/msarahan/miniconda3/envs/py35/lib/python3.5',
+ 'MACHDESTLIB': '/opt/anaconda1anaconda2anaconda3/lib/python3.5',
  'MACOSX_DEPLOYMENT_TARGET': '10.6',
  'MAINCC': '/usr/bin/clang',
  'MAJOR_IN_MKDEV': 0,
  'MAJOR_IN_SYSMACROS': 0,
  'MAKESETUP': './Modules/makesetup',
- 'MANDIR': '/Users/msarahan/miniconda3/envs/py35/share/man',
+ 'MANDIR': '/opt/anaconda1anaconda2anaconda3/share/man',
  'MKDIR_P': './install-sh -c -d',
  'MODLIBS': '',
  'MODOBJS': 'Modules/_threadmodule.o  Modules/signalmodule.o  '
@@ -592,20 +592,20 @@ build_time_vars = {'ABIFLAGS': 'm',
  'PYTHON_OBJS': '\\',
  'PY_CFLAGS': '-Wno-unused-result -Wsign-compare -Wunreachable-code -DNDEBUG '
               '-g -fwrapv -O3 -Wall -Wstrict-prototypes '
-              '-I/Users/msarahan/miniconda3/envs/py35/include  -arch x86_64 '
-              '-I/Users/msarahan/miniconda3/envs/py35/include  -arch x86_64',
+              '-I/opt/anaconda1anaconda2anaconda3/include  -arch x86_64 '
+              '-I/opt/anaconda1anaconda2anaconda3/include  -arch x86_64',
  'PY_CFLAGS_NODIST': '',
  'PY_CORE_CFLAGS': '-Wno-unused-result -Wsign-compare -Wunreachable-code '
                    '-DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes '
-                   '-I/Users/msarahan/miniconda3/envs/py35/include  -arch x86_64 '
-                   '-I/Users/msarahan/miniconda3/envs/py35/include  -arch x86_64 '
+                   '-I/opt/anaconda1anaconda2anaconda3/include  -arch x86_64 '
+                   '-I/opt/anaconda1anaconda2anaconda3/include  -arch x86_64 '
                    ' -I. -IInclude '
                    '-I./Include  -DPy_BUILD_CORE',
  'PY_CPPFLAGS': '-I. -IInclude -I./Include',
  'PY_FORMAT_LONG_LONG': '"ll"',
  'PY_FORMAT_SIZE_T': '"z"',
- 'PY_LDFLAGS': '-L/Users/msarahan/miniconda3/envs/py35/lib  -arch x86_64 '
-               '-L/Users/msarahan/miniconda3/envs/py35/lib  -arch x86_64',
+ 'PY_LDFLAGS': '-L/opt/anaconda1anaconda2anaconda3/lib  -arch x86_64 '
+               '-L/opt/anaconda1anaconda2anaconda3/lib  -arch x86_64',
  'Py_DEBUG': 0,
  'Py_ENABLE_SHARED': 1,
  'Py_HASH_ALGORITHM': 0,
@@ -614,8 +614,8 @@ build_time_vars = {'ABIFLAGS': 'm',
  'READELF': ':',
  'RESSRCDIR': 'Mac/Resources/framework',
  'RETSIGTYPE': 'void',
- 'RUNSHARED': 'DYLD_LIBRARY_PATH=/Users/ilan/minonda/conda-bld/work/Python-3.5.2',
- 'SCRIPTDIR': '/Users/msarahan/miniconda3/envs/py35/lib',
+ 'RUNSHARED': 'DYLD_LIBRARY_PATH=/opt/anaconda1anaconda2anaconda3/../work/Python-3.5.2',
+ 'SCRIPTDIR': '/opt/anaconda1anaconda2anaconda3/lib',
  'SETPGRP_HAVE_ARG': 0,
  'SGI_ABI': '',
  'SHELL': '/bin/sh',
@@ -656,10 +656,10 @@ build_time_vars = {'ABIFLAGS': 'm',
  'TCLTK_LIBS': '',
  'TESTOPTS': '',
  'TESTPATH': '',
- 'TESTPYTHON': 'DYLD_LIBRARY_PATH=/Users/ilan/minonda/conda-bld/work/Python-3.5.2 '
+ 'TESTPYTHON': 'DYLD_LIBRARY_PATH=/opt/anaconda1anaconda2anaconda3/../work/Python-3.5.2 '
                './python.exe',
  'TESTPYTHONOPTS': '',
- 'TESTRUNNER': 'DYLD_LIBRARY_PATH=/Users/ilan/minonda/conda-bld/work/Python-3.5.2 '
+ 'TESTRUNNER': 'DYLD_LIBRARY_PATH=/opt/anaconda1anaconda2anaconda3/../work/Python-3.5.2 '
                './python.exe ./Tools/scripts/run_tests.py',
  'TESTTIMEOUT': 3600,
  'THREADOBJ': 'Python/thread.o',
@@ -684,10 +684,10 @@ build_time_vars = {'ABIFLAGS': 'm',
  'WITH_VALGRIND': 0,
  'X87_DOUBLE_ROUNDING': 0,
  'XMLLIBSUBDIRS': 'xml xml/dom xml/etree xml/parsers xml/sax',
- 'abs_builddir': '/Users/ilan/minonda/conda-bld/work/Python-3.5.2',
- 'abs_srcdir': '/Users/ilan/minonda/conda-bld/work/Python-3.5.2',
+ 'abs_builddir': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.5.2',
+ 'abs_srcdir': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.5.2',
  'cross_compiling': 'no',
- 'datarootdir': '/Users/msarahan/miniconda3/envs/py35/share',
- 'exec_prefix': '/Users/msarahan/miniconda3/envs/py35',
- 'prefix': '/Users/msarahan/miniconda3/envs/py35',
+ 'datarootdir': '/opt/anaconda1anaconda2anaconda3/share',
+ 'exec_prefix': '/opt/anaconda1anaconda2anaconda3',
+ 'prefix': '/opt/anaconda1anaconda2anaconda3',
  'srcdir': '.'}
