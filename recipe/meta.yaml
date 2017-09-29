@@ -22,6 +22,7 @@ source:
       - 0010-Support-cross-compiling-byte-code.patch
       - 0011-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
       - 0013-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
+      - 0001-backport-Python-3.6-_PYTHON_SYSCONFIGDATA_NAME.patch
       # TODO :: Fix this so we can re-enable 0014 We get a failure at building Tcl currently:
       # NMAKE : fatal error U1052: file 'makefile.vc' not found [C:\Users\builder\mc3\conda-bld\python_1505378303698\work\PCbuild\tcl.vcxproj]
       # - 0014-Win32-Do-not-download-externals.patch

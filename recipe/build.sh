@@ -277,7 +277,7 @@ popd
 # environmental variable to _sysconfigdata_$HOST
 #   using the new compilers with python will require setting _PYTHON_SYSCONFIGDATA_NAME
 #   to the name of this file (minus the .py extension)
-pushd $PREFIX/lib/python2.7
+pushd $PREFIX/lib/python3.5
 recorded_name=$(find . -name "_sysconfig*.py")
 mv $recorded_name _sysconfig_${HOST//-/_}.py
 if [[ ${HOST} =~ .*darwin.* ]]; then
