@@ -3,6 +3,10 @@
 VER=${PKG_VERSION%.*}
 CONDA_FORGE=no
 
+# this is the mechanism by which we fall back to default gcc, but having it defined here can break the build
+#     or use incorrect settings
+unset _PYTHON_SYSCONFIGDATA_NAME
+
 # Remove bzip2's shared library if present,
 # as we only want to link to it statically.
 # This is important in cases where conda
@@ -136,3 +140,21 @@ pushd ${PREFIX}
 	fi
   fi
 popd
+
+# Move the _sysconfigdata.py file and replace with a version with a
+# configuration more typical of what a user would expect to be in a "standard"
+# python build. This results in the system toolchain and
+# The original configuration with the crosstool-ng compilers from the conda
+# package can be selected by setting the _PYTHON_SYSCONFIGDATA_NAME
+# environmental variable to _sysconfigdata_$HOST
+#   using the new compilers with python will require setting _PYTHON_SYSCONFIGDATA_NAME
+#   to the name of this file (minus the .py extension)
+pushd $PREFIX/lib/python2.7
+recorded_name=$(find . -name "_sysconfig*.py")
+mv $recorded_name _sysconfig_${HOST//-/_}.py
+if [[ ${HOST} =~ .*darwin.* ]]; then
+    cp $RECIPE_DIR/default_sysconfig_osx.py $recorded_name
+else
+    cp $RECIPE_DIR/default_sysconfig_linux.py $recorded_name
+    cp $LD $PREFIX/bin/ld
+fi
