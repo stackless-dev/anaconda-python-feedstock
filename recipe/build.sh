@@ -11,6 +11,13 @@
 VER=${PKG_VERSION%.*}
 CONDA_FORGE=no
 
+# For debugging builds, set this to 0 to disable profile-guided optimization
+_OPTIMIZED=1
+
+# this is the mechanism by which we fall back to default gcc, but having it defined here can break the build
+#     or use incorrect settings
+unset _PYTHON_SYSCONFIGDATA_NAME
+
 # Remove bzip2's shared library if present,
 # as we only want to link to it statically.
 # This is important in cases where conda
@@ -97,9 +104,6 @@ if [[ "${BUILD}" != "${HOST}" ]] && [[ -n "${BUILD}" ]] && [[ -n "${HOST}" ]]; t
   export CONFIG_SITE=${PWD}/config.site
   # This is needed for libffi:
   export PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig
-  _OPTIMIZED=1
-else
-  _OPTIMIZED=1
 fi
 
 # This causes setup.py to query the sysroot directories from the compiler, something which
@@ -270,13 +274,11 @@ popd
 #   to the name of this file (minus the .py extension)
 pushd $PREFIX/lib/python3.6
 recorded_name=$(find . -name "_sysconfig*.py")
-mv $recorded_name site-packages/_sysconfig_${HOST//-/_}.py
+mv $recorded_name _sysconfig_${HOST//-/_}.py
 if [[ ${HOST} =~ .*darwin.* ]]; then
     cp $RECIPE_DIR/default_sysconfig_osx.py $recorded_name
-    sed -i '' -e 's/@BUILD_PREFIX@/$PREFIX/' $recorded_name
 else
     cp $RECIPE_DIR/default_sysconfig_linux.py $recorded_name
-    sed -i -e 's/@BUILD_PREFIX@/$PREFIX/' $recorded_name
     cp $LD $PREFIX/bin/ld
 fi
 popd
