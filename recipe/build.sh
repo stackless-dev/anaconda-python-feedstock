@@ -278,11 +278,13 @@ popd
 #   using the new compilers with python will require setting _PYTHON_SYSCONFIGDATA_NAME
 #   to the name of this file (minus the .py extension)
 pushd $PREFIX/lib/python3.5
-recorded_name=$(find . -name "_sysconfig*.py")
+recorded_name=$(find . -maxdepth 1 -name "_sysconfig*.py")
 mv $recorded_name _sysconfig_${HOST//-/_}.py
 if [[ ${HOST} =~ .*darwin.* ]]; then
     cp $RECIPE_DIR/default_sysconfig_osx.py $recorded_name
 else
     cp $RECIPE_DIR/default_sysconfig_linux.py $recorded_name
-    cp $LD $PREFIX/bin/ld
+    mkdir -p $PREFIX/compiler_compat
+    cp $LD $PREFIX/compiler_compat/ld
+    echo "Files in this folder are to enhance backwards compatibility of anaconda software with older compilers.  See https://github.com/conda/conda/issues/6030 for more information."  > $PREFIX/compiler_compat/README
 fi
