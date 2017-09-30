@@ -280,7 +280,9 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     cp $RECIPE_DIR/default_sysconfig_osx.py $recorded_name
 else
     cp $RECIPE_DIR/default_sysconfig_linux.py $recorded_name
-    cp $LD $PREFIX/bin/ld
+    mkdir -p $PREFIX/compiler_compat
+    cp $LD $PREFIX/compiler_compat/ld
+    echo "Files in this folder are to enhance backwards compatibility of anaconda software with older compilers.  See https://github.com/conda/conda/issues/6030 for more information."  > $PREFIX/compiler_compat/README
 fi
 popd
 
