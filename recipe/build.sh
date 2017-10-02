@@ -151,7 +151,7 @@ popd
 #   to the name of this file (minus the .py extension)
 pushd $PREFIX/lib/python2.7
 recorded_name=$(find . -name "_sysconfig*.py")
-mv $recorded_name _sysconfig_${HOST//-/_}.py
+mv $recorded_name _sysconfig_$(echo ${HOST} | sed -e 's/[.-]/_/g').py
 if [[ ${HOST} =~ .*darwin.* ]]; then
     cp $RECIPE_DIR/default_sysconfig_osx.py $recorded_name
 else
