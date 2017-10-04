@@ -13,7 +13,8 @@ build_time_vars = {'ABIFLAGS': 'm',
  'BLDLIBRARY': '-L. -lpython3.6m',
  'BLDSHARED': 'gcc -pthread -shared -B /opt/anaconda1anaconda2anaconda3/compiler_compat '
               '-L/opt/anaconda1anaconda2anaconda3/lib '
-              '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib,--no-as-needed',
+              '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib -Wl,--no-as-needed '
+              '-Wl,--sysroot=/',
  'BUILDEXE': '',
  'BUILDPYTHON': 'python',
  'BUILD_GNU_TYPE': 'x86_64-pc-linux-gnu',
@@ -31,7 +32,8 @@ build_time_vars = {'ABIFLAGS': 'm',
                             '-Wno-missing-field-initializers',
  'CONFIGURE_CPPFLAGS': '-I/opt/anaconda1anaconda2anaconda3/include',
  'CONFIGURE_LDFLAGS': '-L/opt/anaconda1anaconda2anaconda3/lib '
-                      '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib,--no-as-needed',
+                      '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib -Wl,--no-as-needed '
+                      '-Wl,--sysroot=/',
  'CONFIG_ARGS': "'--enable-shared' '--enable-ipv6' '--with-ensurepip=no' "
                 "'--prefix=/opt/anaconda1anaconda2anaconda3' "
                 "'--with-tcltk-includes=-I/opt/anaconda1anaconda2anaconda3/include' "
@@ -39,7 +41,7 @@ build_time_vars = {'ABIFLAGS': 'm',
                 "-ltcl8.5 -ltk8.5' "
                 "'CPPFLAGS=-I/opt/anaconda1anaconda2anaconda3/include' "
                 "'LDFLAGS=-L/opt/anaconda1anaconda2anaconda3/lib "
-                "-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib,--no-as-needed' "
+                "-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib -Wl,--no-as-needed -Wl,--sysroot=/' "
                 "'PKG_CONFIG_PATH=/opt/anaconda1anaconda2anaconda3/lib/pkgconfig'",
  'CONFINCLUDEDIR': '/opt/anaconda1anaconda2anaconda3/include',
  'CONFINCLUDEPY': '/opt/anaconda1anaconda2anaconda3/include/python3.6m',
@@ -487,13 +489,15 @@ build_time_vars = {'ABIFLAGS': 'm',
  'IO_OBJS': '\\',
  'LDCXXSHARED': 'g++ -pthread -shared -B /opt/anaconda1anaconda2anaconda3/compiler_compat ',
  'LDFLAGS': '-L/opt/anaconda1anaconda2anaconda3/lib '
-            '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib,--no-as-needed',
+            '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib -Wl,--no-as-needed '
+            '-Wl,--sysroot=/',
  'LDLAST': '',
  'LDLIBRARY': 'libpython3.6m.so',
  'LDLIBRARYDIR': '',
  'LDSHARED': 'gcc -pthread -shared  -B /opt/anaconda1anaconda2anaconda3/compiler_compat '
              '-L/opt/anaconda1anaconda2anaconda3/lib '
-             '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib,--no-as-needed',
+             '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib -Wl,--no-as-needed '
+             '-Wl,--sysroot=/',
  'LDVERSION': '3.6m',
  'LIBC': '',
  'LIBDEST': '/opt/anaconda1anaconda2anaconda3/lib/python3.6',
@@ -598,7 +602,8 @@ build_time_vars = {'ABIFLAGS': 'm',
                 '-I/opt/anaconda1anaconda2anaconda3/include',
  'PY_FORMAT_SIZE_T': '"z"',
  'PY_LDFLAGS': '-L/opt/anaconda1anaconda2anaconda3/lib '
-               '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib,--no-as-needed',
+               '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib -Wl,--no-as-needed '
+               '-Wl,--sysroot=/',
  'Py_DEBUG': 0,
  'Py_ENABLE_SHARED': 1,
  'Py_HASH_ALGORITHM': 0,
