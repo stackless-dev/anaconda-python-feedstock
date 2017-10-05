@@ -1,7 +1,7 @@
-From a4c9d1ae1f0f2cfc07ca536b9e393f40fedbfae5 Mon Sep 17 00:00:00 2001
+From eae27ee82e4de9fb0ede577639002964efdb1003 Mon Sep 17 00:00:00 2001
 From: Jonathan Helmus <jjhelmus@gmail.com>
 Date: Fri, 29 Sep 2017 14:14:13 -0500
-Subject: [PATCH] backport Python 3.6 _PYTHON_SYSCONFIGDATA_NAME
+Subject: [PATCH 01/15] backport Python 3.6 _PYTHON_SYSCONFIGDATA_NAME
 
 backport Python 3.6's _PYTHON_SYSCONFIGDATA_NAME environmental variable support
 to Python 3.5.4
@@ -11,7 +11,7 @@ to Python 3.5.4
  2 files changed, 26 insertions(+), 33 deletions(-)
 
 diff --git a/Lib/distutils/sysconfig.py b/Lib/distutils/sysconfig.py
-index bd19ebf..fa8a467 100644
+index bd19ebf515..fa8a467b30 100644
 --- a/Lib/distutils/sysconfig.py
 +++ b/Lib/distutils/sysconfig.py
 @@ -412,38 +412,18 @@ _config_vars = None
@@ -65,7 +65,7 @@ index bd19ebf..fa8a467 100644
  
  def _init_nt():
 diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
-index 9c34be0..79a4354 100644
+index 9c34be0a07..79a4354928 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
 @@ -339,6 +339,15 @@ def get_makefile_filename():
@@ -107,5 +107,5 @@ index 9c34be0..79a4354 100644
  
  def _init_non_posix(vars):
 -- 
-2.11.1
+2.13.6
 

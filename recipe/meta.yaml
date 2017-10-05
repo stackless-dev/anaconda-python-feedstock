@@ -9,23 +9,24 @@ source:
   - url: https://www.python.org/ftp/python/{{ version }}/Python-{{ version }}.tgz
     md5: {{ md5 }}
     patches:
-      - 0001-Issue-21122-Fix-LTO-builds-on-OS-X.-Patch-by-Brett-C.patch
-      - 0002-Add-Anaconda-Distribution-version-logic.patch
-      - 0003-Darwin-Omit-PYTHONFRAMEWORK-site-packages.patch
-      - 0004-Darwin-Add-arch-x86_64-to-UnicCCompiler-ld_args.patch
-      - 0005-Win32-distutils-Also-look-for-executable.bat.patch
-      # TODO :: This breaks conda activate and deactivate.
-      - 0006-Win32-Ensure-Library-bin-is-in-os.environ-PATH.patch
-      - 0007-Win32-Change-FD_SETSIZE-from-512-to-2048.patch
-      - 0008-Win32-distutils-Add-support-to-cygwinccompiler-for-V.patch
-      - 0009-Do-not-pass-g-to-GCC-when-not-Py_DEBUG.patch
-      - 0010-Support-cross-compiling-byte-code.patch
-      - 0011-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
-      - 0013-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
       - 0001-backport-Python-3.6-_PYTHON_SYSCONFIGDATA_NAME.patch
-      # TODO :: Fix this so we can re-enable 0014 We get a failure at building Tcl currently:
+      - 0002-Issue-21122-Fix-LTO-builds-on-OS-X.-Patch-by-Brett-C.patch
+      - 0003-Add-Anaconda-Distribution-version-logic.patch
+      - 0004-Darwin-Omit-PYTHONFRAMEWORK-site-packages.patch
+      - 0005-Darwin-Add-arch-x86_64-to-UnicCCompiler-ld_args.patch
+      - 0006-Win32-distutils-Also-look-for-executable.bat.patch
+      # TODO :: This breaks conda activate and deactivate.
+      - 0007-Win32-Ensure-Library-bin-is-in-os.environ-PATH.patch
+      - 0008-Win32-Change-FD_SETSIZE-from-512-to-2048.patch
+      - 0009-Win32-distutils-Add-support-to-cygwinccompiler-for-V.patch
+      - 0010-Do-not-pass-g-to-GCC-when-not-Py_DEBUG.patch
+      - 0011-Support-cross-compiling-byte-code.patch
+      - 0012-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
+      - 0013-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
+      - 0014-runtime_library_dir_option-Use-1st-word-of-CC-as-com.patch
+      # TODO :: Fix this so we can re-enable 0015 We get a failure at building Tcl currently:
       # NMAKE : fatal error U1052: file 'makefile.vc' not found [C:\Users\builder\mc3\conda-bld\python_1505378303698\work\PCbuild\tcl.vcxproj]
-      # - 0014-Win32-Do-not-download-externals.patch
+      - 0015-Win32-Do-not-download-externals.patch
   # TODO :: Depend on our own packages for these:
   - url: https://github.com/python/cpython-source-deps/archive/xz-5.2.2.zip          # [win]
     folder: externals/xz-5.2.2                                                       # [win]
@@ -53,7 +54,7 @@ source:
     sha256: de3c87b26a80e789986d8e6950c6304175d3829afe9c6c7211eb7257266ab0ac         # [win]
 
 build:
-  number: 18
+  number: 19
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:

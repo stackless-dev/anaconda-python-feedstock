@@ -1,7 +1,7 @@
-From 0f99f2379ff7a3558ba6120672bf1fe3f2117481 Mon Sep 17 00:00:00 2001
+From 2cd93d2e5e295d1715c9d0047ab7567e0ff4f453 Mon Sep 17 00:00:00 2001
 From: Ned Deily <nad@python.org>
 Date: Tue, 6 Sep 2016 15:09:20 -0700
-Subject: [PATCH 01/14] Issue #21122: Fix LTO builds on OS X. Patch by Brett
+Subject: [PATCH 02/15] Issue #21122: Fix LTO builds on OS X. Patch by Brett
  Cannon.
 
 ---
@@ -10,7 +10,7 @@ Subject: [PATCH 01/14] Issue #21122: Fix LTO builds on OS X. Patch by Brett
  2 files changed, 20 insertions(+), 6 deletions(-)
 
 diff --git a/configure b/configure
-index 5640c2d..191425c 100755
+index 5640c2dc12..191425c1b8 100755
 --- a/configure
 +++ b/configure
 @@ -6582,13 +6582,20 @@ fi
@@ -38,7 +38,7 @@ index 5640c2d..191425c 100755
          *)
            LTOFLAGS="-flto -fuse-linker-plugin -ffat-lto-objects -flto-partition=none"
 diff --git a/configure.ac b/configure.ac
-index c9b755f..4d7ed10 100644
+index c9b755f0f4..4d7ed101a2 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1268,13 +1268,20 @@ fi],
@@ -66,5 +66,5 @@ index c9b755f..4d7ed10 100644
          *)
            LTOFLAGS="-flto -fuse-linker-plugin -ffat-lto-objects -flto-partition=none"
 -- 
-1.8.3.1
+2.13.6
 

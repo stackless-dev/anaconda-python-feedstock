@@ -1,7 +1,7 @@
-From cfc847cbe27284c21c73a11df6f9a683fcc9e541 Mon Sep 17 00:00:00 2001
+From 6c02f317495e2d3bcc593c31ba5bba99335108c5 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 15 Aug 2017 22:38:19 +0100
-Subject: [PATCH 02/14] Add Anaconda Distribution version logic
+Subject: [PATCH 03/15] Add Anaconda Distribution version logic
 
 ---
  Include/pylifecycle.h |  1 +
@@ -11,7 +11,7 @@ Subject: [PATCH 02/14] Add Anaconda Distribution version logic
  4 files changed, 43 insertions(+), 4 deletions(-)
 
 diff --git a/Include/pylifecycle.h b/Include/pylifecycle.h
-index 1c5f7a6..b0f8aea 100644
+index 1c5f7a6374..b0f8aeae76 100644
 --- a/Include/pylifecycle.h
 +++ b/Include/pylifecycle.h
 @@ -63,6 +63,7 @@ int _Py_CheckPython3();
@@ -23,7 +23,7 @@ index 1c5f7a6..b0f8aea 100644
  PyAPI_FUNC(const char *) Py_GetPlatform(void);
  PyAPI_FUNC(const char *) Py_GetCopyright(void);
 diff --git a/Lib/platform.py b/Lib/platform.py
-index d3ed5bf..42f959e 100755
+index d3ed5bf4c5..42f959e62b 100755
 --- a/Lib/platform.py
 +++ b/Lib/platform.py
 @@ -1088,6 +1088,7 @@ def processor():
@@ -35,7 +35,7 @@ index d3ed5bf..42f959e 100755
      r'(?:,\s*([\w ]*)'  # ", builddate"
      r'(?:,\s*([\w :]*))?)?\)\s*'  # ", buildtime)<space>"
 diff --git a/Modules/main.c b/Modules/main.c
-index d36db6d..227daaf 100644
+index d36db6d8b5..227daaf6b7 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -512,7 +512,8 @@ Py_Main(int argc, wchar_t **argv)
@@ -49,7 +49,7 @@ index d36db6d..227daaf 100644
      }
  
 diff --git a/Python/getversion.c b/Python/getversion.c
-index 7bd6efd..17fd1b9 100644
+index 7bd6efd0a0..17fd1b98c4 100644
 --- a/Python/getversion.c
 +++ b/Python/getversion.c
 @@ -2,14 +2,50 @@
@@ -107,5 +107,5 @@ index 7bd6efd..17fd1b9 100644
  	return version;
  }
 -- 
-1.8.3.1
+2.13.6
 
