@@ -1,7 +1,7 @@
 From 578093ea7c14aa9cad559bf645543c4c2f1dc29f Mon Sep 17 00:00:00 2001
 From: Jonathan Helmus <jjhelmus@gmail.com>
 Date: Thu, 28 Sep 2017 15:47:20 -0500
-Subject: [PATCH 01/12] backport Python 3.6 _PYTHON_SYSCONFIGDATA_NAME
+Subject: [PATCH 01/11] backport Python 3.6 _PYTHON_SYSCONFIGDATA_NAME
 
 ---
  Lib/distutils/sysconfig.py | 5 ++++-

@@ -1,7 +1,7 @@
-From c5da849e6e8ae36234f44814439c183dd884bf88 Mon Sep 17 00:00:00 2001
+From 0d45e9a5a49bca7cba8dcc22dddcd820f46ea371 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 20 Aug 2017 00:22:22 +0100
-Subject: [PATCH 11/12] Darwin: Look in ${sysroot}/usr/{lib,include} if sysroot
+Subject: [PATCH 10/11] Darwin: Look in ${sysroot}/usr/{lib,include} if sysroot
  is set
 
 ---

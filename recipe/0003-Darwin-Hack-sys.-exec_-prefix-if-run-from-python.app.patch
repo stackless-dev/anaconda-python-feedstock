@@ -1,7 +1,7 @@
 From 15c117916ad3ebde1525b3414b5117989d1b3eb5 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 13:17:26 +0100
-Subject: [PATCH 03/12] Darwin: Hack sys.{exec_,}prefix if run from
+Subject: [PATCH 03/11] Darwin: Hack sys.{exec_,}prefix if run from
  python.app/Contents
 
 ---

@@ -20,9 +20,8 @@ source:
     - 0007-Win32-Change-FD_SETSIZE-from-512-to-2048.patch
     - 0008-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
     - 0009-Do-not-pass-g-to-GCC-when-not-Py_DEBUG.patch
-    - 0010-Fallback-to-system-compilers-if-psuedo-cross-compile.patch
-    - 0011-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
-    - 0012-runtime_library_dir_option-Use-1st-word-of-CC-as-com.patch
+    - 0010-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
+    - 0011-runtime_library_dir_option-Use-1st-word-of-CC-as-com.patch
 
 build:
   number: 19
