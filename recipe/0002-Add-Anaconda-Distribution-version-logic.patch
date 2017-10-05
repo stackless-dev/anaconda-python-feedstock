@@ -1,7 +1,7 @@
-From 0f1f7bec334ef4cfd7279725fc1bb2b60782f7d2 Mon Sep 17 00:00:00 2001
+From 3720acd798d13f5357061e50ea116d1bba1feb8d Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 15 Aug 2017 22:40:59 +0100
-Subject: [PATCH 01/10] Add Anaconda Distribution version logic
+Subject: [PATCH 02/12] Add Anaconda Distribution version logic
 
 ---
  Include/pythonrun.h |  1 +
@@ -52,11 +52,10 @@ diff --git a/Python/getversion.c b/Python/getversion.c
 index 7bd6efd0a0..12ec7c4315 100644
 --- a/Python/getversion.c
 +++ b/Python/getversion.c
-@@ -5,11 +5,47 @@
- 
+@@ -6,10 +6,46 @@
  #include "patchlevel.h"
  
-+const char *
+ const char *
 +Anaconda_GetVersion(void)
 +{
 +	#ifdef MS_WIN32
@@ -91,7 +90,7 @@ index 7bd6efd0a0..12ec7c4315 100644
 +}
 +
 +
- const char *
++const char *
  Py_GetVersion(void)
  {
  	static char version[250];
@@ -103,5 +102,5 @@ index 7bd6efd0a0..12ec7c4315 100644
  	return version;
  }
 -- 
-2.14.1
+2.13.6
 

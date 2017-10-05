@@ -1,7 +1,7 @@
-From cf14edeed5234185305520da2830a66fc98ce448 Mon Sep 17 00:00:00 2001
+From 13fd74644816cc4aa96a158ab2893e349d0c02f6 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Thu, 21 Sep 2017 19:11:38 -0500
-Subject: [PATCH 09/10] Fallback to system compilers if
+Subject: [PATCH 10/12] Fallback to system compilers if
  (psuedo-)cross-compilers not found
 
 ---
@@ -10,10 +10,10 @@ Subject: [PATCH 09/10] Fallback to system compilers if
  2 files changed, 71 insertions(+)
 
 diff --git a/Lib/distutils/sysconfig.py b/Lib/distutils/sysconfig.py
-index de7da1d..45d0c20 100644
+index bc468b15ca..d492057cc9 100644
 --- a/Lib/distutils/sysconfig.py
 +++ b/Lib/distutils/sysconfig.py
-@@ -466,6 +466,9 @@ def get_config_vars(*args):
+@@ -469,6 +469,9 @@ def get_config_vars(*args):
          if sys.platform == 'darwin':
              import _osx_support
              _osx_support.customize_config_vars(_config_vars)
@@ -24,10 +24,10 @@ index de7da1d..45d0c20 100644
      if args:
          vals = []
 diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
-index 9c8350d..9ca75ea 100644
+index 307497526b..0a3ea4cc43 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
-@@ -445,6 +445,68 @@ def get_path(name, scheme=_get_default_scheme(), vars=None, expand=True):
+@@ -449,6 +449,68 @@ def get_path(name, scheme=_get_default_scheme(), vars=None, expand=True):
      """
      return get_paths(scheme, vars, expand)[name]
  
@@ -96,7 +96,7 @@ index 9c8350d..9ca75ea 100644
  def get_config_vars(*args):
      """With no arguments, return a dictionary of all configuration
      variables relevant for the current platform.
-@@ -502,6 +564,12 @@ def get_config_vars(*args):
+@@ -506,6 +568,12 @@ def get_config_vars(*args):
                  srcdir = os.path.join(base, _CONFIG_VARS['srcdir'])
                  _CONFIG_VARS['srcdir'] = os.path.normpath(srcdir)
  
@@ -110,5 +110,5 @@ index 9c8350d..9ca75ea 100644
          # multi-architecture, multi-os-version installers
          if sys.platform == 'darwin':
 -- 
-1.8.3.1
+2.13.6
 
