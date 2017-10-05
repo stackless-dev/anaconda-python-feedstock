@@ -1,4 +1,4 @@
-From bb578d2f49a3c04c84e5a2c47ec4ec32f17dda34 Mon Sep 17 00:00:00 2001
+From 9ca7eb4c9bd7a0b3b6581678eceafd6aa7f3e7fc Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 11:07:08 +0100
 Subject: [PATCH 04/13] Win32: distutils: Also look for executable.bat
@@ -10,7 +10,7 @@ rewritten. See the comments.
  1 file changed, 25 insertions(+), 9 deletions(-)
 
 diff --git a/Lib/distutils/spawn.py b/Lib/distutils/spawn.py
-index 5dd415a..bef82fb 100644
+index 5dd415a283..bef82fb1ac 100644
 --- a/Lib/distutils/spawn.py
 +++ b/Lib/distutils/spawn.py
 @@ -176,17 +176,33 @@ def find_executable(executable, path=None):
@@ -57,5 +57,5 @@ index 5dd415a..bef82fb 100644
      else:
          return executable
 -- 
-1.8.3.1
+2.13.6
 

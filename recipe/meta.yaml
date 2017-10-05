@@ -20,8 +20,8 @@ source:
       - 0008-Do-not-pass-g-to-GCC-when-not-Py_DEBUG.patch
       - 0009-Support-cross-compiling-byte-code.patch
       - 0010-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
-      #- 0011-Fallback-to-system-compilers-if-psuedo-cross-compile.patch
-      - 0012-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
+      - 0011-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
+      - 0012-runtime_library_dir_option-Use-1st-word-of-CC-as-com.patch
       - 0013-Win32-Do-not-download-externals.patch
   # TODO :: Depend on our own packages for these:
   - url: https://github.com/python/cpython-source-deps/archive/xz-5.2.2.zip          # [win]
@@ -50,7 +50,7 @@ source:
     sha256: de3c87b26a80e789986d8e6950c6304175d3829afe9c6c7211eb7257266ab0ac         # [win]
 
 build:
-  number: 18
+  number: 19
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
