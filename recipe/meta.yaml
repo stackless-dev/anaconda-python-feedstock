@@ -26,7 +26,7 @@ source:
       - 0014-runtime_library_dir_option-Use-1st-word-of-CC-as-com.patch
       # TODO :: Fix this so we can re-enable 0015 We get a failure at building Tcl currently:
       # NMAKE : fatal error U1052: file 'makefile.vc' not found [C:\Users\builder\mc3\conda-bld\python_1505378303698\work\PCbuild\tcl.vcxproj]
-      - 0015-Win32-Do-not-download-externals.patch
+      # - 0015-Win32-Do-not-download-externals.patch
   # TODO :: Depend on our own packages for these:
   - url: https://github.com/python/cpython-source-deps/archive/xz-5.2.2.zip          # [win]
     folder: externals/xz-5.2.2                                                       # [win]
