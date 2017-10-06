@@ -38,7 +38,7 @@ build_time_vars = {'ABIFLAGS': 'm',
                 "'--prefix=/opt/anaconda1anaconda2anaconda3' "
                 "'--with-tcltk-includes=-I/opt/anaconda1anaconda2anaconda3/include' "
                 "'--with-tcltk-libs=-L/opt/anaconda1anaconda2anaconda3/lib "
-                "-ltcl8.5 -ltk8.5' "
+                "-ltcl8.6 -ltk8.6' "
                 "'CPPFLAGS=-I/opt/anaconda1anaconda2anaconda3/include' "
                 "'LDFLAGS=-L/opt/anaconda1anaconda2anaconda3/lib "
                 "-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib -Wl,--no-as-needed -Wl,--sysroot=/' "
@@ -46,8 +46,8 @@ build_time_vars = {'ABIFLAGS': 'm',
  'CONFINCLUDEDIR': '/opt/anaconda1anaconda2anaconda3/include',
  'CONFINCLUDEPY': '/opt/anaconda1anaconda2anaconda3/include/python3.6m',
  'COREPYTHONPATH': ':',
- 'COVERAGE_INFO': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.2/coverage.info',
- 'COVERAGE_REPORT': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.2/lcov-report',
+ 'COVERAGE_INFO': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.3/coverage.info',
+ 'COVERAGE_REPORT': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.3/lcov-report',
  'COVERAGE_REPORT_OPTIONS': '--no-branch-coverage --title "CPython lcov '
                             'report"',
  'CPPFLAGS': '-I. -I./Include '
@@ -612,7 +612,7 @@ build_time_vars = {'ABIFLAGS': 'm',
  'READELF': 'readelf',
  'RESSRCDIR': 'Mac/Resources/framework',
  'RETSIGTYPE': 'void',
- 'RUNSHARED': 'LD_LIBRARY_PATH=/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.2',
+ 'RUNSHARED': 'LD_LIBRARY_PATH=/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.3',
  'SCRIPTDIR': '/opt/anaconda1anaconda2anaconda3/lib',
  'SETPGRP_HAVE_ARG': 0,
  'SGI_ABI': '',
@@ -651,13 +651,13 @@ build_time_vars = {'ABIFLAGS': 'm',
  'TANH_PRESERVES_ZERO_SIGN': 1,
  'TCLTK_INCLUDES': '-I/opt/anaconda1anaconda2anaconda3/include',
  'TCLTK_LIBS': '-L/opt/anaconda1anaconda2anaconda3/lib '
-               '-ltcl8.5 -ltk8.5',
+               '-ltcl8.6 -ltk8.6',
  'TESTOPTS': '',
  'TESTPATH': '',
- 'TESTPYTHON': 'LD_LIBRARY_PATH=/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.2 '
+ 'TESTPYTHON': 'LD_LIBRARY_PATH=/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.3 '
                './python',
  'TESTPYTHONOPTS': '',
- 'TESTRUNNER': 'LD_LIBRARY_PATH=/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.2 '
+ 'TESTRUNNER': 'LD_LIBRARY_PATH=/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.3 '
                './python ./Tools/scripts/run_tests.py',
  'TESTTIMEOUT': 1200,
  'THREADOBJ': 'Python/thread.o',
@@ -681,8 +681,8 @@ build_time_vars = {'ABIFLAGS': 'm',
  'WITH_VALGRIND': 0,
  'X87_DOUBLE_ROUNDING': 0,
  'XMLLIBSUBDIRS': 'xml xml/dom xml/etree xml/parsers xml/sax',
- 'abs_builddir': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.2',
- 'abs_srcdir': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.2',
+ 'abs_builddir': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.3',
+ 'abs_srcdir': '/opt/anaconda1anaconda2anaconda3/../work/Python-3.6.3',
  'datarootdir': '/opt/anaconda1anaconda2anaconda3/share',
  'exec_prefix': '/opt/anaconda1anaconda2anaconda3',
  'prefix': '/opt/anaconda1anaconda2anaconda3',

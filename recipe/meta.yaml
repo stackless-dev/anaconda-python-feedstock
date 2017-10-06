@@ -1,5 +1,5 @@
-{% set version = "3.6.2" %}
-{% set md5 = "e1a36bfffdd1d3a780b1825daf16e56c" %}
+{% set version = "3.6.3" %}
+{% set sha256 = "ab6193af1921b30f587b302fe385268510e80187ca83ca82d2bfe7ab544c6f91" %}
 
 package:
   name: python
@@ -7,7 +7,7 @@ package:
 
 source:
   - url: https://www.python.org/ftp/python/{{ version }}/Python-{{ version }}.tgz
-    md5: {{ md5 }}
+    sha256: {{ sha256 }}
     patches:
       - 0001-Add-Anaconda-Distribution-version-logic.patch
       - 0002-Darwin-Omit-PYTHONFRAMEWORK-site-packages.patch
@@ -50,7 +50,7 @@ source:
     sha256: de3c87b26a80e789986d8e6950c6304175d3829afe9c6c7211eb7257266ab0ac         # [win]
 
 build:
-  number: 19
+  number: 0
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
