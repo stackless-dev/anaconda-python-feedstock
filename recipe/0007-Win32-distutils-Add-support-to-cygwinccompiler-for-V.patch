@@ -1,4 +1,4 @@
-From 4040e84efa23dddcb6f36797ba0bcec764463f83 Mon Sep 17 00:00:00 2001
+From 25b2971c9aed67d3cd467456946272df6bb56e98 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 11:59:00 +0100
 Subject: [PATCH 07/13] Win32: distutils: Add support to cygwinccompiler for
@@ -24,5 +24,5 @@ index 1c36990347..fe95547112 100644
              raise ValueError("Unknown MS Compiler version %s " % msc_ver)
  
 -- 
-2.13.6
+2.14.1
 
