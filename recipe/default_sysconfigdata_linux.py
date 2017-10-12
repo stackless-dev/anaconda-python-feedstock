@@ -19,7 +19,7 @@ build_time_vars = {'ABIFLAGS': 'm',
  'BUILDPYTHON': 'python',
  'BUILD_GNU_TYPE': 'x86_64-pc-linux-gnu',
  'BYTESTR_DEPS': '\\',
- 'CC': 'gcc -pthread -B /opt/anaconda1anaconda2anaconda3/compiler_compat ',
+ 'CC': 'gcc -pthread -B /opt/anaconda1anaconda2anaconda3/compiler_compat -Wl,--sysroot=/',
  'CCSHARED': '-fPIC',
  'CFLAGS': '-Wsign-compare -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes',
  'CFLAGSFORSHARED': '-fPIC',
@@ -52,7 +52,7 @@ build_time_vars = {'ABIFLAGS': 'm',
                             'report"',
  'CPPFLAGS': '-I. -I./Include '
              '-I/opt/anaconda1anaconda2anaconda3/include',
- 'CXX': 'g++ -pthread -B /opt/anaconda1anaconda2anaconda3/compiler_compat ',
+ 'CXX': 'g++ -pthread -B /opt/anaconda1anaconda2anaconda3/compiler_compat -Wl,--sysroot=/',
  'DESTDIRS': '/opt/anaconda1anaconda2anaconda3 '
              '/opt/anaconda1anaconda2anaconda3/lib '
              '/opt/anaconda1anaconda2anaconda3/lib/python3.6 '
@@ -487,14 +487,17 @@ build_time_vars = {'ABIFLAGS': 'm',
  'INSTSONAME': 'libpython3.6m.so.1.0',
  'IO_H': 'Modules/_io/_iomodule.h',
  'IO_OBJS': '\\',
- 'LDCXXSHARED': 'g++ -pthread -shared -B /opt/anaconda1anaconda2anaconda3/compiler_compat ',
+ 'LDCXXSHARED': 'g++ -pthread -shared -B /opt/anaconda1anaconda2anaconda3/compiler_compat '
+                '-L/opt/anaconda1anaconda2anaconda3/lib '
+                '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib -Wl,--no-as-needed '
+                '-Wl,--sysroot=/',
  'LDFLAGS': '-L/opt/anaconda1anaconda2anaconda3/lib '
             '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib -Wl,--no-as-needed '
             '-Wl,--sysroot=/',
  'LDLAST': '',
  'LDLIBRARY': 'libpython3.6m.so',
  'LDLIBRARYDIR': '',
- 'LDSHARED': 'gcc -pthread -shared  -B /opt/anaconda1anaconda2anaconda3/compiler_compat '
+ 'LDSHARED': 'gcc -pthread -shared -B /opt/anaconda1anaconda2anaconda3/compiler_compat '
              '-L/opt/anaconda1anaconda2anaconda3/lib '
              '-Wl,-rpath=/opt/anaconda1anaconda2anaconda3/lib -Wl,--no-as-needed '
              '-Wl,--sysroot=/',
@@ -511,9 +514,9 @@ build_time_vars = {'ABIFLAGS': 'm',
  'LIBRARY': 'libpython3.6m.a',
  'LIBRARY_OBJS': '\\',
  'LIBRARY_OBJS_OMIT_FROZEN': '\\',
- 'LIBS': '-lpthread -ldl  -lutil -lrt',
+ 'LIBS': '-lpthread -ldl -lutil -lrt',
  'LIBSUBDIRS': 'tkinter tkinter/test tkinter/test/test_tkinter \\',
- 'LINKCC': 'gcc -pthread -B /opt/anaconda1anaconda2anaconda3/compiler_compat ',
+ 'LINKCC': 'gcc -pthread -B /opt/anaconda1anaconda2anaconda3/compiler_compat -Wl,--sysroot/',
  'LINKFORSHARED': '-Xlinker -export-dynamic',
  'LIPO_32BIT_FLAGS': '',
  'LLVM_PROF_ERR': 'no',
@@ -527,7 +530,7 @@ build_time_vars = {'ABIFLAGS': 'm',
  'MACHDEP_OBJS': '',
  'MACHDESTLIB': '/opt/anaconda1anaconda2anaconda3/lib/python3.6',
  'MACOSX_DEPLOYMENT_TARGET': '',
- 'MAINCC': 'gcc -pthread -B /opt/anaconda1anaconda2anaconda3/compiler_compat ',
+ 'MAINCC': 'gcc -pthread -B /opt/anaconda1anaconda2anaconda3/compiler_compat -Wl,--sysroot=/',
  'MAJOR_IN_MKDEV': 0,
  'MAJOR_IN_SYSMACROS': 0,
  'MAKESETUP': './Modules/makesetup',
@@ -617,7 +620,7 @@ build_time_vars = {'ABIFLAGS': 'm',
  'SETPGRP_HAVE_ARG': 0,
  'SGI_ABI': '',
  'SHELL': '/bin/sh',
- 'SHLIBS': '-lpthread -ldl  -lutil -lrt',
+ 'SHLIBS': '-lpthread -ldl -lutil -lrt',
  'SHLIB_SUFFIX': '.so',
  'SIGNED_RIGHT_SHIFT_ZERO_FILLS': 0,
  'SITEPATH': '',
