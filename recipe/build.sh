@@ -160,3 +160,14 @@ else
     cp $LD $PREFIX/compiler_compat/ld
     echo "Files in this folder are to enhance backwards compatibility of anaconda software with older compilers.  See https://github.com/conda/conda/issues/6030 for more information."  > $PREFIX/compiler_compat/README
 fi
+
+# https://github.com/ContinuumIO/anaconda-issues/issues/6424
+# TODO :: Move this into conda-build as an error with an override (same for openssl-feedstock)
+if [[ ${HOST} =~ .*linux.* ]]; then
+  for _SO in lib/python2.7/lib-dynload/_ssl.so ./lib/python2.7/lib-dynload/_hashlib.so; do
+    if execstack -q "${PREFIX}"/${_SO} | grep -e '^X '; then
+      echo "Error, executable stack found in ${_SO}"
+      exit 1
+    fi
+  done
+fi
