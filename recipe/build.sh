@@ -11,8 +11,17 @@
 VER=${PKG_VERSION%.*}
 CONDA_FORGE=no
 
+declare -a _dbg_opts
 # For debugging builds, set this to 0 to disable profile-guided optimization
-_OPTIMIZED=1
+if [[ ${DEBUG} == 1 ]]; then
+  _OPTIMIZED=0
+  # This Python will not be usable with non-debug Python modules.
+  _dbg_opts+=(--with-pydebug)
+  DBG=d
+else
+  _OPTIMIZED=1
+  DBG=
+fi
 
 # this is the mechanism by which we fall back to default gcc, but having it defined here can break the build
 #     or use incorrect settings
@@ -152,6 +161,7 @@ _common_configure_args+=("--with-tcltk-libs=-L${PREFIX}/lib -ltcl8.6 -ltk8.6")
 mkdir -p ${_buildd_shared}
 pushd ${_buildd_shared}
   ../configure "${_common_configure_args[@]}" \
+               "${_dbg_opts[@]}" \
                --enable-shared
 popd
 
@@ -175,6 +185,7 @@ mkdir -p ${_buildd_static}
 pushd ${_buildd_static}
   ../configure "${_common_configure_args[@]}" \
                "${_extra_opts[@]}" \
+               "${_dbg_opts[@]}" \
                --disable-shared
 popd
 
@@ -260,7 +271,7 @@ pushd ${PREFIX}
       strip -S lib/libpython${VER}m.a
     fi
   fi
-  CONFIG_LIBPYTHON=$(find lib/python${VER}/config-${VER}m* -name "libpython${VER}m.a")
+  CONFIG_LIBPYTHON=$(find lib/python${VER}/config-${VER}${DBG}m* -name "libpython${VER}m.a")
   if [[ -f lib/libpython${VER}m.a ]] && [[ -f ${CONFIG_LIBPYTHON} ]]; then
     chmod +w ${CONFIG_LIBPYTHON}
     rm ${CONFIG_LIBPYTHON}
