@@ -62,9 +62,6 @@ declare -a LTO_CFLAGS
 LTO_CFLAGS+=(-flto)
 LTO_CFLAGS+=(-fuse-linker-plugin)
 
-# Remove ensurepip stubs.
-rm -rf Lib/ensurepip
-
 export CPPFLAGS=${CPPFLAGS}" -I${PREFIX}/include"
 export LDFLAGS=${LDFLAGS}" -Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib"
 if [[ ${HOST} =~ .*darwin.* ]]; then
