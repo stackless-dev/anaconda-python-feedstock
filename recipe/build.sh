@@ -74,9 +74,6 @@ declare -a LTO_CFLAGS
 LTO_CFLAGS+=(-flto)
 LTO_CFLAGS+=(-fuse-linker-plugin)
 
-# Remove ensurepip stubs.
-rm -rf Lib/ensurepip
-
 if [[ ${HOST} =~ .*darwin.* ]]; then
   sed -i -e "s/@OSX_ARCH@/$ARCH/g" Lib/distutils/unixccompiler.py
 fi
