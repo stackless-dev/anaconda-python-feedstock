@@ -78,8 +78,6 @@ fi
 _buildd_static=build-static
 _buildd_shared=build-shared
 declare -a LTO_CFLAGS
-LTO_CFLAGS+=(-flto)
-LTO_CFLAGS+=(-fuse-linker-plugin)
 
 if [[ ${HOST} =~ .*darwin.* ]]; then
   sed -i -e "s/@OSX_ARCH@/$ARCH/g" Lib/distutils/unixccompiler.py
@@ -178,7 +176,17 @@ if [[ ${_OPTIMIZED} == yes ]]; then
   # To speed up build times during testing (1):
   # _PROFILE_TASK="./python -m test.regrtest --pgo test_builtin"
   if [[ ${CC} =~ .*gcc.* ]]; then
+    LTO_CFLAGS+=(-fuse-linker-plugin)
     LTO_CFLAGS+=(-ffat-lto-objects)
+    # -flto must come after -flto-partition due to the replacement code
+    LTO_CFLAGS+=(-flto-partition=none)
+    LTO_CFLAGS+=(-flto)
+  else
+    # TODO :: Check if -flto=thin gives better results. It is about faster
+    #         compilation rather than faster execution so probably not:
+    # http://clang.llvm.org/docs/ThinLTO.html
+    # http://blog.llvm.org/2016/06/thinlto-scalable-and-incremental-lto.html
+    LTO_CFLAGS+=(-flto)
   fi
   export CFLAGS="${CFLAGS} ${LTO_CFLAGS[@]}"
 else
