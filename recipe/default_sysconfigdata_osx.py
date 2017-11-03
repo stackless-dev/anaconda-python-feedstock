@@ -607,7 +607,7 @@ build_time_vars = {'ABIFLAGS': 'm',
  'PY_LDFLAGS': '-L/opt/anaconda1anaconda2anaconda3/lib  -arch x86_64 '
                '-L/opt/anaconda1anaconda2anaconda3/lib  -arch x86_64',
  'Py_DEBUG': 0,
- 'Py_ENABLE_SHARED': 1,
+ 'Py_ENABLE_SHARED': 0,
  'Py_HASH_ALGORITHM': 0,
  'QUICKTESTOPTS': '-x test_subprocess test_io test_lib2to3 \\',
  'RANLIB': 'ranlib',

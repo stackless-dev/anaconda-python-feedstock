@@ -204,7 +204,7 @@ if [[ ${_OPTIMIZED} == 1 ]]; then
     _FLAGS_REPLACE+=(${_LTO_CFLAG})
     _FLAGS_REPLACE+=("")
   done
-  SYSCONFIG=$(find ${_buildd_shared}/$(cat ${_buildd_shared}/pybuilddir.txt) -name "_sysconfigdata*.py" -print0)
+  SYSCONFIG=$(find ${_buildd_static}/$(cat ${_buildd_static}/pybuilddir.txt) -name "_sysconfigdata*.py" -print0)
   cat ${SYSCONFIG} | ${SYS_PYTHON} "${RECIPE_DIR}"/replace-word-pairs.py \
     "${_FLAGS_REPLACE[@]}"  \
       > ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
