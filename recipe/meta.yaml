@@ -24,12 +24,10 @@ source:
     - 0011-runtime_library_dir_option-Use-1st-word-of-CC-as-com.patch
 
 build:
-  number: 22
+  number: 23
   no_link:
     - bin/python2.7     # [unix]
     - DLLs/_ctypes.pyd  # [win]
-  track_features:
-    - vc9               # [win]
   # script_env:
   #   - python_branding
   # We delete the shared libraries.
@@ -48,18 +46,11 @@ requirements:
     - bzip2                              # [unix]
     - sqlite                             # [unix]
     - zlib                               # [unix]
-    - openssl 1.0.*                      # [unix]
-    - readline 7.*                       # [unix]
-    - tk 8.6.*                           # [unix]
-    - ncurses 6.0.*                      # [linux]
-    - libffi 3.2.*                       # [unix]
-  run:
-    - openssl 1.0.*                      # [unix]
-    - readline 7.*                       # [unix]
-    - tk 8.6.*                           # [unix]
-    - ncurses 6.0.*                      # [linux]
-    - libffi 3.2.*                       # [unix]
-    - vs2008_runtime                     # [win]
+    - openssl                            # [unix]
+    - readline                           # [unix]
+    - tk                                 # [unix]
+    - ncurses                            # [linux]
+    - libffi                             # [unix]
 
 test:
   commands:
