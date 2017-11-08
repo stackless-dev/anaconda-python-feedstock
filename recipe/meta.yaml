@@ -50,19 +50,18 @@ source:
     sha256: de3c87b26a80e789986d8e6950c6304175d3829afe9c6c7211eb7257266ab0ac         # [win]
 
 build:
-  number: 3
+  number: 4
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
     - DLLs/_ctypes.pyd  # [win]
     - bin/python3.6     # [unix]
-  track_features:
-    - vc14              # [win]
   # script_env:
   #   - python_branding
   # We delete the shared libraries.
   ignore_run_exports:   # [unix]
     - bzip2             # [unix]
+  # match python.org compiler standard
   skip: True            # [win and vc != 14]
 
 requirements:
@@ -77,18 +76,11 @@ requirements:
     - sqlite                             # [unix]
     - xz                                 # [unix]
     - zlib                               # [unix]
-    - openssl 1.0.*                      # [unix]
-    - readline 7.*                       # [unix]
-    - tk 8.6.*                           # [unix]
-    - ncurses 6.0.*                      # [linux]
-    - libffi 3.2.*                       # [unix]
-  run:
-    - openssl 1.0.*                      # [unix]
-    - readline 7.*                       # [unix]
-    - tk 8.6.*                           # [unix]
-    - ncurses 6.0.*                      # [linux]
-    - libffi 3.2.*                       # [unix]
-    - vs2015_runtime                     # [win]
+    - openssl                            # [unix]
+    - readline                           # [unix]
+    - tk                                 # [unix]
+    - ncurses                            # [linux]
+    - libffi                             # [unix]
 
 test:
   commands:
