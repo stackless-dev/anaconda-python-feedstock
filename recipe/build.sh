@@ -230,19 +230,9 @@ if [[ ${_OPTIMIZED} == yes ]]; then
     _FLAGS_REPLACE+=(${_LTO_CFLAG})
     _FLAGS_REPLACE+=("")
   done
-  SYSCONFIG=$(find ${_buildd_static}/$(cat ${_buildd_static}/pybuilddir.txt) -name "_sysconfigdata*.py" -print0)
-  cat ${SYSCONFIG} | ${SYS_PYTHON} "${RECIPE_DIR}"/replace-word-pairs.py \
-    "${_FLAGS_REPLACE[@]}"  \
-      > ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
-  MAKEFILE=$(find ${PREFIX}/lib/python${VER}/ -path "*config-*/Makefile" -print0)
-  cp ${MAKEFILE} /tmp/Makefile-$$
-  cat /tmp/Makefile-$$ | ${SYS_PYTHON} "${RECIPE_DIR}"/replace-word-pairs.py \
-    "${_FLAGS_REPLACE[@]}"  \
-      > ${MAKEFILE}
-  # Check to see that our differences took.
-  # echo diff -urN ${SYSCONFIG} ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
-  # diff -urN ${SYSCONFIG} ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
-  # Install the shared library
+  # Install the shared library (for people who embed Python only, e.g. GDB).
+  # Linking module extensions to this on Linux is redundant (but harmless).
+  # Linking module extensions to this on Darwin is harmful (multiply defined symbols).
   if [[ ${HOST} =~ .*linux.* ]]; then
     cp -p ${_buildd_shared}/libpython${VER}m${SHLIB_EXT}.1.0 ${PREFIX}/lib/
     ln -sf ${PREFIX}/lib/libpython${VER}m${SHLIB_EXT}.1.0 ${PREFIX}/lib/libpython${VER}m${SHLIB_EXT}.1
@@ -252,7 +242,21 @@ if [[ ${_OPTIMIZED} == yes ]]; then
   fi
 else
   make -C ${_buildd_shared} install
+  declare -a _FLAGS_REPLACE
 fi
+
+SYSCONFIG=$(find ${_buildd_static}/$(cat ${_buildd_static}/pybuilddir.txt) -name "_sysconfigdata*.py" -print0)
+cat ${SYSCONFIG} | ${SYS_PYTHON} "${RECIPE_DIR}"/replace-word-pairs.py \
+  "${_FLAGS_REPLACE[@]}"  \
+    > ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
+MAKEFILE=$(find ${PREFIX}/lib/python${VER}/ -path "*config-*/Makefile" -print0)
+cp ${MAKEFILE} /tmp/Makefile-$$
+cat /tmp/Makefile-$$ | ${SYS_PYTHON} "${RECIPE_DIR}"/replace-word-pairs.py \
+  "${_FLAGS_REPLACE[@]}"  \
+    > ${MAKEFILE}
+# Check to see that our differences took.
+# echo diff -urN ${SYSCONFIG} ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
+# diff -urN ${SYSCONFIG} ${PREFIX}/lib/python${VER}/$(basename ${SYSCONFIG})
 
 # Python installs python${VER}m and python${VER}, one as a hardlink to the other. conda-build breaks these
 # by copying. Since the executable may be static it may be very large so change one to be a symlink
@@ -292,20 +296,30 @@ pushd ${PREFIX}
   fi
 popd
 
-
 # Copy sysconfig that gets recorded to a non-default name
 #   using the new compilers with python will require setting _PYTHON_SYSCONFIGDATA_NAME
 #   to the name of this file (minus the .py extension)
-pushd $PREFIX/lib/python3.6
-recorded_name=$(find . -name "_sysconfigdata*.py")
-mv $recorded_name _sysconfigdata_$(echo ${HOST} | sed -e 's/[.-]/_/g').py
-if [[ ${HOST} =~ .*darwin.* ]]; then
-    cp $RECIPE_DIR/default_sysconfigdata_osx.py $recorded_name
-else
-    cp $RECIPE_DIR/default_sysconfigdata_linux.py $recorded_name
-    mkdir -p $PREFIX/compiler_compat
-    cp $LD $PREFIX/compiler_compat/ld
-    echo "Files in this folder are to enhance backwards compatibility of anaconda software with older compilers.  See https://github.com/conda/conda/issues/6030 for more information."  > $PREFIX/compiler_compat/README
-fi
-popd
+pushd $PREFIX/lib/python${VER}
+  recorded_name=$(find . -name "_sysconfigdata*.py")
+  our_compilers_name=_sysconfigdata_$(echo ${HOST} | sed -e 's/[.-]/_/g').py
+  mv ${recorded_name} ${our_compilers_name}
 
+  # Copy all "${RECIPE_DIR}"/sysconfigdata/*.py. This is to support cross-compilation. They will be
+  # from the previous build unfortunately so care must be taken at version bumps and flag changes.
+  cp -rf "${RECIPE_DIR}"/sysconfigdata/*.py ${PREFIX}/lib/python${VER}/
+
+  if [[ ${HOST} =~ .*darwin.* ]]; then
+    cp ${RECIPE_DIR}/sysconfigdata/default/_sysconfigdata_osx.py ${recorded_name}
+  else
+    cp ${RECIPE_DIR}/sysconfigdata/default/_sysconfigdata_linux.py ${recorded_name}
+    mkdir -p ${PREFIX}/compiler_compat
+    cp ${LD} ${PREFIX}/compiler_compat/ld
+    echo "Files in this folder are to enhance backwards compatibility of anaconda software with older compilers."   > ${PREFIX}/compiler_compat/README
+    echo "See: https://github.com/conda/conda/issues/6030 for more information."                                   >> ${PREFIX}/compiler_compat/README
+  fi
+
+  # Copy the latest sysconfigdata for this platform back to the recipe. This could change the hash
+  # unfortunately.
+  cp -f ${our_compilers_name} "${RECIPE_DIR}"/sysconfigdata/
+
+popd
