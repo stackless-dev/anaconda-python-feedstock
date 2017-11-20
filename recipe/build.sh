@@ -146,17 +146,30 @@ popd
 # environmental variable to _sysconfigdata_$HOST
 #   using the new compilers with python will require setting _PYTHON_SYSCONFIGDATA_NAME
 #   to the name of this file (minus the .py extension)
-pushd $PREFIX/lib/python2.7
-recorded_name=$(find . -name "_sysconfigdata*.py")
-mv $recorded_name _sysconfigdata_$(echo ${HOST} | sed -e 's/[.-]/_/g').py
-if [[ ${HOST} =~ .*darwin.* ]]; then
-    cp $RECIPE_DIR/default_sysconfigdata_osx.py $recorded_name
-else
-    cp $RECIPE_DIR/default_sysconfigdata_linux.py $recorded_name
-    mkdir -p $PREFIX/compiler_compat
-    cp $LD $PREFIX/compiler_compat/ld
-    echo "Files in this folder are to enhance backwards compatibility of anaconda software with older compilers.  See https://github.com/conda/conda/issues/6030 for more information."  > $PREFIX/compiler_compat/README
-fi
+pushd $PREFIX/lib/python${VER}
+  recorded_name=$(find . -name "_sysconfigdata*.py")
+  our_compilers_name=_sysconfigdata_$(echo ${HOST} | sed -e 's/[.-]/_/g').py
+  mv ${recorded_name} ${our_compilers_name}
+
+  # Copy all "${RECIPE_DIR}"/sysconfigdata/*.py. This is to support cross-compilation. They will be
+  # from the previous build unfortunately so care must be taken at version bumps and flag changes.
+  cp -rf "${RECIPE_DIR}"/sysconfigdata/*.py ${PREFIX}/lib/python${VER}/
+
+  if [[ ${HOST} =~ .*darwin.* ]]; then
+    cp ${RECIPE_DIR}/sysconfigdata/default/_sysconfigdata_osx.py ${recorded_name}
+  else
+    cp ${RECIPE_DIR}/sysconfigdata/default/_sysconfigdata_linux.py ${recorded_name}
+    mkdir -p ${PREFIX}/compiler_compat
+    cp ${LD} ${PREFIX}/compiler_compat/ld
+    echo "Files in this folder are to enhance backwards compatibility of anaconda software with older compilers."   > ${PREFIX}/compiler_compat/README
+    echo "See: https://github.com/conda/conda/issues/6030 for more information."                                   >> ${PREFIX}/compiler_compat/README
+  fi
+
+  # Copy the latest sysconfigdata for this platform back to the recipe. This could change the hash
+  # unfortunately.
+  cp -f ${our_compilers_name} "${RECIPE_DIR}"/sysconfigdata/
+
+popd
 
 # https://github.com/ContinuumIO/anaconda-issues/issues/6424
 # TODO :: Move this into conda-build as an error with an override (same for openssl-feedstock)
