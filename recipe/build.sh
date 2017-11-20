@@ -11,8 +11,25 @@
 VER=${PKG_VERSION%.*}
 CONDA_FORGE=no
 
-# this is the mechanism by which we fall back to default gcc, but having it defined here can break the build
-#     or use incorrect settings
+# For debugging builds, set this to 0 to disable profile-guided optimization
+if [[ ${DEBUG_C} == yes ]]; then
+  _OPTIMIZED=no
+else
+  _OPTIMIZED=no
+fi
+
+declare -a _dbg_opts
+if [[ ${DEBUG_PY} == yes ]]; then
+  # This Python will not be usable with non-debug Python modules.
+  _dbg_opts+=(--with-pydebug)
+  DBG=d
+else
+  DBG=
+fi
+
+# This is the mechanism by which we fall back to default gcc, but having it defined here
+# would probably break the build by using incorrect settings and/or importing files that
+# do not yet exist.
 unset _PYTHON_SYSCONFIGDATA_NAME
 
 # Remove bzip2's shared library if present,
@@ -47,10 +64,12 @@ if [[ ${HOST} =~ .*darwin.* ]] && [[ -n ${CONDA_BUILD_SYSROOT} ]]; then
 fi
 
 # Debian uses -O3 then resets it at the end to -O2 in _sysconfigdata.py
-export CPPFLAGS=$(echo "${CPPFLAGS}" | sed "s/-O2/-O3/g")
-export CFLAGS=$(echo "${CFLAGS}" | sed "s/-O2/-O3/g")
-export CXXFLAGS=$(echo "${CXXFLAGS}" | sed "s/-O2/-O3/g")
-export LDFLAGS
+if [[ ${_OPTIMIZED} = yes ]]; then
+  CPPFLAGS=$(echo "${CPPFLAGS}" | sed "s/-O2/-O3/g")
+  CFLAGS=$(echo "${CFLAGS}" | sed "s/-O2/-O3/g")
+  CXXFLAGS=$(echo "${CXXFLAGS}" | sed "s/-O2/-O3/g")
+fi
+export CPPFLAGS CFLAGS CXXFLAGS LDFLAGS
 
 if [[ ${CONDA_FORGE} == yes ]]; then
   ${SYS_PYTHON} ${RECIPE_DIR}/brand_python.py
@@ -81,10 +100,10 @@ if [[ "${BUILD}" != "${HOST}" ]] && [[ -n "${BUILD}" ]] && [[ -n "${HOST}" ]]; t
             AR=/usr/bin/ar \
             RANLIB=/usr/bin/ranlib \
             LD=/usr/bin/ld && \
-      ../configure --build=${BUILD} \
-                   --host=${BUILD} \
-                   --prefix=${BUILD_PYTHON_PREFIX} \
-                   --with-ensurepip=no && \
+      ${SRC_DIR}/configure --build=${BUILD} \
+                           --host=${BUILD} \
+                           --prefix=${BUILD_PYTHON_PREFIX} \
+                           --with-ensurepip=no && \
       make && \
       make install)
     export PATH=${BUILD_PYTHON_PREFIX}/bin:${PATH}
@@ -97,9 +116,6 @@ if [[ "${BUILD}" != "${HOST}" ]] && [[ -n "${BUILD}" ]] && [[ -n "${HOST}" ]]; t
   export CONFIG_SITE=${PWD}/config.site
   # This is needed for libffi:
   export PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig
-  _OPTIMIZED=1
-else
-  _OPTIMIZED=1
 fi
 
 # This causes setup.py to query the sysroot directories from the compiler, something which
@@ -147,13 +163,14 @@ _common_configure_args+=("--with-tcltk-libs=-L${PREFIX}/lib -ltcl8.6 -ltk8.6")
 
 mkdir -p ${_buildd_shared}
 pushd ${_buildd_shared}
-  ../configure "${_common_configure_args[@]}" \
-               --enable-shared
+  ${SRC_DIR}/configure "${_common_configure_args[@]}" \
+                       "${_dbg_opts[@]}" \
+                       --enable-shared
 popd
 
 # Add more optimization flags for the static Python interpreter:
 declare -a _extra_opts
-if [[ ${_OPTIMIZED} == 1 ]]; then
+if [[ ${_OPTIMIZED} == yes ]]; then
   _extra_opts+=(--enable-optimizations)
   _extra_opts+=(--with-lto)
   _MAKE_TARGET=profile-opt
@@ -179,9 +196,10 @@ fi
 
 mkdir -p ${_buildd_static}
 pushd ${_buildd_static}
-  ../configure "${_common_configure_args[@]}" \
-               "${_extra_opts[@]}" \
-               --disable-shared
+  ${SRC_DIR}/configure "${_common_configure_args[@]}" \
+                       "${_extra_opts[@]}" \
+                       "${_dbg_opts[@]}" \
+                       --disable-shared
 popd
 
 make -j${CPU_COUNT} -C ${_buildd_static} \
@@ -197,7 +215,7 @@ make -j${CPU_COUNT} -C ${_buildd_shared} \
         EXTRA_CFLAGS="${EXTRA_CFLAGS}" \
         LIBRARY=libpython${VER}m-pic.a libpython${VER}m-pic.a
 
-if [[ ${_OPTIMIZED} == 1 ]]; then
+if [[ ${_OPTIMIZED} == yes ]]; then
   make -C ${_buildd_static} install
   declare -a _FLAGS_REPLACE
   _FLAGS_REPLACE+=(-O3)
@@ -270,7 +288,7 @@ pushd ${PREFIX}
       strip -S lib/libpython${VER}m.a
     fi
   fi
-  CONFIG_LIBPYTHON=$(find lib/python${VER}/config-${VER}m* -name "libpython${VER}m.a")
+  CONFIG_LIBPYTHON=$(find lib/python${VER}/config-${VER}${DBG}m* -name "libpython${VER}m.a")
   if [[ -f lib/libpython${VER}m.a ]] && [[ -f ${CONFIG_LIBPYTHON} ]]; then
     chmod +w ${CONFIG_LIBPYTHON}
     rm ${CONFIG_LIBPYTHON}
@@ -278,19 +296,17 @@ pushd ${PREFIX}
   fi
 popd
 
-# Move the _sysconfigdata.py file and replace with a version with a
-# configuration more typical of what a user would expect to be in a "standard"
-# python build. This results in the system toolchain and
-# The original configuration with the crosstool-ng compilers from the conda
-# package can be selected by setting the _PYTHON_SYSCONFIGDATA_NAME
-# environmental variable to _sysconfigdata_$HOST
+# Copy sysconfig that gets recorded to a non-default name
 #   using the new compilers with python will require setting _PYTHON_SYSCONFIGDATA_NAME
 #   to the name of this file (minus the .py extension)
 pushd $PREFIX/lib/python${VER}
+  # On Python 3.5 _sysconfigdata.py was getting copied in here and compiled for some reason.
+  # This breaks our attempt to find the right one as recorded_name.
+  find lib-dynload -name "_sysconfigdata*.py*" -exec rm {} \;
   recorded_name=$(find . -name "_sysconfigdata*.py")
   our_compilers_name=_sysconfigdata_$(echo ${HOST} | sed -e 's/[.-]/_/g').py
   mv ${recorded_name} ${our_compilers_name}
- 
+
   # Copy all "${RECIPE_DIR}"/sysconfigdata/*.py. This is to support cross-compilation. They will be
   # from the previous build unfortunately so care must be taken at version bumps and flag changes.
   cp -rf "${RECIPE_DIR}"/sysconfigdata/*.py ${PREFIX}/lib/python${VER}/
