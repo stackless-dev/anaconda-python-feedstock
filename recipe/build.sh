@@ -15,7 +15,7 @@ CONDA_FORGE=no
 if [[ ${DEBUG_C} == yes ]]; then
   _OPTIMIZED=no
 else
-  _OPTIMIZED=no
+  _OPTIMIZED=yes
 fi
 
 declare -a _dbg_opts
