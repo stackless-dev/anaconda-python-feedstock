@@ -328,8 +328,8 @@ pushd $PREFIX/lib/python${VER}
     echo "See: https://github.com/conda/conda/issues/6030 for more information."                                   >> ${PREFIX}/compiler_compat/README
   fi
 
-  # Copy the latest sysconfigdata for this platform back to the recipe. This could change the hash
-  # unfortunately.
+  # Copy the latest sysconfigdata for this platform back to the recipe so we can do full cross-compilation
+  [[ -f	"${RECIPE_DIR}"/sysconfigdata/${our_compilers_name} ]] && rm -f	"${RECIPE_DIR}"/sysconfigdata/${our_compilers_name}
   cat ${our_compilers_name} | sed "s|${PREFIX}|/opt/anaconda1anaconda2anaconda3|g" > "${RECIPE_DIR}"/sysconfigdata/${our_compilers_name}
 
 popd
