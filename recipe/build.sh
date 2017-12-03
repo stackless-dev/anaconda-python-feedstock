@@ -69,7 +69,6 @@ if [[ ${_OPTIMIZED} = yes ]]; then
   CFLAGS=$(echo "${CFLAGS}" | sed "s/-O2/-O3/g")
   CXXFLAGS=$(echo "${CXXFLAGS}" | sed "s/-O2/-O3/g")
 fi
-export CPPFLAGS CFLAGS CXXFLAGS LDFLAGS
 
 if [[ ${CONDA_FORGE} == yes ]]; then
   ${SYS_PYTHON} ${RECIPE_DIR}/brand_python.py
@@ -79,8 +78,15 @@ _buildd_static=build-static
 _buildd_shared=build-shared
 declare -a LTO_CFLAGS
 
-export CPPFLAGS=${CPPFLAGS}" -I${PREFIX}/include"
-export LDFLAGS=${LDFLAGS}" -Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib"
+CPPFLAGS=${CPPFLAGS}" -I${PREFIX}/include"
+
+re='^(.*)(-I[^ ]*)(.*)$'
+if [[ ${CFLAGS} =~ $re ]]; then
+  CFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[3]}"
+fi
+
+export CPPFLAGS CFLAGS CXXFLAGS LDFLAGS
+
 if [[ ${HOST} =~ .*darwin.* ]]; then
   sed -i -e "s/@OSX_ARCH@/$ARCH/g" Lib/distutils/unixccompiler.py
 fi
@@ -323,6 +329,6 @@ pushd $PREFIX/lib/python${VER}
 
   # Copy the latest sysconfigdata for this platform back to the recipe. This could change the hash
   # unfortunately.
-  cp -f ${our_compilers_name} "${RECIPE_DIR}"/sysconfigdata/
+  cat ${our_compilers_name} | sed "s|${PREFIX}|/opt/anaconda1anaconda2anaconda3|g" > "${RECIPE_DIR}"/sysconfigdata/${our_compilers_name}
 
 popd
