@@ -27,6 +27,7 @@ source:
       # TODO :: Fix this so we can re-enable 0015 We get a failure at building Tcl currently:
       # NMAKE : fatal error U1052: file 'makefile.vc' not found [C:\Users\builder\mc3\conda-bld\python_1505378303698\work\PCbuild\tcl.vcxproj]
       # - 0015-Win32-Do-not-download-externals.patch
+      - 0016-Ignore-_PYTHON_SYSCONFIGDATA_NAME-if-it-does-not-exi.patch
   # TODO :: Depend on our own packages for these:
   - url: https://github.com/python/cpython-source-deps/archive/xz-5.2.2.zip          # [win]
     folder: externals/xz-5.2.2                                                       # [win]
