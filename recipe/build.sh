@@ -61,7 +61,12 @@ if [[ ${CONDA_FORGE} == yes ]]; then
 fi
 
 export CPPFLAGS=${CPPFLAGS}" -I${PREFIX}/include"
-export LDFLAGS=${LDFLAGS}" -Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib"
+
+re='^(.*)(-I[^ ]*)(.*)$'
+if [[ ${CFLAGS} =~ $re ]]; then
+  export CFLAGS="${BASH_REMATCH[1]}${BASH_REMATCH[3]}"
+fi
+
 if [[ ${HOST} =~ .*darwin.* ]]; then
   sed -i -e "s/@OSX_ARCH@/$ARCH/g" Lib/distutils/unixccompiler.py
   UNICODE=ucs2
@@ -168,9 +173,9 @@ pushd $PREFIX/lib/python${VER}
     echo "See: https://github.com/conda/conda/issues/6030 for more information."                                   >> ${PREFIX}/compiler_compat/README
   fi
 
-  # Copy the latest sysconfigdata for this platform back to the recipe. This could change the hash
-  # unfortunately.
-  cp -f ${our_compilers_name} "${RECIPE_DIR}"/sysconfigdata/
+  # Copy the latest sysconfigdata for this platform back to the recipe so we can do full cross-compilation
+  [[ -f "${RECIPE_DIR}"/sysconfigdata/${our_compilers_name} ]] && rm -f "${RECIPE_DIR}"/sysconfigdata/${our_compilers_name}
+  cat ${our_compilers_name} | sed "s|${PREFIX}|/opt/anaconda1anaconda2anaconda3|g" > "${RECIPE_DIR}"/sysconfigdata/${our_compilers_name}
 
 popd
 
