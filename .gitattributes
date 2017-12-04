@@ -2,4 +2,4 @@
 
 meta.yaml text eol=lf
 build.sh text eol=lf
-bld.bat text eol=crlf
+*/bld.bat text eol=crlf
