@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # system configuration generated and used by the sysconfig module
 build_time_vars = {'AC_APPLE_UNIVERSAL_BUILD': 0,
  'AIX_GENUINE_CPLUSPLUS': 0,
