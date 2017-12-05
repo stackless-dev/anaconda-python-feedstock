@@ -28,6 +28,7 @@ source:
       # NMAKE : fatal error U1052: file 'makefile.vc' not found [C:\Users\builder\mc3\conda-bld\python_1505378303698\work\PCbuild\tcl.vcxproj]
       # - 0015-Win32-Do-not-download-externals.patch
       - 0016-Ignore-_PYTHON_SYSCONFIGDATA_NAME-if-it-does-not-exi.patch
+      - 0017-Fix-find_library-so-that-it-looks-in-sys.prefix-lib-.patch
   # TODO :: Depend on our own packages for these:
   - url: https://github.com/python/cpython-source-deps/archive/xz-5.2.2.zip          # [win]
     folder: externals/xz-5.2.2                                                       # [win]
@@ -55,7 +56,7 @@ source:
     sha256: de3c87b26a80e789986d8e6950c6304175d3829afe9c6c7211eb7257266ab0ac         # [win]
 
 build:
-  number: 25
+  number: 26
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
