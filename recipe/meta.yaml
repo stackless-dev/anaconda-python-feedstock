@@ -52,7 +52,7 @@ source:
     sha256: de3c87b26a80e789986d8e6950c6304175d3829afe9c6c7211eb7257266ab0ac         # [win]
 
 build:
-  number: 7
+  number: 8
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
@@ -72,6 +72,7 @@ requirements:
     - {{ compiler('cxx') }}
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
     - {{ cdt('libx11-devel') }}          # [linux]
+    - make                               # [unix]
     - pkg-config                         # [unix]
   host:
     - bzip2                              # [unix]
