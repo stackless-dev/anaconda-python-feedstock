@@ -320,7 +320,17 @@ pushd $PREFIX/lib/python${VER}
   if [[ ${HOST} =~ .*darwin.* ]]; then
     cp ${RECIPE_DIR}/sysconfigdata/default/_sysconfigdata_osx.py ${recorded_name}
   else
-    cp ${RECIPE_DIR}/sysconfigdata/default/_sysconfigdata_linux.py ${recorded_name}
+    if [[ ${HOST} =~ x86_64.* ]]; then
+      PY_ARCH=x86_64
+    elif [[ ${HOST} =~ i686.* ]]; then
+      PY_ARCH=i386
+    elif [[ ${HOST} =~ powerpc64le.* ]]; then
+      PY_ARCH=powerpc64le
+    else
+      echo "ERROR: Cannot determine PY_ARCH for host ${HOST}"
+      exit 1
+    fi
+    cat ${RECIPE_DIR}/sysconfigdata/default/_sysconfigdata_linux.py | sed "s|@ARCH@|${PY_ARCH}|g" > ${recorded_name}
     mkdir -p ${PREFIX}/compiler_compat
     cp ${LD} ${PREFIX}/compiler_compat/ld
     echo "Files in this folder are to enhance backwards compatibility of anaconda software with older compilers."   > ${PREFIX}/compiler_compat/README
