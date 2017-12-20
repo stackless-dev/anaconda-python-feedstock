@@ -1,7 +1,7 @@
-From 63aad2f9fbbd26775c894e177a9e88cf68475f09 Mon Sep 17 00:00:00 2001
+From e580158b9779b421f1c2232cfa1144786f79fd71 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 3 Dec 2017 17:31:27 +0000
-Subject: [PATCH 14/14] Ignore _PYTHON_SYSCONFIGDATA_NAME if it does not exist
+Subject: [PATCH 14/15] Ignore _PYTHON_SYSCONFIGDATA_NAME if it does not exist
 
 This is important when bootstrapping a Miniconda (however if you are using
 a Python that pre-dates this change then you will need to apply this patch
@@ -11,7 +11,7 @@ manually).
  1 file changed, 15 insertions(+), 9 deletions(-)
 
 diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
-index 9314e71a2f..422034eb0f 100644
+index 9314e71..422034e 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
 @@ -342,13 +342,19 @@ def get_makefile_filename():
@@ -60,5 +60,5 @@ index 9314e71a2f..422034eb0f 100644
      build_time_vars = _temp.build_time_vars
      vars.update(build_time_vars)
 -- 
-2.13.6 (Apple Git-96)
+2.11.1
 
