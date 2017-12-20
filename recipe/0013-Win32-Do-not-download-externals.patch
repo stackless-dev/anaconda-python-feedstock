@@ -1,17 +1,17 @@
-From f4abc7c9e8759db245b94e91208c9bd840017cdf Mon Sep 17 00:00:00 2001
+From c1d26201183b61e6b35fab9dbd09fa4e232f8a9a Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Thu, 7 Sep 2017 11:35:47 +0100
-Subject: [PATCH 13/13] Win32: Do not download externals
+Subject: [PATCH 13/15] Win32: Do not download externals
 
 ---
  PCbuild/build.bat | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/PCbuild/build.bat b/PCbuild/build.bat
-index 81e500d..b4b606f 100644
+index 5828b51..17a413f 100644
 --- a/PCbuild/build.bat
 +++ b/PCbuild/build.bat
-@@ -83,7 +83,7 @@ if "%IncludeExternals%"=="" set IncludeExternals=false
+@@ -81,7 +81,7 @@ if "%IncludeExternals%"=="" set IncludeExternals=true
  if "%IncludeSSL%"=="" set IncludeSSL=true
  if "%IncludeTkinter%"=="" set IncludeTkinter=true
  
@@ -21,5 +21,5 @@ index 81e500d..b4b606f 100644
  if "%do_pgo%" EQU "true" if "%platf%" EQU "x64" (
      if "%PROCESSOR_ARCHITEW6432%" NEQ "AMD64" if "%PROCESSOR_ARCHITECTURE%" NEQ "AMD64" (
 -- 
-2.10.1
+2.11.1
 
