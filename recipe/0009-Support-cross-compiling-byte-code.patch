@@ -1,17 +1,17 @@
-From 45a759db7725ec264a32b81a1426e87abe33514f Mon Sep 17 00:00:00 2001
-From: Ray Donnelly <mingw.android@gmail.com>
-Date: Wed, 16 Aug 2017 12:17:33 +0100
-Subject: [PATCH 09/14] Support cross-compiling byte-code
+From 9e73c3e853b6ab09991a281a882ff3fdbd4694ef Mon Sep 17 00:00:00 2001
+From: Michael Sarahan <msarahan@gmail.com>
+Date: Wed, 20 Dec 2017 12:16:09 -0600
+Subject: [PATCH 09/15] Support cross-compiling byte-code (adjust @mingwandroid
+ patch)
 
-https://bugs.python.org/issue22724
 ---
- Makefile.pre.in | 17 +++++++++--------
+ Makefile.pre.in | 15 ++++++++-------
  configure       |  4 +++-
  configure.ac    |  4 +++-
- 3 files changed, 15 insertions(+), 10 deletions(-)
+ 3 files changed, 14 insertions(+), 9 deletions(-)
 
 diff --git a/Makefile.pre.in b/Makefile.pre.in
-index 6cb0c63e5d..50f0dea955 100644
+index 5e88e3f..e7e22b2 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
 @@ -230,6 +230,7 @@ PYTHON=		python$(EXE)
@@ -19,27 +19,19 @@ index 6cb0c63e5d..50f0dea955 100644
  
  PYTHON_FOR_REGEN=@PYTHON_FOR_REGEN@
 +PY_BUILD_ENVIRON=@PY_BUILD_ENVIRON@
+ UPDATE_FILE=@PYTHON_FOR_REGEN@ $(srcdir)/Tools/scripts/update_file.py
  PYTHON_FOR_BUILD=@PYTHON_FOR_BUILD@
  _PYTHON_HOST_PLATFORM=@_PYTHON_HOST_PLATFORM@
- BUILD_GNU_TYPE=	@build@
-@@ -530,14 +531,14 @@ coverage-report: regen-grammar regen-importlib
+@@ -541,7 +542,7 @@ coverage-report: regen-grammar regen-importlib
  # (depends on python having already been built)
  .PHONY=clinic
- clinic: $(BUILDPYTHON) $(srcdir)/Modules/_blake2/blake2s_impl.c
+ clinic: check-clean-src $(BUILDPYTHON) $(srcdir)/Modules/_blake2/blake2s_impl.c
 -	$(RUNSHARED) $(PYTHON_FOR_BUILD) ./Tools/clinic/clinic.py --make
 +	$(RUNSHARED) $(PY_BUILD_ENVIRON) $(PYTHON_FOR_BUILD) ./Tools/clinic/clinic.py --make
  
  # Build the interpreter
  $(BUILDPYTHON):	Programs/python.o $(LIBRARY) $(LDLIBRARY) $(PY3LIBRARY)
- 	$(LINKCC) $(PY_LDFLAGS) $(LINKFORSHARED) -o $@ Programs/python.o $(BLDLIBRARY) $(LIBS) $(MODLIBS) $(SYSLIBS) $(LDLAST)
- 
- platform: $(BUILDPYTHON) pybuilddir.txt
--	$(RUNSHARED) $(PYTHON_FOR_BUILD) -c 'import sys ; from sysconfig import get_platform ; print("%s-%d.%d" % (get_platform(), *sys.version_info[:2]))' >platform
-+	$(RUNSHARED) $(PY_BUILD_ENVIRON) $(PYTHON_FOR_BUILD) -c 'import sys ; from sysconfig import get_platform ; print("%s-%d.%d" % (get_platform(), *sys.version_info[:2]))' >platform
- 
- # Create build directory and generate the sysconfig build-time data there.
- # pybuilddir.txt contains the name of the build dir and is used for
-@@ -548,7 +549,7 @@ platform: $(BUILDPYTHON) pybuilddir.txt
+@@ -559,7 +560,7 @@ platform: $(BUILDPYTHON) pybuilddir.txt
  # or removed in case of failure.
  pybuilddir.txt: $(BUILDPYTHON)
  	@echo "none" > ./pybuilddir.txt
@@ -48,7 +40,7 @@ index 6cb0c63e5d..50f0dea955 100644
  	if test $$? -ne 0 ; then \
  		echo "generate-posix-vars failed" ; \
  		rm -f ./pybuilddir.txt ; \
-@@ -575,7 +576,7 @@ sharedmods: $(BUILDPYTHON) pybuilddir.txt Modules/_math.o
+@@ -586,7 +587,7 @@ sharedmods: $(BUILDPYTHON) pybuilddir.txt Modules/_math.o
  	esac; \
  	$(RUNSHARED) CC='$(CC)' LDSHARED='$(BLDSHARED)' OPT='$(OPT)' \
  		_TCLTK_INCLUDES='$(TCLTK_INCLUDES)' _TCLTK_LIBS='$(TCLTK_LIBS)' \
@@ -57,7 +49,7 @@ index 6cb0c63e5d..50f0dea955 100644
  
  
  # Build static library
-@@ -1067,7 +1068,7 @@ install: @FRAMEWORKINSTALLFIRST@ commoninstall bininstall maninstall @FRAMEWORKI
+@@ -1087,7 +1088,7 @@ install: @FRAMEWORKINSTALLFIRST@ commoninstall bininstall maninstall @FRAMEWORKI
  			upgrade) ensurepip="--upgrade" ;; \
  			install|*) ensurepip="" ;; \
  		esac; \
@@ -66,7 +58,7 @@ index 6cb0c63e5d..50f0dea955 100644
  			$$ensurepip --root=$(DESTDIR)/ ; \
  	fi
  
-@@ -1077,7 +1078,7 @@ altinstall: commoninstall
+@@ -1097,7 +1098,7 @@ altinstall: commoninstall
  			upgrade) ensurepip="--altinstall --upgrade" ;; \
  			install|*) ensurepip="--altinstall" ;; \
  		esac; \
@@ -75,7 +67,7 @@ index 6cb0c63e5d..50f0dea955 100644
  			$$ensurepip --root=$(DESTDIR)/ ; \
  	fi
  
-@@ -1448,7 +1449,7 @@ libainstall:	@DEF_MAKE_RULE@ python-config
+@@ -1468,7 +1469,7 @@ libainstall:	@DEF_MAKE_RULE@ python-config
  # Install the dynamically loadable modules
  # This goes into $(exec_prefix)
  sharedinstall: sharedmods
@@ -84,7 +76,7 @@ index 6cb0c63e5d..50f0dea955 100644
  	   	--prefix=$(prefix) \
  		--install-scripts=$(BINDIR) \
  		--install-platlib=$(DESTSHARED) \
-@@ -1532,7 +1533,7 @@ frameworkinstallextras:
+@@ -1552,7 +1553,7 @@ frameworkinstallextras:
  # This installs a few of the useful scripts in Tools/scripts
  scriptsinstall:
  	SRCDIR=$(srcdir) $(RUNSHARED) \
@@ -94,7 +86,7 @@ index 6cb0c63e5d..50f0dea955 100644
  	--install-scripts=$(BINDIR) \
  	--root=$(DESTDIR)/
 diff --git a/configure b/configure
-index 22959bdac7..2ec1dd6b83 100755
+index fed73fe..25a2ab3 100755
 --- a/configure
 +++ b/configure
 @@ -751,6 +751,7 @@ CONFIG_ARGS
@@ -116,7 +108,7 @@ index 22959bdac7..2ec1dd6b83 100755
  elif test "$cross_compiling" = maybe; then
      as_fn_error $? "Cross compiling required --host=HOST-TUPLE and --build=ARCH" "$LINENO" 5
 diff --git a/configure.ac b/configure.ac
-index 543085c11d..9546506884 100644
+index ded175b..9fe7010 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -73,13 +73,15 @@ if test "$cross_compiling" = yes; then
@@ -137,5 +129,5 @@ index 543085c11d..9546506884 100644
  
  dnl Ensure that if prefix is specified, it does not end in a slash. If
 -- 
-2.13.6 (Apple Git-96)
+2.11.1
 
