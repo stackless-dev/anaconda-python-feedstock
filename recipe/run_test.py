@@ -14,7 +14,7 @@ print('sys.version:', sys.version)
 print('sys.platform:', sys.platform)
 print('tuple.__itemsize__:', tuple.__itemsize__)
 if sys.platform == 'win32':
-    assert 'MSC v.1900' in sys.version
+    assert 'MSC v.19' in sys.version
 print('sys.maxunicode:', sys.maxunicode)
 print('platform.architecture:', platform.architecture())
 print('platform.python_version:', platform.python_version())
