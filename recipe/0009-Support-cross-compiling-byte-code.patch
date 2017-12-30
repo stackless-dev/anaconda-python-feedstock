@@ -1,28 +1,28 @@
-From 9e73c3e853b6ab09991a281a882ff3fdbd4694ef Mon Sep 17 00:00:00 2001
-From: Michael Sarahan <msarahan@gmail.com>
-Date: Wed, 20 Dec 2017 12:16:09 -0600
-Subject: [PATCH 09/15] Support cross-compiling byte-code (adjust @mingwandroid
- patch)
+From df24f8e9f7c3e7d71aaf19e76ebdc4dedcf99573 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Wed, 16 Aug 2017 12:17:33 +0100
+Subject: [PATCH 09/15] Support cross-compiling byte-code
 
+https://bugs.python.org/issue22724
 ---
- Makefile.pre.in | 15 ++++++++-------
+ Makefile.pre.in | 17 +++++++++--------
  configure       |  4 +++-
  configure.ac    |  4 +++-
- 3 files changed, 14 insertions(+), 9 deletions(-)
+ 3 files changed, 15 insertions(+), 10 deletions(-)
 
 diff --git a/Makefile.pre.in b/Makefile.pre.in
-index 5e88e3f..e7e22b2 100644
+index 5e88e3f6aa..bca5efea67 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -230,6 +230,7 @@ PYTHON=		python$(EXE)
- BUILDPYTHON=	python$(BUILDEXE)
+@@ -231,6 +231,7 @@ BUILDPYTHON=	python$(BUILDEXE)
  
  PYTHON_FOR_REGEN=@PYTHON_FOR_REGEN@
-+PY_BUILD_ENVIRON=@PY_BUILD_ENVIRON@
  UPDATE_FILE=@PYTHON_FOR_REGEN@ $(srcdir)/Tools/scripts/update_file.py
++PY_BUILD_ENVIRON=@PY_BUILD_ENVIRON@
  PYTHON_FOR_BUILD=@PYTHON_FOR_BUILD@
  _PYTHON_HOST_PLATFORM=@_PYTHON_HOST_PLATFORM@
-@@ -541,7 +542,7 @@ coverage-report: regen-grammar regen-importlib
+ BUILD_GNU_TYPE=	@build@
+@@ -541,14 +542,14 @@ coverage-report: regen-grammar regen-importlib
  # (depends on python having already been built)
  .PHONY=clinic
  clinic: check-clean-src $(BUILDPYTHON) $(srcdir)/Modules/_blake2/blake2s_impl.c
@@ -31,6 +31,14 @@ index 5e88e3f..e7e22b2 100644
  
  # Build the interpreter
  $(BUILDPYTHON):	Programs/python.o $(LIBRARY) $(LDLIBRARY) $(PY3LIBRARY)
+ 	$(LINKCC) $(PY_LDFLAGS) $(LINKFORSHARED) -o $@ Programs/python.o $(BLDLIBRARY) $(LIBS) $(MODLIBS) $(SYSLIBS) $(LDLAST)
+ 
+ platform: $(BUILDPYTHON) pybuilddir.txt
+-	$(RUNSHARED) $(PYTHON_FOR_BUILD) -c 'import sys ; from sysconfig import get_platform ; print("%s-%d.%d" % (get_platform(), *sys.version_info[:2]))' >platform
++	$(RUNSHARED) $(PY_BUILD_ENVIRON) $(PYTHON_FOR_BUILD) -c 'import sys ; from sysconfig import get_platform ; print("%s-%d.%d" % (get_platform(), *sys.version_info[:2]))' >platform
+ 
+ # Create build directory and generate the sysconfig build-time data there.
+ # pybuilddir.txt contains the name of the build dir and is used for
 @@ -559,7 +560,7 @@ platform: $(BUILDPYTHON) pybuilddir.txt
  # or removed in case of failure.
  pybuilddir.txt: $(BUILDPYTHON)
@@ -86,7 +94,7 @@ index 5e88e3f..e7e22b2 100644
  	--install-scripts=$(BINDIR) \
  	--root=$(DESTDIR)/
 diff --git a/configure b/configure
-index fed73fe..25a2ab3 100755
+index fed73fe94c..25a2ab3f26 100755
 --- a/configure
 +++ b/configure
 @@ -751,6 +751,7 @@ CONFIG_ARGS
@@ -108,7 +116,7 @@ index fed73fe..25a2ab3 100755
  elif test "$cross_compiling" = maybe; then
      as_fn_error $? "Cross compiling required --host=HOST-TUPLE and --build=ARCH" "$LINENO" 5
 diff --git a/configure.ac b/configure.ac
-index ded175b..9fe7010 100644
+index ded175bb94..9fe70109ff 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -73,13 +73,15 @@ if test "$cross_compiling" = yes; then
@@ -129,5 +137,5 @@ index ded175b..9fe7010 100644
  
  dnl Ensure that if prefix is specified, it does not end in a slash. If
 -- 
-2.11.1
+2.14.3 (Apple Git-98)
 
