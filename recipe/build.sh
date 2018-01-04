@@ -40,10 +40,6 @@ CXX=$(basename "${CXX}")
 RANLIB=$(basename "${RANLIB}")
 READELF=$(basename "${READELF}")
 
-if [[ ${HOST} =~ .*darwin.* ]]; then
-  LDFLAGS=${LDFLAGS_CC}
-fi
-
 if [[ ${HOST} =~ .*darwin.* ]] && [[ -n ${CONDA_BUILD_SYSROOT} ]]; then
   # Python's setup.py will figure out that this is a macOS sysroot.
   CFLAGS="-isysroot ${CONDA_BUILD_SYSROOT} "${CFLAGS}
