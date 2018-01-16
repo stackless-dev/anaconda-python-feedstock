@@ -11,7 +11,7 @@ diff --git a/PCbuild/build.bat b/PCbuild/build.bat
 index 5828b51..17a413f 100644
 --- a/PCbuild/build.bat
 +++ b/PCbuild/build.bat
-@@ -81,7 +81,7 @@ if "%IncludeExternals%"=="" set IncludeExternals=true
+@@ -81,7 +81,7 @@
  if "%IncludeSSL%"=="" set IncludeSSL=true
  if "%IncludeTkinter%"=="" set IncludeTkinter=true
  
@@ -22,4 +22,3 @@ index 5828b51..17a413f 100644
      if "%PROCESSOR_ARCHITEW6432%" NEQ "AMD64" if "%PROCESSOR_ARCHITECTURE%" NEQ "AMD64" (
 -- 
 2.11.1
-
