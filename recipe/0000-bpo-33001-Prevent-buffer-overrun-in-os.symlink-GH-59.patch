@@ -1,0 +1,235 @@
+From 5e417537ae5d4c540cddca3d8c9d24a110ecf6d0 Mon Sep 17 00:00:00 2001
+From: Steve Dower <steve.dower@microsoft.com>
+Date: Mon, 5 Mar 2018 14:26:28 -0800
+Subject: [PATCH] bpo-33001: Prevent buffer overrun in os.symlink (GH-5989)
+ (GH-5990)
+
+---
+ Lib/test/test_os.py   | 35 ++++++++++++++++++++
+ Modules/posixmodule.c | 92 +++++++++++++++++++++++++++++++--------------------
+ 2 files changed, 91 insertions(+), 36 deletions(-)
+
+diff --git a/Lib/test/test_os.py b/Lib/test/test_os.py
+index bb5d2e3429..1117574501 100644
+--- a/Lib/test/test_os.py
++++ b/Lib/test/test_os.py
+@@ -2180,6 +2180,41 @@ class NonLocalSymlinkTests(unittest.TestCase):
+         os.symlink('some_dir', src)
+         assert os.path.isdir(src)
+ 
++    def test_buffer_overflow(self):
++        # Older versions would have a buffer overflow when detecting
++        # whether a link source was a directory. This test ensures we
++        # no longer crash, but does not otherwise validate the behavior
++        segment = 'X' * 27
++        path = os.path.join(*[segment] * 10)
++        test_cases = [
++            # overflow with absolute src
++            ('\\' + path, segment),
++            # overflow dest with relative src
++            (segment, path),
++            # overflow when joining src
++            (path[:180], path[:180]),
++        ]
++        for src, dest in test_cases:
++            try:
++                os.symlink(src, dest)
++            except FileNotFoundError:
++                pass
++            else:
++                try:
++                    os.remove(dest)
++                except OSError:
++                    pass
++            # Also test with bytes, since that is a separate code path.
++            try:
++                os.symlink(os.fsencode(src), os.fsencode(dest))
++            except FileNotFoundError:
++                pass
++            else:
++                try:
++                    os.remove(dest)
++                except OSError:
++                    pass
++
+ 
+ class FSEncodingTests(unittest.TestCase):
+     def test_nop(self):
+diff --git a/Modules/posixmodule.c b/Modules/posixmodule.c
+index d42416b027..22666594f3 100644
+--- a/Modules/posixmodule.c
++++ b/Modules/posixmodule.c
+@@ -7241,8 +7241,8 @@ win_readlink(PyObject *self, PyObject *args, PyObject *kwargs)
+ #if defined(MS_WINDOWS)
+ 
+ /* Grab CreateSymbolicLinkW dynamically from kernel32 */
+-static DWORD (CALLBACK *Py_CreateSymbolicLinkW)(LPWSTR, LPWSTR, DWORD) = NULL;
+-static DWORD (CALLBACK *Py_CreateSymbolicLinkA)(LPSTR, LPSTR, DWORD) = NULL;
++static BOOLEAN (CALLBACK *Py_CreateSymbolicLinkW)(LPCWSTR, LPCWSTR, DWORD) = NULL;
++static BOOLEAN (CALLBACK *Py_CreateSymbolicLinkA)(LPSTR, LPSTR, DWORD) = NULL;
+ 
+ static int
+ check_CreateSymbolicLink(void)
+@@ -7259,25 +7259,34 @@ check_CreateSymbolicLink(void)
+     return (Py_CreateSymbolicLinkW && Py_CreateSymbolicLinkA);
+ }
+ 
+-/* Remove the last portion of the path */
+-static void
++/* Remove the last portion of the path - return 0 on success */
++static int
+ _dirnameW(WCHAR *path)
+ {
+     WCHAR *ptr;
++    size_t length = wcsnlen_s(path, MAX_PATH);
++    if (length == MAX_PATH) {
++        return -1;
++    }
+ 
+     /* walk the path from the end until a backslash is encountered */
+-    for(ptr = path + wcslen(path); ptr != path; ptr--) {
++    for(ptr = path + length; ptr != path; ptr--) {
+         if (*ptr == L'\\' || *ptr == L'/')
+             break;
+     }
+     *ptr = 0;
++    return 0;
+ }
+ 
+-/* Remove the last portion of the path */
+-static void
++/* Remove the last portion of the path - return 0 on success */
++static int
+ _dirnameA(char *path)
+ {
+     char *ptr;
++    size_t length = strnlen_s(path, MAX_PATH);
++    if (length == MAX_PATH) {
++        return -1;
++    }
+ 
+     /* walk the path from the end until a backslash is encountered */
+     for(ptr = path + strlen(path); ptr != path; ptr--) {
+@@ -7285,14 +7294,15 @@ _dirnameA(char *path)
+             break;
+     }
+     *ptr = 0;
++    return 0;
+ }
+ 
+ /* Is this path absolute? */
+ static int
+ _is_absW(const WCHAR *path)
+ {
+-    return path[0] == L'\\' || path[0] == L'/' || path[1] == L':';
+-
++    return path[0] == L'\\' || path[0] == L'/' ||
++        (path[0] && path[1] == L':');
+ }
+ 
+ /* Is this path absolute? */
+@@ -7303,46 +7313,46 @@ _is_absA(const char *path)
+ 
+ }
+ 
+-/* join root and rest with a backslash */
+-static void
++/* join root and rest with a backslash - return 0 on success */
++static int
+ _joinW(WCHAR *dest_path, const WCHAR *root, const WCHAR *rest)
+ {
+-    size_t root_len;
+-
+     if (_is_absW(rest)) {
+-        wcscpy(dest_path, rest);
+-        return;
++        return wcscpy_s(dest_path, MAX_PATH, rest);
+     }
+ 
+-    root_len = wcslen(root);
++    if (wcscpy_s(dest_path, MAX_PATH, root)) {
++        return -1;
++    }
+ 
+-    wcscpy(dest_path, root);
+-    if(root_len) {
+-        dest_path[root_len] = L'\\';
+-        root_len++;
++    if (dest_path[0] && wcscat_s(dest_path, MAX_PATH, L"\\")) {
++        return -1;
+     }
+-    wcscpy(dest_path+root_len, rest);
++
++    wcscpy(dest_path, root);
++
++    return wcscat_s(dest_path, MAX_PATH, rest);
+ }
+ 
+-/* join root and rest with a backslash */
+-static void
++/* join root and rest with a backslash - return 0 on success */
++static int
+ _joinA(char *dest_path, const char *root, const char *rest)
+ {
+-    size_t root_len;
+-
+     if (_is_absA(rest)) {
+-        strcpy(dest_path, rest);
+-        return;
++        return strcpy_s(dest_path, MAX_PATH, rest);
+     }
+ 
+-    root_len = strlen(root);
++    if (strcpy_s(dest_path, MAX_PATH, root)) {
++        return -1;
++    }
+ 
+-    strcpy(dest_path, root);
+-    if(root_len) {
+-        dest_path[root_len] = '\\';
+-        root_len++;
++    if (dest_path[0] && strcat_s(dest_path, MAX_PATH, "\\")) {
++        return -1;
+     }
+-    strcpy(dest_path+root_len, rest);
++
++    strcpy(dest_path, root);
++
++    return strcat_s(dest_path, MAX_PATH, rest);
+ }
+ 
+ /* Return True if the path at src relative to dest is a directory */
+@@ -7354,10 +7364,14 @@ _check_dirW(WCHAR *src, WCHAR *dest)
+     WCHAR src_resolved[MAX_PATH] = L"";
+ 
+     /* dest_parent = os.path.dirname(dest) */
+-    wcscpy(dest_parent, dest);
+-    _dirnameW(dest_parent);
++    if (wcscpy_s(dest_parent, MAX_PATH, dest) ||
++        _dirnameW(dest_parent)) {
++        return 0;
++    }
+     /* src_resolved = os.path.join(dest_parent, src) */
+-    _joinW(src_resolved, dest_parent, src);
++    if (_joinW(src_resolved, dest_parent, src)) {
++        return 0;
++    }
+     return (
+         GetFileAttributesExW(src_resolved, GetFileExInfoStandard, &src_info)
+         && src_info.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY
+@@ -7460,6 +7474,12 @@ os_symlink_impl(PyObject *module, path_t *src, path_t *dst,
+ 
+ #else
+ 
++    if ((src->narrow && dst->wide) || (src->wide && dst->narrow)) {
++        PyErr_SetString(PyExc_ValueError,
++            "symlink: src and dst must be the same type");
++        return NULL;
++    }
++
+     Py_BEGIN_ALLOW_THREADS
+ #if HAVE_SYMLINKAT
+     if (dir_fd != DEFAULT_DIR_FD)
+-- 
+2.16.2
+
