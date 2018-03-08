@@ -9,6 +9,7 @@ source:
   - url: https://www.python.org/ftp/python/{{ version }}/Python-{{ version }}.tgz
     md5: {{ md5 }}
     patches:
+      - 0000-bpo-33001-Prevent-buffer-overrun-in-os-symlink.patch
       - 0001-backport-Python-3.6-_PYTHON_SYSCONFIGDATA_NAME.patch
       - 0002-Issue-21122-Fix-LTO-builds-on-OS-X.-Patch-by-Brett-C.patch
       - 0003-Add-Anaconda-Distribution-version-logic.patch
@@ -56,7 +57,11 @@ source:
     sha256: de3c87b26a80e789986d8e6950c6304175d3829afe9c6c7211eb7257266ab0ac         # [win]
 
 build:
+<<<<<<< HEAD
   number: 27
+=======
+  number: w
+>>>>>>> 4046f8b... Fix for CVE-2018-1000117
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
