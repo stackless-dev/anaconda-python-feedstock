@@ -1,21 +1,23 @@
-From 5e417537ae5d4c540cddca3d8c9d24a110ecf6d0 Mon Sep 17 00:00:00 2001
-From: Steve Dower <steve.dower@microsoft.com>
-Date: Mon, 5 Mar 2018 14:26:28 -0800
-Subject: [PATCH] bpo-33001: Prevent buffer overrun in os.symlink (GH-5989)
- (GH-5990)
+From d316eefeb4b857238f2e9f15322239b00e757277 Mon Sep 17 00:00:00 2001
+From: Steve Dower <steve.dower@python.org>
+Date: Mon, 5 Mar 2018 09:03:42 -0800
+Subject: [PATCH 1/2] bpo-33001: Minimal fix to prevent buffer overrun in
+ os.symlink
 
 ---
- Lib/test/test_os.py   | 35 ++++++++++++++++++++
- Modules/posixmodule.c | 92 +++++++++++++++++++++++++++++++--------------------
- 2 files changed, 91 insertions(+), 36 deletions(-)
+ Lib/test/test_os.py                                | 42 ++++++++++
+ .../2018-03-05-10-09-51.bpo-33001.elj4Aa.rst       |  1 +
+ Modules/posixmodule.c                              | 94 +++++++++++++---------
+ 3 files changed, 99 insertions(+), 38 deletions(-)
+ create mode 100644 Misc/NEWS.d/next/Security/2018-03-05-10-09-51.bpo-33001.elj4Aa.rst
 
 diff --git a/Lib/test/test_os.py b/Lib/test/test_os.py
-index bb5d2e3429..1117574501 100644
+index bb5d2e3429ce..e000b80f5e1b 100644
 --- a/Lib/test/test_os.py
 +++ b/Lib/test/test_os.py
-@@ -2180,6 +2180,41 @@ class NonLocalSymlinkTests(unittest.TestCase):
-         os.symlink('some_dir', src)
-         assert os.path.isdir(src)
+@@ -2117,6 +2117,48 @@ def test_12084(self):
+             os.remove(file1)
+             shutil.rmtree(level1)
  
 +    def test_buffer_overflow(self):
 +        # Older versions would have a buffer overflow when detecting
@@ -28,6 +30,8 @@ index bb5d2e3429..1117574501 100644
 +            ('\\' + path, segment),
 +            # overflow dest with relative src
 +            (segment, path),
++            # overflow dest when appending '\\' for join
++            (segment, path[:261]),
 +            # overflow when joining src
 +            (path[:180], path[:180]),
 +        ]
@@ -42,8 +46,13 @@ index bb5d2e3429..1117574501 100644
 +                except OSError:
 +                    pass
 +            # Also test with bytes, since that is a separate code path.
++            # However, because of the stack layout, it is not possible
++            # to exploit the overflow on Python 3.5 using bytes
 +            try:
 +                os.symlink(os.fsencode(src), os.fsencode(dest))
++            except ValueError:
++                # Conversion function checks for len(arg) >= 260
++                pass
 +            except FileNotFoundError:
 +                pass
 +            else:
@@ -53,24 +62,20 @@ index bb5d2e3429..1117574501 100644
 +                    pass
 +
  
- class FSEncodingTests(unittest.TestCase):
-     def test_nop(self):
+ @unittest.skipUnless(sys.platform == "win32", "Win32 specific tests")
+ class Win32JunctionTests(unittest.TestCase):
+diff --git a/Misc/NEWS.d/next/Security/2018-03-05-10-09-51.bpo-33001.elj4Aa.rst b/Misc/NEWS.d/next/Security/2018-03-05-10-09-51.bpo-33001.elj4Aa.rst
+new file mode 100644
+index 000000000000..2acbac9e1af6
+--- /dev/null
++++ b/Misc/NEWS.d/next/Security/2018-03-05-10-09-51.bpo-33001.elj4Aa.rst
+@@ -0,0 +1 @@
++Minimal fix to prevent buffer overrun in os.symlink on Windows
 diff --git a/Modules/posixmodule.c b/Modules/posixmodule.c
-index d42416b027..22666594f3 100644
+index d42416b0270e..102c5405bd59 100644
 --- a/Modules/posixmodule.c
 +++ b/Modules/posixmodule.c
-@@ -7241,8 +7241,8 @@ win_readlink(PyObject *self, PyObject *args, PyObject *kwargs)
- #if defined(MS_WINDOWS)
- 
- /* Grab CreateSymbolicLinkW dynamically from kernel32 */
--static DWORD (CALLBACK *Py_CreateSymbolicLinkW)(LPWSTR, LPWSTR, DWORD) = NULL;
--static DWORD (CALLBACK *Py_CreateSymbolicLinkA)(LPSTR, LPSTR, DWORD) = NULL;
-+static BOOLEAN (CALLBACK *Py_CreateSymbolicLinkW)(LPCWSTR, LPCWSTR, DWORD) = NULL;
-+static BOOLEAN (CALLBACK *Py_CreateSymbolicLinkA)(LPSTR, LPSTR, DWORD) = NULL;
- 
- static int
- check_CreateSymbolicLink(void)
-@@ -7259,25 +7259,34 @@ check_CreateSymbolicLink(void)
+@@ -7259,39 +7259,50 @@ check_CreateSymbolicLink(void)
      return (Py_CreateSymbolicLinkW && Py_CreateSymbolicLinkA);
  }
  
@@ -109,8 +114,9 @@ index d42416b027..22666594f3 100644
 +    }
  
      /* walk the path from the end until a backslash is encountered */
-     for(ptr = path + strlen(path); ptr != path; ptr--) {
-@@ -7285,14 +7294,15 @@ _dirnameA(char *path)
+-    for(ptr = path + strlen(path); ptr != path; ptr--) {
++    for(ptr = path + length; ptr != path; ptr--) {
+         if (*ptr == '\\' || *ptr == '/')
              break;
      }
      *ptr = 0;
@@ -122,13 +128,18 @@ index d42416b027..22666594f3 100644
  _is_absW(const WCHAR *path)
  {
 -    return path[0] == L'\\' || path[0] == L'/' || path[1] == L':';
--
 +    return path[0] == L'\\' || path[0] == L'/' ||
 +        (path[0] && path[1] == L':');
+ 
  }
  
- /* Is this path absolute? */
-@@ -7303,46 +7313,46 @@ _is_absA(const char *path)
+@@ -7299,50 +7310,47 @@ _is_absW(const WCHAR *path)
+ static int
+ _is_absA(const char *path)
+ {
+-    return path[0] == '\\' || path[0] == '/' || path[1] == ':';
++    return path[0] == '\\' || path[0] == '/' ||
++        (path[0] && path[1] == ':');
  
  }
  
@@ -159,8 +170,6 @@ index d42416b027..22666594f3 100644
 +        return -1;
      }
 -    wcscpy(dest_path+root_len, rest);
-+
-+    wcscpy(dest_path, root);
 +
 +    return wcscat_s(dest_path, MAX_PATH, rest);
  }
@@ -193,13 +202,11 @@ index d42416b027..22666594f3 100644
      }
 -    strcpy(dest_path+root_len, rest);
 +
-+    strcpy(dest_path, root);
-+
 +    return strcat_s(dest_path, MAX_PATH, rest);
  }
  
  /* Return True if the path at src relative to dest is a directory */
-@@ -7354,10 +7364,14 @@ _check_dirW(WCHAR *src, WCHAR *dest)
+@@ -7354,10 +7362,14 @@ _check_dirW(WCHAR *src, WCHAR *dest)
      WCHAR src_resolved[MAX_PATH] = L"";
  
      /* dest_parent = os.path.dirname(dest) */
@@ -217,19 +224,60 @@ index d42416b027..22666594f3 100644
      return (
          GetFileAttributesExW(src_resolved, GetFileExInfoStandard, &src_info)
          && src_info.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY
-@@ -7460,6 +7474,12 @@ os_symlink_impl(PyObject *module, path_t *src, path_t *dst,
+@@ -7373,10 +7385,14 @@ _check_dirA(char *src, char *dest)
+     char src_resolved[MAX_PATH] = "";
  
- #else
- 
-+    if ((src->narrow && dst->wide) || (src->wide && dst->narrow)) {
-+        PyErr_SetString(PyExc_ValueError,
-+            "symlink: src and dst must be the same type");
-+        return NULL;
+     /* dest_parent = os.path.dirname(dest) */
+-    strcpy(dest_parent, dest);
+-    _dirnameA(dest_parent);
++    if (strcpy_s(dest_parent, MAX_PATH, dest) ||
++        _dirnameA(dest_parent)) {
++        return 0;
 +    }
-+
+     /* src_resolved = os.path.join(dest_parent, src) */
+-    _joinA(src_resolved, dest_parent, src);
++    if (_joinA(src_resolved, dest_parent, src)) {
++        return 0;
++    }
+     return (
+         GetFileAttributesExA(src_resolved, GetFileExInfoStandard, &src_info)
+         && src_info.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY
+@@ -7441,6 +7457,7 @@ os_symlink_impl(PyObject *module, path_t *src, path_t *dst,
+ #ifdef MS_WINDOWS
+ 
      Py_BEGIN_ALLOW_THREADS
- #if HAVE_SYMLINKAT
-     if (dir_fd != DEFAULT_DIR_FD)
--- 
-2.16.2
++    _Py_BEGIN_SUPPRESS_IPH
+     if (dst->wide) {
+         /* if src is a directory, ensure target_is_directory==1 */
+         target_is_directory |= _check_dirW(src->wide, dst->wide);
+@@ -7453,6 +7470,7 @@ os_symlink_impl(PyObject *module, path_t *src, path_t *dst,
+         result = Py_CreateSymbolicLinkA(dst->narrow, src->narrow,
+                                         target_is_directory);
+     }
++    _Py_END_SUPPRESS_IPH
+     Py_END_ALLOW_THREADS
+ 
+     if (!result)
 
+From ac732bec4d227a38ebb57a83a6caef0df671a219 Mon Sep 17 00:00:00 2001
+From: Steve Dower <steve.dower@python.org>
+Date: Mon, 5 Mar 2018 13:23:22 -0800
+Subject: [PATCH 2/2] Remove invalid test
+
+---
+ Lib/test/test_os.py | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/Lib/test/test_os.py b/Lib/test/test_os.py
+index e000b80f5e1b..e2077383bf47 100644
+--- a/Lib/test/test_os.py
++++ b/Lib/test/test_os.py
+@@ -2128,8 +2128,6 @@ def test_buffer_overflow(self):
+             ('\\' + path, segment),
+             # overflow dest with relative src
+             (segment, path),
+-            # overflow dest when appending '\\' for join
+-            (segment, path[:261]),
+             # overflow when joining src
+             (path[:180], path[:180]),
+         ]
