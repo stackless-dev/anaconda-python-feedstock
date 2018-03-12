@@ -1,4 +1,4 @@
-From df24f8e9f7c3e7d71aaf19e76ebdc4dedcf99573 Mon Sep 17 00:00:00 2001
+From 45a759db7725ec264a32b81a1426e87abe33514f Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 12:17:33 +0100
 Subject: [PATCH 09/15] Support cross-compiling byte-code
@@ -11,21 +11,21 @@ https://bugs.python.org/issue22724
  3 files changed, 15 insertions(+), 10 deletions(-)
 
 diff --git a/Makefile.pre.in b/Makefile.pre.in
-index 5e88e3f6aa..bca5efea67 100644
+index 6cb0c63e5d..50f0dea955 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -231,6 +231,7 @@ BUILDPYTHON=	python$(BUILDEXE)
+@@ -230,6 +230,7 @@ PYTHON=		python$(EXE)
+ BUILDPYTHON=	python$(BUILDEXE)
  
  PYTHON_FOR_REGEN=@PYTHON_FOR_REGEN@
- UPDATE_FILE=@PYTHON_FOR_REGEN@ $(srcdir)/Tools/scripts/update_file.py
 +PY_BUILD_ENVIRON=@PY_BUILD_ENVIRON@
  PYTHON_FOR_BUILD=@PYTHON_FOR_BUILD@
  _PYTHON_HOST_PLATFORM=@_PYTHON_HOST_PLATFORM@
  BUILD_GNU_TYPE=	@build@
-@@ -541,14 +542,14 @@ coverage-report: regen-grammar regen-importlib
+@@ -530,14 +531,14 @@ coverage-report: regen-grammar regen-importlib
  # (depends on python having already been built)
  .PHONY=clinic
- clinic: check-clean-src $(BUILDPYTHON) $(srcdir)/Modules/_blake2/blake2s_impl.c
+ clinic: $(BUILDPYTHON) $(srcdir)/Modules/_blake2/blake2s_impl.c
 -	$(RUNSHARED) $(PYTHON_FOR_BUILD) ./Tools/clinic/clinic.py --make
 +	$(RUNSHARED) $(PY_BUILD_ENVIRON) $(PYTHON_FOR_BUILD) ./Tools/clinic/clinic.py --make
  
@@ -39,7 +39,7 @@ index 5e88e3f6aa..bca5efea67 100644
  
  # Create build directory and generate the sysconfig build-time data there.
  # pybuilddir.txt contains the name of the build dir and is used for
-@@ -559,7 +560,7 @@ platform: $(BUILDPYTHON) pybuilddir.txt
+@@ -548,7 +549,7 @@ platform: $(BUILDPYTHON) pybuilddir.txt
  # or removed in case of failure.
  pybuilddir.txt: $(BUILDPYTHON)
  	@echo "none" > ./pybuilddir.txt
@@ -48,7 +48,7 @@ index 5e88e3f6aa..bca5efea67 100644
  	if test $$? -ne 0 ; then \
  		echo "generate-posix-vars failed" ; \
  		rm -f ./pybuilddir.txt ; \
-@@ -586,7 +587,7 @@ sharedmods: $(BUILDPYTHON) pybuilddir.txt Modules/_math.o
+@@ -575,7 +576,7 @@ sharedmods: $(BUILDPYTHON) pybuilddir.txt Modules/_math.o
  	esac; \
  	$(RUNSHARED) CC='$(CC)' LDSHARED='$(BLDSHARED)' OPT='$(OPT)' \
  		_TCLTK_INCLUDES='$(TCLTK_INCLUDES)' _TCLTK_LIBS='$(TCLTK_LIBS)' \
@@ -57,7 +57,7 @@ index 5e88e3f6aa..bca5efea67 100644
  
  
  # Build static library
-@@ -1087,7 +1088,7 @@ install: @FRAMEWORKINSTALLFIRST@ commoninstall bininstall maninstall @FRAMEWORKI
+@@ -1067,7 +1068,7 @@ install: @FRAMEWORKINSTALLFIRST@ commoninstall bininstall maninstall @FRAMEWORKI
  			upgrade) ensurepip="--upgrade" ;; \
  			install|*) ensurepip="" ;; \
  		esac; \
@@ -66,7 +66,7 @@ index 5e88e3f6aa..bca5efea67 100644
  			$$ensurepip --root=$(DESTDIR)/ ; \
  	fi
  
-@@ -1097,7 +1098,7 @@ altinstall: commoninstall
+@@ -1077,7 +1078,7 @@ altinstall: commoninstall
  			upgrade) ensurepip="--altinstall --upgrade" ;; \
  			install|*) ensurepip="--altinstall" ;; \
  		esac; \
@@ -75,7 +75,7 @@ index 5e88e3f6aa..bca5efea67 100644
  			$$ensurepip --root=$(DESTDIR)/ ; \
  	fi
  
-@@ -1468,7 +1469,7 @@ libainstall:	@DEF_MAKE_RULE@ python-config
+@@ -1448,7 +1449,7 @@ libainstall:	@DEF_MAKE_RULE@ python-config
  # Install the dynamically loadable modules
  # This goes into $(exec_prefix)
  sharedinstall: sharedmods
@@ -84,7 +84,7 @@ index 5e88e3f6aa..bca5efea67 100644
  	   	--prefix=$(prefix) \
  		--install-scripts=$(BINDIR) \
  		--install-platlib=$(DESTSHARED) \
-@@ -1552,7 +1553,7 @@ frameworkinstallextras:
+@@ -1532,7 +1533,7 @@ frameworkinstallextras:
  # This installs a few of the useful scripts in Tools/scripts
  scriptsinstall:
  	SRCDIR=$(srcdir) $(RUNSHARED) \
@@ -94,7 +94,7 @@ index 5e88e3f6aa..bca5efea67 100644
  	--install-scripts=$(BINDIR) \
  	--root=$(DESTDIR)/
 diff --git a/configure b/configure
-index fed73fe94c..25a2ab3f26 100755
+index 22959bdac7..2ec1dd6b83 100755
 --- a/configure
 +++ b/configure
 @@ -751,6 +751,7 @@ CONFIG_ARGS
@@ -116,7 +116,7 @@ index fed73fe94c..25a2ab3f26 100755
  elif test "$cross_compiling" = maybe; then
      as_fn_error $? "Cross compiling required --host=HOST-TUPLE and --build=ARCH" "$LINENO" 5
 diff --git a/configure.ac b/configure.ac
-index ded175bb94..9fe70109ff 100644
+index 543085c11d..9546506884 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -73,13 +73,15 @@ if test "$cross_compiling" = yes; then
