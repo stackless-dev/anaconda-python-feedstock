@@ -10,7 +10,7 @@ source:
     md5: {{ md5 }}
     patches:
       - 0000-bpo-33001-Prevent-buffer-overrun-in-os.symlink-GH-59.patch
-      - 0001-backport-Python-3.6-_PYTHON_SYSCONFIGDATA_NAME.patch
+      - 0001-backport-Python-3.6-_PYTHON_SYSCONFIGDATA_NAME-also-.patch
       - 0002-Issue-21122-Fix-LTO-builds-on-OS-X.-Patch-by-Brett-C.patch
       - 0003-Add-Anaconda-Distribution-version-logic.patch
       - 0004-Darwin-Omit-PYTHONFRAMEWORK-site-packages.patch
@@ -27,9 +27,10 @@ source:
       - 0014-runtime_library_dir_option-Use-1st-word-of-CC-as-com.patch
       # TODO :: Fix this so we can re-enable 0015 We get a failure at building Tcl currently:
       # NMAKE : fatal error U1052: file 'makefile.vc' not found [C:\Users\builder\mc3\conda-bld\python_1505378303698\work\PCbuild\tcl.vcxproj]
-      # - 0015-Win32-Do-not-download-externals.patch
-      - 0016-Ignore-_PYTHON_SYSCONFIGDATA_NAME-if-it-does-not-exi.patch
-      - 0017-Fix-find_library-so-that-it-looks-in-sys.prefix-lib-.patch
+      - 0015-Win32-Do-not-download-externals.patch
+      - 0016-Fix-find_library-so-that-it-looks-in-sys.prefix-lib-.patch
+      - 0017-Fix-macOS-test_asyncio-from-https-github.com-python-.patch
+
   # TODO :: Depend on our own packages for these:
   - url: https://github.com/python/cpython-source-deps/archive/xz-5.2.2.zip          # [win]
     folder: externals/xz-5.2.2                                                       # [win]
@@ -57,7 +58,7 @@ source:
     sha256: de3c87b26a80e789986d8e6950c6304175d3829afe9c6c7211eb7257266ab0ac         # [win]
 
 build:
-  number: 0
+  number: 1
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:

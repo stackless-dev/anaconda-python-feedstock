@@ -1,7 +1,7 @@
-From 789476bb797a5a216d2acc513705f9c51e60843e Mon Sep 17 00:00:00 2001
+From 524e816203bb955002fc00e3fa194eab2d7ebcf5 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 12:17:33 +0100
-Subject: [PATCH 11/15] Support cross-compiling byte-code
+Subject: [PATCH 11/16] Support cross-compiling byte-code
 
 https://bugs.python.org/issue22724
 ---
@@ -137,5 +137,5 @@ index 22c3fd170a..9205a4de78 100644
  
  dnl Ensure that if prefix is specified, it does not end in a slash. If
 -- 
-2.13.6
+2.14.3 (Apple Git-98)
 

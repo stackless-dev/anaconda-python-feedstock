@@ -1,20 +1,24 @@
-From eae27ee82e4de9fb0ede577639002964efdb1003 Mon Sep 17 00:00:00 2001
+From 48b58fc29205d1dea7426fd1623a5f7559d68459 Mon Sep 17 00:00:00 2001
 From: Jonathan Helmus <jjhelmus@gmail.com>
 Date: Fri, 29 Sep 2017 14:14:13 -0500
-Subject: [PATCH 01/15] backport Python 3.6 _PYTHON_SYSCONFIGDATA_NAME
+Subject: [PATCH 01/16] backport Python 3.6 _PYTHON_SYSCONFIGDATA_NAME, also
+ add support for using _CONDA_PYTHON_SYSCONFIGDATA_NAME if
+ _PYTHON_SYSCONFIGDATA_NAME has not been set and ignore
+ {_CONDA,}_PYTHON_SYSCONFIGDATA_NAME if the file they point to does not exist.
 
-backport Python 3.6's _PYTHON_SYSCONFIGDATA_NAME environmental variable support
-to Python 3.5.4
+This is important when bootstrapping a Miniconda (however if you are using
+a Python that pre-dates this change then you will need to apply this patch
+manually).
 ---
- Lib/distutils/sysconfig.py | 42 +++++++++++-------------------------------
- Lib/sysconfig.py           | 17 +++++++++++++++--
- 2 files changed, 26 insertions(+), 33 deletions(-)
+ Lib/distutils/sysconfig.py | 44 +++++++++++++-------------------------------
+ Lib/sysconfig.py           | 24 ++++++++++++++++++++++--
+ 2 files changed, 35 insertions(+), 33 deletions(-)
 
 diff --git a/Lib/distutils/sysconfig.py b/Lib/distutils/sysconfig.py
-index bd19ebf515..fa8a467b30 100644
+index bd19ebf515..ed33c30fed 100644
 --- a/Lib/distutils/sysconfig.py
 +++ b/Lib/distutils/sysconfig.py
-@@ -412,38 +412,18 @@ _config_vars = None
+@@ -412,38 +412,20 @@ _config_vars = None
  
  def _init_posix():
      """Initialize the module as appropriate for POSIX systems."""
@@ -50,11 +54,13 @@ index bd19ebf515..fa8a467b30 100644
 -
 +    # _sysconfigdata is generated at build time, see the sysconfig module
 +    name = os.environ.get('_PYTHON_SYSCONFIGDATA_NAME',
-+        '_sysconfigdata_{abi}_{platform}_{multiarch}'.format(
-+        abi=sys.abiflags,
-+        platform=sys.platform,
-+        multiarch=getattr(sys.implementation, '_multiarch', ''),
-+    ))
++        os.environ.get('_CONDA_PYTHON_SYSCONFIGDATA_NAME',
++            '_sysconfigdata_{abi}_{platform}_{multiarch}'.format(
++            abi=sys.abiflags,
++            platform=sys.platform,
++            multiarch=getattr(sys.implementation, '_multiarch', ''))
++        )
++    )
 +    _temp = __import__(name, globals(), locals(), ['build_time_vars'], 0)
 +    build_time_vars = _temp.build_time_vars
      global _config_vars
@@ -65,47 +71,54 @@ index bd19ebf515..fa8a467b30 100644
  
  def _init_nt():
 diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
-index 9c34be0a07..79a4354928 100644
+index 9c34be0a07..bd02f2aea7 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
-@@ -339,6 +339,15 @@ def get_makefile_filename():
+@@ -339,6 +339,22 @@ def get_makefile_filename():
          config_dir_name = 'config'
      return os.path.join(get_path('stdlib'), config_dir_name, 'Makefile')
  
 +
-+def _get_sysconfigdata_name():
-+    return os.environ.get('_PYTHON_SYSCONFIGDATA_NAME',
-+        '_sysconfigdata_{abi}_{platform}_{multiarch}'.format(
-+        abi=sys.abiflags,
-+        platform=sys.platform,
-+        multiarch=getattr(sys.implementation, '_multiarch', ''),
-+    ))
++def _get_sysconfigdata_name(check_exists):
++    for envvar in ('_PYTHON_SYSCONFIGDATA_NAME', '_CONDA_PYTHON_SYSCONFIGDATA_NAME'):
++        res = os.environ.get(envvar, None)
++        if res and check_exists:
++            try:
++                loader = importlib.util.find_spec(res)
++            except:
++                res = None
++        if res:
++            return res
++    return '_sysconfigdata_{abi}_{platform}_{multiarch}'.format(
++            abi=sys.abiflags,
++            platform=sys.platform,
++            multiarch=getattr(sys.implementation, '_multiarch', ''))
 +
  def _generate_posix_vars():
      """Generate the Python module containing build-time variables."""
      import pprint
-@@ -379,7 +388,8 @@ def _generate_posix_vars():
+@@ -379,7 +395,8 @@ def _generate_posix_vars():
      # _sysconfigdata module manually and populate it with the build vars.
      # This is more than sufficient for ensuring the subsequent call to
      # get_platform() succeeds.
 -    name = '_sysconfigdata'
 +    # _PYTHON_SYSCONFIGDATA_NAME support backported from Python 3.6
-+    name = _get_sysconfigdata_name()
++    name = _get_sysconfigdata_name(False)
      if 'darwin' in sys.platform:
          import types
          module = types.ModuleType(name)
-@@ -405,7 +415,10 @@ def _generate_posix_vars():
+@@ -405,7 +422,10 @@ def _generate_posix_vars():
  def _init_posix(vars):
      """Initialize the module as appropriate for POSIX systems."""
      # _sysconfigdata is generated at build time, see _generate_posix_vars()
 -    from _sysconfigdata import build_time_vars
 +    # _PYTHON_SYSCONFIGDATA_NAME support backported from Python 3.6
-+    name = _get_sysconfigdata_name()
++    name = _get_sysconfigdata_name(True)
 +    _temp = __import__(name, globals(), locals(), ['build_time_vars'], 0)
 +    build_time_vars = _temp.build_time_vars
      vars.update(build_time_vars)
  
  def _init_non_posix(vars):
 -- 
-2.13.6
+2.14.3 (Apple Git-98)
 

@@ -1,7 +1,7 @@
-From d13b5b2f1dccf13fe69466acf4b3159da1bee8be Mon Sep 17 00:00:00 2001
+From 0dc2d22fda865ad458a88684a4ab3ff9a55572b8 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 11:45:28 +0100
-Subject: [PATCH 10/15] Do not pass -g to GCC when not Py_DEBUG
+Subject: [PATCH 10/16] Do not pass -g to GCC when not Py_DEBUG
 
 This bloats our exe and our modules a lot.
 ---
@@ -48,5 +48,5 @@ index 4d7ed101a2..22c3fd170a 100644
  	    ;;
  	*)
 -- 
-2.13.6
+2.14.3 (Apple Git-98)
 

@@ -1,7 +1,7 @@
-From 6c02f317495e2d3bcc593c31ba5bba99335108c5 Mon Sep 17 00:00:00 2001
+From c94f11ddc0786091c01a0a79f4de99f2e1494081 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 15 Aug 2017 22:38:19 +0100
-Subject: [PATCH 03/15] Add Anaconda Distribution version logic
+Subject: [PATCH 03/16] Add Anaconda Distribution version logic
 
 ---
  Include/pylifecycle.h |  1 +
@@ -60,7 +60,7 @@ index 7bd6efd0a0..17fd1b98c4 100644
 +#include "osdefs.h"
  #include "patchlevel.h"
  
- const char *
++const char *
 +Anaconda_GetVersion(void)
 +{
 +	#ifdef MS_WIN32
@@ -95,7 +95,7 @@ index 7bd6efd0a0..17fd1b98c4 100644
 +	#undef STDLIB_DIR
 +}
 +
-+const char *
+ const char *
  Py_GetVersion(void)
  {
  	static char version[250];
@@ -107,5 +107,5 @@ index 7bd6efd0a0..17fd1b98c4 100644
  	return version;
  }
 -- 
-2.13.6
+2.14.3 (Apple Git-98)
 
