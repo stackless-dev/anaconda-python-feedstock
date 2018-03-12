@@ -1,0 +1,25 @@
+From b6417edf1bb98ab72cc1a6192e4d0a5f89a8b2ec Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Mon, 12 Mar 2018 20:47:04 +0000
+Subject: [PATCH 16/16] Fix macOS test_asyncio from
+ https://github.com/python/cpython/pull/6037
+
+---
+ Lib/test/test_asyncio/test_events.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Lib/test/test_asyncio/test_events.py b/Lib/test/test_asyncio/test_events.py
+index 27781a2d91..2c4629ab49 100644
+--- a/Lib/test/test_asyncio/test_events.py
++++ b/Lib/test/test_asyncio/test_events.py
+@@ -1533,6 +1533,7 @@ class EventLoopTestsMixin:
+         self.assertEqual(5, proto.nbytes)
+ 
+         os.close(slave)
++        proto.transport.close()
+         self.loop.run_until_complete(proto.done)
+         self.assertEqual(
+             ['INITIAL', 'CONNECTED', 'EOF', 'CLOSED'], proto.state)
+-- 
+2.14.3 (Apple Git-98)
+
