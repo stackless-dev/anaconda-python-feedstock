@@ -24,8 +24,9 @@ source:
       - 0011-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
       - 0012-runtime_library_dir_option-Use-1st-word-of-CC-as-com.patch
       - 0013-Win32-Do-not-download-externals.patch
-      - 0014-Ignore-_PYTHON_SYSCONFIGDATA_NAME-if-it-does-not-exi.patch
+      - 0014-Add-support-for-_CONDA_PYTHON_SYSCONFIGDATA_NAME-if-.patch
       - 0015-Fix-find_library-so-that-it-looks-in-sys.prefix-lib-.patch
+      - 0016-Fix-macOS-test_asyncio-from-https-github.com-python-.patch
   # TODO :: Depend on our own packages for these:
   - url: https://github.com/python/cpython-source-deps/archive/xz-5.2.2.zip          # [win]
     folder: externals/xz-5.2.2                                                       # [win]
