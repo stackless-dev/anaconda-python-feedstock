@@ -26,7 +26,7 @@ source:
     - 0013-Fix-find_library-so-that-it-looks-in-sys.prefix-lib-.patch
 
 build:
-  number: 30
+  number: 31
   no_link:
     - bin/python2.7     # [unix]
     - DLLs/_ctypes.pyd  # [win]
