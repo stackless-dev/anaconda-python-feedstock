@@ -1,4 +1,4 @@
-From dbd73548e1d1a55b2bc8e4c42583a1190403af3f Mon Sep 17 00:00:00 2001
+From 951db25094d7c3adbc99d73a470604b3fdb94196 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 20 Aug 2017 00:22:22 +0100
 Subject: [PATCH 11/15] Darwin: Look in ${sysroot}/usr/{lib,include} if sysroot
@@ -9,7 +9,7 @@ Subject: [PATCH 11/15] Darwin: Look in ${sysroot}/usr/{lib,include} if sysroot
  1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/setup.py b/setup.py
-index 0d644db..2a1a319 100644
+index 49193f6..09fba45 100644
 --- a/setup.py
 +++ b/setup.py
 @@ -574,7 +574,13 @@ class PyBuildExt(build_ext):
@@ -28,5 +28,5 @@ index 0d644db..2a1a319 100644
              inc_dirs = self.compiler.include_dirs + system_include_dirs
          else:
 -- 
-2.11.1
+2.7.4
 

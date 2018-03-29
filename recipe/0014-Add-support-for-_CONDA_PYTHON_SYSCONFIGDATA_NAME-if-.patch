@@ -1,4 +1,4 @@
-From a217e28a32cce813eeac3f547ccb665f53681e0c Mon Sep 17 00:00:00 2001
+From 6c32238dbbc2ccd2f43ae6704d1151f7d1e4cf20 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 3 Dec 2017 17:31:27 +0000
 Subject: [PATCH 14/15] Add support for _CONDA_PYTHON_SYSCONFIGDATA_NAME if
@@ -14,7 +14,7 @@ manually).
  2 files changed, 23 insertions(+), 14 deletions(-)
 
 diff --git a/Lib/distutils/sysconfig.py b/Lib/distutils/sysconfig.py
-index 2bcd1dd288..237d680d91 100644
+index 2bcd1dd..237d680 100644
 --- a/Lib/distutils/sysconfig.py
 +++ b/Lib/distutils/sysconfig.py
 @@ -416,11 +416,13 @@ def _init_posix():
@@ -37,7 +37,7 @@ index 2bcd1dd288..237d680d91 100644
      build_time_vars = _temp.build_time_vars
      global _config_vars
 diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
-index 9314e71a2f..882b89cbc8 100644
+index 9314e71..882b89c 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
 @@ -342,13 +342,20 @@ def get_makefile_filename():
@@ -87,5 +87,5 @@ index 9314e71a2f..882b89cbc8 100644
      build_time_vars = _temp.build_time_vars
      vars.update(build_time_vars)
 -- 
-2.14.3 (Apple Git-98)
+2.7.4
 
