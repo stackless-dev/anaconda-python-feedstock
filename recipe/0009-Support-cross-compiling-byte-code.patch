@@ -1,17 +1,17 @@
-From df24f8e9f7c3e7d71aaf19e76ebdc4dedcf99573 Mon Sep 17 00:00:00 2001
+From 5e153623a69c89f299d025c24a6161c6e279746c Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 12:17:33 +0100
 Subject: [PATCH 09/15] Support cross-compiling byte-code
 
 https://bugs.python.org/issue22724
 ---
- Makefile.pre.in | 17 +++++++++--------
+ Makefile.pre.in | 15 ++++++++-------
  configure       |  4 +++-
  configure.ac    |  4 +++-
- 3 files changed, 15 insertions(+), 10 deletions(-)
+ 3 files changed, 14 insertions(+), 9 deletions(-)
 
 diff --git a/Makefile.pre.in b/Makefile.pre.in
-index 5e88e3f6aa..bca5efea67 100644
+index 1c9ffea..bfcf8b1 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
 @@ -231,6 +231,7 @@ BUILDPYTHON=	python$(BUILDEXE)
@@ -22,15 +22,7 @@ index 5e88e3f6aa..bca5efea67 100644
  PYTHON_FOR_BUILD=@PYTHON_FOR_BUILD@
  _PYTHON_HOST_PLATFORM=@_PYTHON_HOST_PLATFORM@
  BUILD_GNU_TYPE=	@build@
-@@ -541,14 +542,14 @@ coverage-report: regen-grammar regen-importlib
- # (depends on python having already been built)
- .PHONY=clinic
- clinic: check-clean-src $(BUILDPYTHON) $(srcdir)/Modules/_blake2/blake2s_impl.c
--	$(RUNSHARED) $(PYTHON_FOR_BUILD) ./Tools/clinic/clinic.py --make
-+	$(RUNSHARED) $(PY_BUILD_ENVIRON) $(PYTHON_FOR_BUILD) ./Tools/clinic/clinic.py --make
- 
- # Build the interpreter
- $(BUILDPYTHON):	Programs/python.o $(LIBRARY) $(LDLIBRARY) $(PY3LIBRARY)
+@@ -547,7 +548,7 @@ $(BUILDPYTHON):	Programs/python.o $(LIBRARY) $(LDLIBRARY) $(PY3LIBRARY)
  	$(LINKCC) $(PY_LDFLAGS) $(LINKFORSHARED) -o $@ Programs/python.o $(BLDLIBRARY) $(LIBS) $(MODLIBS) $(SYSLIBS) $(LDLAST)
  
  platform: $(BUILDPYTHON) pybuilddir.txt
@@ -39,7 +31,7 @@ index 5e88e3f6aa..bca5efea67 100644
  
  # Create build directory and generate the sysconfig build-time data there.
  # pybuilddir.txt contains the name of the build dir and is used for
-@@ -559,7 +560,7 @@ platform: $(BUILDPYTHON) pybuilddir.txt
+@@ -558,7 +559,7 @@ platform: $(BUILDPYTHON) pybuilddir.txt
  # or removed in case of failure.
  pybuilddir.txt: $(BUILDPYTHON)
  	@echo "none" > ./pybuilddir.txt
@@ -48,7 +40,7 @@ index 5e88e3f6aa..bca5efea67 100644
  	if test $$? -ne 0 ; then \
  		echo "generate-posix-vars failed" ; \
  		rm -f ./pybuilddir.txt ; \
-@@ -586,7 +587,7 @@ sharedmods: $(BUILDPYTHON) pybuilddir.txt Modules/_math.o
+@@ -585,7 +586,7 @@ sharedmods: $(BUILDPYTHON) pybuilddir.txt Modules/_math.o
  	esac; \
  	$(RUNSHARED) CC='$(CC)' LDSHARED='$(BLDSHARED)' OPT='$(OPT)' \
  		_TCLTK_INCLUDES='$(TCLTK_INCLUDES)' _TCLTK_LIBS='$(TCLTK_LIBS)' \
@@ -94,7 +86,7 @@ index 5e88e3f6aa..bca5efea67 100644
  	--install-scripts=$(BINDIR) \
  	--root=$(DESTDIR)/
 diff --git a/configure b/configure
-index fed73fe94c..25a2ab3f26 100755
+index eeaae67..d9503a9 100755
 --- a/configure
 +++ b/configure
 @@ -751,6 +751,7 @@ CONFIG_ARGS
@@ -105,7 +97,7 @@ index fed73fe94c..25a2ab3f26 100755
  PYTHON_FOR_REGEN
  host_os
  host_vendor
-@@ -2925,7 +2926,8 @@ $as_echo_n "checking for python interpreter for cross build... " >&6; }
+@@ -2926,7 +2927,8 @@ $as_echo_n "checking for python interpreter for cross build... " >&6; }
  	fi
          { $as_echo "$as_me:${as_lineno-$LINENO}: result: $interp" >&5
  $as_echo "$interp" >&6; }
@@ -116,7 +108,7 @@ index fed73fe94c..25a2ab3f26 100755
  elif test "$cross_compiling" = maybe; then
      as_fn_error $? "Cross compiling required --host=HOST-TUPLE and --build=ARCH" "$LINENO" 5
 diff --git a/configure.ac b/configure.ac
-index ded175bb94..9fe70109ff 100644
+index dc8215b..d382fea 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -73,13 +73,15 @@ if test "$cross_compiling" = yes; then
@@ -137,5 +129,5 @@ index ded175bb94..9fe70109ff 100644
  
  dnl Ensure that if prefix is specified, it does not end in a slash. If
 -- 
-2.14.3 (Apple Git-98)
+2.7.4
 
