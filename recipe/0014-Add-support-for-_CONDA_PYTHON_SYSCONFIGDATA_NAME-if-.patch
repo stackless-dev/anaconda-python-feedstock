@@ -1,4 +1,4 @@
-From 6c32238dbbc2ccd2f43ae6704d1151f7d1e4cf20 Mon Sep 17 00:00:00 2001
+From 3052b2f89e991a2cab7689b861e2a137c8f49e24 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 3 Dec 2017 17:31:27 +0000
 Subject: [PATCH 14/15] Add support for _CONDA_PYTHON_SYSCONFIGDATA_NAME if
@@ -10,11 +10,11 @@ a Python that pre-dates this change then you will need to apply this patch
 manually).
 ---
  Lib/distutils/sysconfig.py | 12 +++++++-----
- Lib/sysconfig.py           | 25 ++++++++++++++++---------
- 2 files changed, 23 insertions(+), 14 deletions(-)
+ Lib/sysconfig.py           | 23 +++++++++++++++--------
+ 2 files changed, 22 insertions(+), 13 deletions(-)
 
 diff --git a/Lib/distutils/sysconfig.py b/Lib/distutils/sysconfig.py
-index 2bcd1dd..237d680 100644
+index 2bcd1dd288..237d680d91 100644
 --- a/Lib/distutils/sysconfig.py
 +++ b/Lib/distutils/sysconfig.py
 @@ -416,11 +416,13 @@ def _init_posix():
@@ -37,7 +37,7 @@ index 2bcd1dd..237d680 100644
      build_time_vars = _temp.build_time_vars
      global _config_vars
 diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
-index 9314e71..882b89c 100644
+index 9314e71a2f..121b212388 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
 @@ -342,13 +342,20 @@ def get_makefile_filename():
@@ -51,7 +51,7 @@ index 9314e71..882b89c 100644
 -        platform=sys.platform,
 -        multiarch=getattr(sys.implementation, '_multiarch', ''),
 -    ))
-+def _get_sysconfigdata_name(check_exists):
++def _get_sysconfigdata_name(check_exists=False):
 +    for envvar in ('_PYTHON_SYSCONFIGDATA_NAME', '_CONDA_PYTHON_SYSCONFIGDATA_NAME'):
 +        res = os.environ.get(envvar, None)
 +        if res and check_exists:
@@ -68,15 +68,6 @@ index 9314e71..882b89c 100644
  
  
  def _generate_posix_vars():
-@@ -391,7 +398,7 @@ def _generate_posix_vars():
-     # _sysconfigdata module manually and populate it with the build vars.
-     # This is more than sufficient for ensuring the subsequent call to
-     # get_platform() succeeds.
--    name = _get_sysconfigdata_name()
-+    name = _get_sysconfigdata_name(False)
-     if 'darwin' in sys.platform:
-         import types
-         module = types.ModuleType(name)
 @@ -417,7 +424,7 @@ def _generate_posix_vars():
  def _init_posix(vars):
      """Initialize the module as appropriate for POSIX systems."""
@@ -87,5 +78,5 @@ index 9314e71..882b89c 100644
      build_time_vars = _temp.build_time_vars
      vars.update(build_time_vars)
 -- 
-2.7.4
+2.17.0
 
