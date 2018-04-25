@@ -29,7 +29,7 @@ source:
       - 0016-Fix-macOS-test_asyncio-from-https-github.com-python-.patch
 
 build:
-  number: 2
+  number: 3
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:

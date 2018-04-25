@@ -1,4 +1,4 @@
-From 48b58fc29205d1dea7426fd1623a5f7559d68459 Mon Sep 17 00:00:00 2001
+From 4f0f26a9ff2595c00b3a1b3e5d3ecd97c1d1336e Mon Sep 17 00:00:00 2001
 From: Jonathan Helmus <jjhelmus@gmail.com>
 Date: Fri, 29 Sep 2017 14:14:13 -0500
 Subject: [PATCH 01/16] backport Python 3.6 _PYTHON_SYSCONFIGDATA_NAME, also
@@ -10,8 +10,8 @@ This is important when bootstrapping a Miniconda (however if you are using
 a Python that pre-dates this change then you will need to apply this patch
 manually).
 ---
- Lib/distutils/sysconfig.py | 44 +++++++++++++-------------------------------
- Lib/sysconfig.py           | 24 ++++++++++++++++++++++--
+ Lib/distutils/sysconfig.py | 44 +++++++++++---------------------------
+ Lib/sysconfig.py           | 24 +++++++++++++++++++--
  2 files changed, 35 insertions(+), 33 deletions(-)
 
 diff --git a/Lib/distutils/sysconfig.py b/Lib/distutils/sysconfig.py
@@ -71,7 +71,7 @@ index bd19ebf515..ed33c30fed 100644
  
  def _init_nt():
 diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
-index 9c34be0a07..bd02f2aea7 100644
+index 9c34be0a07..00856f032d 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
 @@ -339,6 +339,22 @@ def get_makefile_filename():
@@ -79,7 +79,7 @@ index 9c34be0a07..bd02f2aea7 100644
      return os.path.join(get_path('stdlib'), config_dir_name, 'Makefile')
  
 +
-+def _get_sysconfigdata_name(check_exists):
++def _get_sysconfigdata_name(check_exists=False):
 +    for envvar in ('_PYTHON_SYSCONFIGDATA_NAME', '_CONDA_PYTHON_SYSCONFIGDATA_NAME'):
 +        res = os.environ.get(envvar, None)
 +        if res and check_exists:
@@ -120,5 +120,5 @@ index 9c34be0a07..bd02f2aea7 100644
  
  def _init_non_posix(vars):
 -- 
-2.14.3 (Apple Git-98)
+2.17.0
 
