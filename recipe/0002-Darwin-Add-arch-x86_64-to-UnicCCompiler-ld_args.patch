@@ -1,14 +1,14 @@
-From 95bc7ba045d6426049ba7ebb536600d8a94563d2 Mon Sep 17 00:00:00 2001
+From 584a5e9b01045d235f59adb0d8a3a675f85e107e Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 08:48:16 +0100
-Subject: [PATCH 03/15] Darwin: Add -arch x86_64 to UnicCCompiler ld_args
+Subject: [PATCH 02/14] Darwin: Add -arch x86_64 to UnicCCompiler ld_args
 
 ---
  Lib/distutils/unixccompiler.py | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/Lib/distutils/unixccompiler.py b/Lib/distutils/unixccompiler.py
-index 3f321c2..a36acdc 100644
+index ab4d4de156..1aa99a0ff5 100644
 --- a/Lib/distutils/unixccompiler.py
 +++ b/Lib/distutils/unixccompiler.py
 @@ -192,6 +192,7 @@ class UnixCCompiler(CCompiler):
@@ -20,5 +20,5 @@ index 3f321c2..a36acdc 100644
                  self.spawn(linker + ld_args)
              except DistutilsExecError as msg:
 -- 
-2.7.4
+2.17.0
 

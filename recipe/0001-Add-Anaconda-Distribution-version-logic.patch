@@ -1,20 +1,20 @@
-From f190ff184eb5161a697a3748b0f471e90d7c6977 Mon Sep 17 00:00:00 2001
+From 7c2ef4cd1d3840e3e2431119521f63abb38b29ba Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 15 Aug 2017 22:34:16 +0100
-Subject: [PATCH 01/15] Add Anaconda Distribution version logic
+Subject: [PATCH 01/14] Add Anaconda Distribution version logic
 
 ---
  Include/pylifecycle.h |  1 +
  Lib/platform.py       |  1 +
- Modules/main.c        |  3 ++-
- Python/getversion.c   | 44 +++++++++++++++++++++++++++++++++++++++++---
- 4 files changed, 45 insertions(+), 4 deletions(-)
+ Modules/main.c        |  2 +-
+ Python/getversion.c   | 46 +++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 49 insertions(+), 1 deletion(-)
 
 diff --git a/Include/pylifecycle.h b/Include/pylifecycle.h
-index 01abfa9..ac8e19a 100644
+index 659c6df644..988f7558da 100644
 --- a/Include/pylifecycle.h
 +++ b/Include/pylifecycle.h
-@@ -64,6 +64,7 @@ int _Py_CheckPython3();
+@@ -130,6 +130,7 @@ int _Py_CheckPython3(void);
  #endif
  
  /* In their own files */
@@ -23,7 +23,7 @@ index 01abfa9..ac8e19a 100644
  PyAPI_FUNC(const char *) Py_GetPlatform(void);
  PyAPI_FUNC(const char *) Py_GetCopyright(void);
 diff --git a/Lib/platform.py b/Lib/platform.py
-index cc2db98..b205329 100755
+index dc981ec144..d04c03febb 100755
 --- a/Lib/platform.py
 +++ b/Lib/platform.py
 @@ -1087,6 +1087,7 @@ def processor():
@@ -35,79 +35,78 @@ index cc2db98..b205329 100755
      r'(?:,\s*([\w ]*)'  # ", builddate"
      r'(?:,\s*([\w :]*))?)?\)\s*'  # ", buildtime)<space>"
 diff --git a/Modules/main.c b/Modules/main.c
-index 585d696..5076d54 100644
+index f6b5104300..949abe7047 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
-@@ -533,7 +533,8 @@ Py_Main(int argc, wchar_t **argv)
-         return usage(0, argv[0]);
- 
-     if (version) {
--        printf("Python %s\n", version >= 2 ? Py_GetVersion() : PY_VERSION);
-+        Py_SetProgramName(argv[0]);
-+        fprintf(stderr, "Python %s :: %s\n", PY_VERSION, Anaconda_GetVersion());
-         return 0;
+@@ -1221,7 +1221,7 @@ pymain_header(_PyMain *pymain)
+         return;
      }
  
+-    fprintf(stderr, "Python %s on %s\n", Py_GetVersion(), Py_GetPlatform());
++    fprintf(stderr, "Python %s :: %s on %s\n", Py_GetVersion(), Anaconda_GetVersion(), Py_GetPlatform());
+     if (!Py_NoSiteFlag) {
+         fprintf(stderr, "%s\n", COPYRIGHT);
+     }
 diff --git a/Python/getversion.c b/Python/getversion.c
-index 7bd6efd..46554e6 100644
+index c32b6f9d60..59b0ebc58d 100644
 --- a/Python/getversion.c
 +++ b/Python/getversion.c
-@@ -2,14 +2,52 @@
+@@ -2,9 +2,55 @@
  /* Return the full version string. */
  
  #include "Python.h"
--
 +#include "osdefs.h"
+ 
  #include "patchlevel.h"
  
 +
 +const char *
 +Anaconda_GetVersion(void)
 +{
-+	#ifdef MS_WIN32
-+	#define STDLIB_DIR  L"\\Lib\\"
-+	#else
-+	#define STDLIB_DIR  L"/lib/python3.6/"
-+	#endif
-+	static char res[128];
-+	FILE *f;
-+	wchar_t path[MAXPATHLEN+1];
-+	int c, i;
++#ifdef MS_WIN32
++    #define STDLIB_DIR  L"\\Lib\\"
++    /* We want to allow paths > 260 characters on Windows some day. */
++    #define MPL 2048
++#else
++    #define XSTR(_D) STR(_D)
++    #define STR(_D) #_D
++    #define STDLIB_DIR  L"/lib/python" XSTR(PY_MAJOR_VERSION) "." XSTR(PY_MINOR_VERSION) "/"
++    #define MPL MAXPATHLEN
++    #undef STR
++    #undef XSTR
++#endif
 +
-+	wcscpy(path, Py_GetPrefix());
-+	wcscat(path, STDLIB_DIR L"version.txt");
++    static char res[128];
++    FILE *f;
++    wchar_t path[MPL + 1];
++    int c, i;
 +
-+	f = _Py_wfopen(path, L"rb");
-+	if (f == NULL) {
-+		strcpy(res, "Anaconda, Inc.");
-+	}
-+	else {
-+		i = 0;
-+		while (i + 1 < sizeof(res)) {
-+		c = fgetc(f);
-+			if (c == EOF || c == '\n' || c == '\r')
-+				break;
-+			res[i++] = c;
-+		}
-+		fclose(f);
-+		res[i] = '\0';
-+	}
-+	return res;
-+	#undef STDLIB_DIR
++    wcscpy(path, Py_GetPrefix());
++    wcscat(path, STDLIB_DIR L"version.txt");
++
++    f = _Py_wfopen(path, L"rb");
++    if (f == NULL)
++        strcpy(res, "Anaconda, Inc.");
++    else {
++        i = 0;
++        while (i < sizeof(res) - 1) {
++            c = fgetc(f);
++            if (c == EOF || c == '\n' || c == '\r')
++                break;
++            res[i++] = c;
++        }
++        fclose(f);
++        res[i] = '\0';
++    }
++    return res;
++    #undef STDLIB_DIR
++    #undef MPL
 +}
 +
 +
  const char *
  Py_GetVersion(void)
  {
- 	static char version[250];
--	PyOS_snprintf(version, sizeof(version), "%.80s (%.80s) %.80s",
--		      PY_VERSION, Py_GetBuildInfo(), Py_GetCompiler());
-+	PyOS_snprintf(version, sizeof(version), "%.80s |%s| (%.80s) %.80s",
-+		      PY_VERSION, Anaconda_GetVersion(),
-+		      Py_GetBuildInfo(), Py_GetCompiler());
- 	return version;
- }
 -- 
-2.7.4
+2.17.0
 
