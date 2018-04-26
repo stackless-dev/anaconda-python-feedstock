@@ -57,7 +57,6 @@ build:
   # Copy rather than link.
   no_link:
     - DLLs/_ctypes.pyd  # [win]
-    - bin/python3.6     # [unix]
   # script_env:
   #   - python_branding
   # We delete the shared libraries.
