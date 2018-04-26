@@ -11,6 +11,11 @@
 VER=${PKG_VERSION%.*}
 CONDA_FORGE=no
 
+# Hack for conda-build 3.9.1 bug:
+if [[ ${HOST} =~ .*darwin.* ]]; then
+  export CONDA_BUILD_SYSROOT=/opt/MacOSX10.9.sdk
+fi
+
 # For debugging builds, set this to 0 to disable profile-guided optimization
 if [[ ${DEBUG_C} == yes ]]; then
   _OPTIMIZED=no
@@ -31,6 +36,7 @@ fi
 # would probably break the build by using incorrect settings and/or importing files that
 # do not yet exist.
 unset _PYTHON_SYSCONFIGDATA_NAME
+unset _CONDA_PYTHON_SYSCONFIGDATA_NAME
 
 # Remove bzip2's shared library if present,
 # as we only want to link to it statically.
