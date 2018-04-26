@@ -82,7 +82,7 @@ requirements:
     - openssl                            # [unix]
     - readline                           # [unix]
     - tk                                 # [unix]
-    - ncurses                            # [linux]
+    - ncurses                            # [unix]
     - libffi                             # [unix]
 
 test:
