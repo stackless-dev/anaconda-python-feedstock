@@ -9,8 +9,8 @@ build_time_vars = {'ABIFLAGS': 'm',
  'BASECPPFLAGS': '-IObjects -IInclude -IPython',
  'BASEMODLIBS': '',
  'BINDIR': '/opt/anaconda1anaconda2anaconda3/bin',
- 'BINLIBDEST': '/opt/anaconda1anaconda2anaconda3/lib/python3.6',
- 'BLDLIBRARY': 'libpython3.6m.a',
+ 'BINLIBDEST': '/opt/anaconda1anaconda2anaconda3/lib/python3.7',
+ 'BLDLIBRARY': 'libpython3.7m.a',
  'BLDSHARED': 'powerpc64le-conda_cos7-linux-gnu-gcc -pthread -shared -Wl,-O2 '
               '-Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now '
               '-Wl,-rpath,/opt/anaconda1anaconda2anaconda3/lib '
@@ -31,12 +31,12 @@ build_time_vars = {'ABIFLAGS': 'm',
            '-Wstrict-prototypes -mcpu=power8 -mtune=power8 -mpower8-fusion '
            '-mpower8-vector -ftree-vectorize -fPIC -fstack-protector-strong '
            '-fno-plt -O2 '
-           '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.6.3 '
+           '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.7.3 '
            '-fdebug-prefix-map=/opt/anaconda1anaconda2anaconda3=/usr/local/src/conda-prefix '
            '-pipe     '
            ' -mcpu=power8 -mtune=power8 -mpower8-fusion -mpower8-vector '
            '-ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 '
-           '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.6.3 '
+           '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.7.3 '
            '-fdebug-prefix-map=/opt/anaconda1anaconda2anaconda3=/usr/local/src/conda-prefix '
            '-pipe     '
            '',
@@ -47,7 +47,7 @@ build_time_vars = {'ABIFLAGS': 'm',
  'CONFIGURE_CFLAGS': '-mcpu=power8 -mtune=power8 -mpower8-fusion '
                      '-mpower8-vector -ftree-vectorize -fPIC '
                      '-fstack-protector-strong -fno-plt -O2 '
-                     '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.6.3 '
+                     '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.7.3 '
                      '-fdebug-prefix-map=/opt/anaconda1anaconda2anaconda3=/usr/local/src/conda-prefix '
                      '-pipe    '
                      ' ',
@@ -75,7 +75,7 @@ build_time_vars = {'ABIFLAGS': 'm',
                 "'CFLAGS=-mcpu=power8 -mtune=power8 -mpower8-fusion "
                 '-mpower8-vector -ftree-vectorize -fPIC '
                 '-fstack-protector-strong -fno-plt -O2 '
-                '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.6.3 '
+                '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.7.3 '
                 '-fdebug-prefix-map=/opt/anaconda1anaconda2anaconda3=/usr/local/src/conda-prefix '
                 '-pipe    '
                 " ' 'LDFLAGS=-Wl,-O2 "
@@ -87,7 +87,7 @@ build_time_vars = {'ABIFLAGS': 'm',
                 "'CPP=/opt/anaconda1anaconda2anaconda3/bin/powerpc64le-conda_cos7-linux-gnu-cpp' "
                 "'PKG_CONFIG_PATH=/opt/anaconda1anaconda2anaconda3/lib/pkgconfig'",
  'CONFINCLUDEDIR': '/opt/anaconda1anaconda2anaconda3/include',
- 'CONFINCLUDEPY': '/opt/anaconda1anaconda2anaconda3/include/python3.6m',
+ 'CONFINCLUDEPY': '/opt/anaconda1anaconda2anaconda3/include/python3.7m',
  'COREPYTHONPATH': ':',
  'COVERAGE_INFO': '/opt/conda/conda-bld/python_1512347718438/work/build-static/coverage.info',
  'COVERAGE_REPORT': '/opt/conda/conda-bld/python_1512347718438/work/build-static/lcov-report',
@@ -102,11 +102,11 @@ build_time_vars = {'ABIFLAGS': 'm',
  'CXX': 'powerpc64le-conda_cos7-linux-gnu-c++ -pthread',
  'DESTDIRS': '/opt/anaconda1anaconda2anaconda3 '
              '/opt/anaconda1anaconda2anaconda3/lib '
-             '/opt/anaconda1anaconda2anaconda3/lib/python3.6 '
-             '/opt/anaconda1anaconda2anaconda3/lib/python3.6/lib-dynload',
- 'DESTLIB': '/opt/anaconda1anaconda2anaconda3/lib/python3.6',
+             '/opt/anaconda1anaconda2anaconda3/lib/python3.7 '
+             '/opt/anaconda1anaconda2anaconda3/lib/python3.7/lib-dynload',
+ 'DESTLIB': '/opt/anaconda1anaconda2anaconda3/lib/python3.7',
  'DESTPATH': '',
- 'DESTSHARED': '/opt/anaconda1anaconda2anaconda3/lib/python3.6/lib-dynload',
+ 'DESTSHARED': '/opt/anaconda1anaconda2anaconda3/lib/python3.7/lib-dynload',
  'DFLAGS': '',
  'DIRMODE': 755,
  'DIST': 'README ChangeLog configure configure.ac acconfig.h pyconfig.h.in '
@@ -522,16 +522,16 @@ build_time_vars = {'ABIFLAGS': 'm',
  'HOST_GNU_TYPE': 'powerpc64le-conda_cos7-linux-gnu',
  'INCLDIRSTOMAKE': '/opt/anaconda1anaconda2anaconda3/include '
                    '/opt/anaconda1anaconda2anaconda3/include '
-                   '/opt/anaconda1anaconda2anaconda3/include/python3.6m '
-                   '/opt/anaconda1anaconda2anaconda3/include/python3.6m',
+                   '/opt/anaconda1anaconda2anaconda3/include/python3.7m '
+                   '/opt/anaconda1anaconda2anaconda3/include/python3.7m',
  'INCLUDEDIR': '/opt/anaconda1anaconda2anaconda3/include',
- 'INCLUDEPY': '/opt/anaconda1anaconda2anaconda3/include/python3.6m',
+ 'INCLUDEPY': '/opt/anaconda1anaconda2anaconda3/include/python3.7m',
  'INSTALL': '/usr/bin/install -c',
  'INSTALL_DATA': '/usr/bin/install -c -m 644',
  'INSTALL_PROGRAM': '/usr/bin/install -c',
  'INSTALL_SCRIPT': '/usr/bin/install -c',
  'INSTALL_SHARED': '/usr/bin/install -c -m 555',
- 'INSTSONAME': 'libpython3.6m.a',
+ 'INSTSONAME': 'libpython3.7m.a',
  'IO_H': 'Modules/_io/_iomodule.h',
  'IO_OBJS': '\\',
  'LDCXXSHARED': 'powerpc64le-conda_cos7-linux-gnu-c++ -pthread -shared',
@@ -543,7 +543,7 @@ build_time_vars = {'ABIFLAGS': 'm',
             '-L/opt/anaconda1anaconda2anaconda3/lib '
             '   ',
  'LDLAST': '',
- 'LDLIBRARY': 'libpython3.6m.a',
+ 'LDLIBRARY': 'libpython3.7m.a',
  'LDLIBRARYDIR': '',
  'LDSHARED': 'powerpc64le-conda_cos7-linux-gnu-gcc -pthread -shared -Wl,-O2 '
              '-Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now '
@@ -554,17 +554,17 @@ build_time_vars = {'ABIFLAGS': 'm',
              '-Wl,-rpath,/opt/anaconda1anaconda2anaconda3/lib '
              '-L/opt/anaconda1anaconda2anaconda3/lib '
              '   ',
- 'LDVERSION': '3.6m',
+ 'LDVERSION': '3.7m',
  'LIBC': '',
- 'LIBDEST': '/opt/anaconda1anaconda2anaconda3/lib/python3.6',
+ 'LIBDEST': '/opt/anaconda1anaconda2anaconda3/lib/python3.7',
  'LIBDIR': '/opt/anaconda1anaconda2anaconda3/lib',
  'LIBFFI_INCLUDEDIR': '/opt/anaconda1anaconda2anaconda3/include',
  'LIBM': '-lm',
  'LIBOBJDIR': 'Python/',
  'LIBOBJS': '',
  'LIBPC': '/opt/anaconda1anaconda2anaconda3/lib/pkgconfig',
- 'LIBPL': '/opt/anaconda1anaconda2anaconda3/lib/python3.6/config-3.6m-powerpc64le-linux-gnu',
- 'LIBRARY': 'libpython3.6m.a',
+ 'LIBPL': '/opt/anaconda1anaconda2anaconda3/lib/python3.7/config-3.7m-powerpc64le-linux-gnu',
+ 'LIBRARY': 'libpython3.7m.a',
  'LIBRARY_OBJS': '\\',
  'LIBRARY_OBJS_OMIT_FROZEN': '\\',
  'LIBS': '-lpthread -ldl  -lutil',
@@ -581,7 +581,7 @@ build_time_vars = {'ABIFLAGS': 'm',
  'MACHDEP': 'linux',
  'MACHDEPPATH': ':',
  'MACHDEP_OBJS': '',
- 'MACHDESTLIB': '/opt/anaconda1anaconda2anaconda3/lib/python3.6',
+ 'MACHDESTLIB': '/opt/anaconda1anaconda2anaconda3/lib/python3.7',
  'MACOSX_DEPLOYMENT_TARGET': '',
  'MAINCC': 'powerpc64le-conda_cos7-linux-gnu-gcc -pthread',
  'MAJOR_IN_MKDEV': 0,
@@ -642,7 +642,7 @@ build_time_vars = {'ABIFLAGS': 'm',
  'PYTHONFRAMEWORKPREFIX': '',
  'PYTHONPATH': ':',
  'PYTHON_FOR_BUILD': './python -E',
- 'PYTHON_FOR_REGEN': 'python3.6',
+ 'PYTHON_FOR_REGEN': 'python3.7',
  'PYTHON_HEADERS': '\\',
  'PYTHON_OBJS': '\\',
  'PY_BUILD_ENVIRON': '',
@@ -650,13 +650,13 @@ build_time_vars = {'ABIFLAGS': 'm',
               '-Wstrict-prototypes -mcpu=power8 -mtune=power8 -mpower8-fusion '
               '-mpower8-vector -ftree-vectorize -fPIC -fstack-protector-strong '
               '-fno-plt -O2 '
-              '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.6.3 '
+              '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.7.3 '
               '-fdebug-prefix-map=/opt/anaconda1anaconda2anaconda3=/usr/local/src/conda-prefix '
               '-pipe    '
               '  -mcpu=power8 -mtune=power8 '
               '-mpower8-fusion -mpower8-vector -ftree-vectorize -fPIC '
               '-fstack-protector-strong -fno-plt -O2 '
-              '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.6.3 '
+              '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.7.3 '
               '-fdebug-prefix-map=/opt/anaconda1anaconda2anaconda3=/usr/local/src/conda-prefix '
               '-pipe    '
               ' ',
@@ -665,7 +665,7 @@ build_time_vars = {'ABIFLAGS': 'm',
                      '-mcpu=power8 -mtune=power8 -mpower8-fusion '
                      '-mpower8-vector -ftree-vectorize -fPIC '
                      '-fstack-protector-strong -fno-plt -O2 '
-                     '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.6.3 '
+                     '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.7.3 '
                      '-fdebug-prefix-map=/opt/anaconda1anaconda2anaconda3=/usr/local/src/conda-prefix '
                      '-pipe    '
                      '   '
@@ -675,13 +675,13 @@ build_time_vars = {'ABIFLAGS': 'm',
                    '-Wall -Wstrict-prototypes -mcpu=power8 -mtune=power8 '
                    '-mpower8-fusion -mpower8-vector -ftree-vectorize -fPIC '
                    '-fstack-protector-strong -fno-plt -O2 '
-                   '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.6.3 '
+                   '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.7.3 '
                    '-fdebug-prefix-map=/opt/anaconda1anaconda2anaconda3=/usr/local/src/conda-prefix '
                    '-pipe    '
                    '  -mcpu=power8 -mtune=power8 '
                    '-mpower8-fusion -mpower8-vector -ftree-vectorize -fPIC '
                    '-fstack-protector-strong -fno-plt -O2 '
-                   '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.6.3 '
+                   '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.7.3 '
                    '-fdebug-prefix-map=/opt/anaconda1anaconda2anaconda3=/usr/local/src/conda-prefix '
                    '-pipe    '
                    '  -std=c99 -Wextra '
@@ -689,7 +689,7 @@ build_time_vars = {'ABIFLAGS': 'm',
                    '-Wno-missing-field-initializers -mcpu=power8 -mtune=power8 '
                    '-mpower8-fusion -mpower8-vector -ftree-vectorize -fPIC '
                    '-fstack-protector-strong -fno-plt -O2 '
-                   '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.6.3 '
+                   '-fdebug-prefix-map=/opt/conda/conda-bld/python_1512347718438/work=/usr/local/src/conda/python-3.7.3 '
                    '-fdebug-prefix-map=/opt/anaconda1anaconda2anaconda3=/usr/local/src/conda-prefix '
                    '-pipe    '
                    '   '
@@ -782,7 +782,7 @@ build_time_vars = {'ABIFLAGS': 'm',
  'UNIVERSALSDK': '',
  'USE_COMPUTED_GOTOS': 1,
  'USE_INLINE': 1,
- 'VERSION': '3.6',
+ 'VERSION': '3.7',
  'VPATH': '/opt/conda/conda-bld/python_1512347718438/work',
  'WANT_SIGFPE_HANDLER': 0,
  'WINDOW_HAS_FLAGS': 1,
