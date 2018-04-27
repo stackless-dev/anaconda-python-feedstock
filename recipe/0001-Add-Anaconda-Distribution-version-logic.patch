@@ -68,12 +68,10 @@ index c32b6f9d60..59b0ebc58d 100644
 +    /* We want to allow paths > 260 characters on Windows some day. */
 +    #define MPL 2048
 +#else
-+    #define XSTR(_D) STR(_D)
-+    #define STR(_D) #_D
-+    #define STDLIB_DIR  L"/lib/python" XSTR(PY_MAJOR_VERSION) "." XSTR(PY_MINOR_VERSION) "/"
++    #define STR(_s) #_s
++    #define XSTR(_s) STR(_s)
++    #define STDLIB_DIR L"/lib/python" XSTR(PY_MAJOR_VERSION) L"." XSTR(PY_MINOR_VERSION) L"/"
 +    #define MPL MAXPATHLEN
-+    #undef STR
-+    #undef XSTR
 +#endif
 +
 +    static char res[128];
@@ -99,6 +97,8 @@ index c32b6f9d60..59b0ebc58d 100644
 +        res[i] = '\0';
 +    }
 +    return res;
++    #undef STR
++    #undef XSTR
 +    #undef STDLIB_DIR
 +    #undef MPL
 +}
