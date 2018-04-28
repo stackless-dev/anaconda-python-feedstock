@@ -33,7 +33,7 @@ build_time_vars = {'ABIFLAGS': 'm',
            '-fdebug-prefix-map=${SRC_DIR}=/usr/local/src/conda/${PKG_NAME}-${PKG_VERSION} '
            '-fdebug-prefix-map=/opt/anaconda1anaconda2anaconda3=/usr/local/src/conda-prefix '
            '-flto -Wl,-export_dynamic -march=core2 -mtune=haswell '
-           '-mssse3 -ftree-vectorize -fPIC -fPIE -fstack-protector-strong -O3 '
+           '-mssse3 -ftree-vectorize -fPIC -fPIE -fstack-protector-strong -O3 ',
  'CFLAGSFORSHARED': '',
  'CFLAGS_ALIASING': '-fno-strict-aliasing',
  'CONFIGFILES': 'configure configure.ac acconfig.h pyconfig.h.in '
