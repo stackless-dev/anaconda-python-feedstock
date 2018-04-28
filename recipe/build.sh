@@ -334,8 +334,12 @@ pushd $PREFIX/lib/python${VER}
     echo "See: https://github.com/conda/conda/issues/6030 for more information."                                   >> ${PREFIX}/compiler_compat/README
   fi
 
-  # Copy the latest sysconfigdata for this platform back to the recipe so we can do full cross-compilation
+  # Copy the latest sysconfigdata for this platform back to the recipe so we can do full cross-compilation.
+  # The [^ ]* part after PKG_VERSION is to catch beta versions encoded into the build string but not the version number (e.g. b3).
+  # .. there is no variable set that contains this information, though it would be useful. We do have:
+  # .. PKG_BUILD_STRING="placeholder" though (pinging @msarahan about this).
   [[ -f	"${RECIPE_DIR}"/sysconfigdata/${our_compilers_name} ]] && rm -f	"${RECIPE_DIR}"/sysconfigdata/${our_compilers_name}
-  cat ${our_compilers_name} | sed "s|${PREFIX}|/opt/anaconda1anaconda2anaconda3|g" > "${RECIPE_DIR}"/sysconfigdata/${our_compilers_name}
-
+  cat ${our_compilers_name} | sed -e "s|${PREFIX}|/opt/anaconda1anaconda2anaconda3|g" \
+                                  -e "s|${SRC_DIR}|\${SRC_DIR}|g" \
+                                  -e "s|${PKG_NAME}-${PKG_VERSION}[^ ]*|\${PKG_NAME}-\${PKG_VERSION}|g" > "${RECIPE_DIR}"/sysconfigdata/${our_compilers_name}
 popd
