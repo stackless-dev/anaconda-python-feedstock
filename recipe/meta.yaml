@@ -105,8 +105,6 @@ test:
     - python3-config --help  # [unix]
     - python -c "import sysconfig; print(sysconfig.get_config_var('CC'))"
     -  _PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_x86_64_conda_cos6_linux_gnu python -c "import sysconfig; print(sysconfig.get_config_var('CC'))"  # [linux64]
-    - conda inspect linkages -p $PREFIX python  # [not win]
-    - conda inspect objects -p $PREFIX python  # [osx]
 
 about:
   home: http://www.python.org/
