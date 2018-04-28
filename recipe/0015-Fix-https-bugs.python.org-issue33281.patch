@@ -1,0 +1,34 @@
+From 9a72a4f3bfdf1a5b8dd418d0647274e72d08f716 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Sat, 28 Apr 2018 13:36:08 +0100
+Subject: [PATCH] Fix https://bugs.python.org/issue33281
+
+---
+ Lib/ctypes/util.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Lib/ctypes/util.py b/Lib/ctypes/util.py
+index 5e8b31a854..97973bce00 100644
+--- a/Lib/ctypes/util.py
++++ b/Lib/ctypes/util.py
+@@ -67,7 +67,7 @@ if os.name == "nt":
+                 return fname
+         return None
+ 
+-if os.name == "posix" and sys.platform == "darwin":
++elif os.name == "posix" and sys.platform == "darwin":
+     from ctypes.macholib.dyld import dyld_find as _dyld_find
+     def find_library(name):
+         possible = ['lib%s.dylib' % name,
+@@ -80,7 +80,7 @@ if os.name == "posix" and sys.platform == "darwin":
+                 continue
+         return None
+ 
+-if sys.platform.startswith("aix"):
++elif sys.platform.startswith("aix"):
+     # AIX has two styles of storing shared libraries
+     # GNU auto_tools refer to these as svr4 and aix
+     # svr4 (System V Release 4) is a regular file, often with .so as suffix
+-- 
+2.15.1 (Apple Git-101)
+
