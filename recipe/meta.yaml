@@ -33,12 +33,17 @@ source:
   - url: https://github.com/python/cpython-source-deps/archive/xz-5.2.2.zip          # [win]
     folder: externals/xz-5.2.2                                                       # [win]
     sha256: 02b6d6f1e0369940e7e1f0d324992e069d09f5f3d32d86e2d22cd8b82ac3fb3f         # [win]
+  # Not used as of 3.7b3 (tcltk from cpython-bin- is), but kept for archival and license reasons.
   - url: https://github.com/python/cpython-source-deps/archive/tcl-core-8.6.8.0.zip  # [win]
     folder: externals/tcl-core-8.6.8.0                                               # [win]
     sha256: 91fd3ea97f7fddbd45591fd91961b6be6434b6d338ae54ad16f40efe53295be2         # [win]
+  # Not used as of 3.7b3 (tcltk from cpython-bin- is), but kept for archival and license reasons.
   - url: https://github.com/python/cpython-source-deps/archive/tk-8.6.8.0.zip        # [win]
     folder: externals/tk-8.6.8.0                                                     # [win]
     sha256: 584fbfdc3cd4427d44ae7ba1e829966d30aaee2a36feb02e3714ac97b48983c1         # [win]
+  - url: https://github.com/python/cpython-bin-deps/archive/tcltk-8.6.8.0.zip        # [win]
+    folder: externals/tcltk-8.6.8.0                                                  # [win]
+    sha256: 63a28d9112d47f5ca9970593fda7fca8c22e911450d8036e033bba376500acd9         # [win]
   - url: https://github.com/python/cpython-source-deps/archive/tix-8.4.3.6.zip       # [win]
     folder: externals/tix-8.4.3.6                                                    # [win]
     sha256: e558e3dc5e67ac0942f8fceafce00ca46b177da9ebeaf38ec7fafd9b9913ac56         # [win]
@@ -49,6 +54,9 @@ source:
   - url: https://github.com/python/cpython-source-deps/archive/openssl-1.1.0f.zip    # [win]
     folder: externals/openssl-1.1.0f                                                 # [win]
     sha256: f9a39b7519d3c1d5b5da7559c0b117f588eea97bc98d4ea8434d078cf5063eaa         # [win]
+  - url: https://github.com/python/cpython-bin-deps/archive/openssl-bin-1.1.0f.zip   # [win]
+    folder: externals/openssl-bin-1.1.0f                                             # [win]
+    sha256: 94d06a902f213bb8d98b195ecf32abe9a6159130ce38f0352fd2d29329588157         # [win]
   - url: https://github.com/python/cpython-source-deps/archive/bzip2-1.0.6.zip       # [win]
     folder: externals/bzip2-1.0.6                                                    # [win]
     sha256: c42fd1432a2667b964a74bc423bb7485059c4a6d5dc92946d59dbf9a6bdb988d         # [win]
@@ -58,9 +66,6 @@ source:
   - url: https://github.com/python/cpython-bin-deps/archive/nasm-2.11.06.zip         # [win]
     folder: externals/nasm-2.11.06                                                   # [win]
     sha256: de3c87b26a80e789986d8e6950c6304175d3829afe9c6c7211eb7257266ab0ac         # [win]
-  # - url: https://github.com/python/cpython-bin-deps/archive/openssl-bin-1.1.0f.zip   # [win]
-  #   folder: externals/openssl-bin-1.1.0f                                             # [win]
-  #   sha256: 94d06a902f213bb8d98b195ecf32abe9a6159130ce38f0352fd2d29329588157         # [win]
 
 
 build:
