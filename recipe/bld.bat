@@ -3,6 +3,15 @@ REM brand Python with conda-forge startup message
 REM %SYS_PYTHON% %RECIPE_DIR%\brand_python.py
 REM if errorlevel 1 exit 1
 
+:: See https://github.com/conda-forge/staged-recipes/pull/194#issuecomment-203577297
+:: Nasty workaround. Need to have a more current msbuild in PATH. The chosen one
+:: is C:\Windows\Microsoft.NET\Framework64\v3.5\MSBuild.exe, which is incompatible:
+:: error MSB4066: The attribute "Label" in element <PropertyGroup> is unrecognized.
+:: The msbuild.exe from the Win7 SDK (.net 4.0), is known to work.
+if %VS_MAJOR% == 9 (
+    COPY C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe .\
+    set "PATH=%CD%;%PATH%"
+)
 
 REM Compile python, extensions and external libraries
 if "%ARCH%"=="64" (
