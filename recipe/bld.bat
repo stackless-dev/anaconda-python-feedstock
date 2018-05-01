@@ -154,7 +154,7 @@ if errorlevel 1 exit 1
 
 REM bytecode compile the standard library
 
-%PREFIX%\python.exe -Wi %PREFIX%\Lib\compileall.py -f -q -x "bad_coding|badsyntax|py3_" %PREFIX%\Lib
+%PREFIX%\python.exe -Wi %PREFIX%\Lib\compileall.py -f -q -x "bad_coding|badsyntax|py3_|ttk" %PREFIX%\Lib
 if errorlevel 1 exit 1
 
 
