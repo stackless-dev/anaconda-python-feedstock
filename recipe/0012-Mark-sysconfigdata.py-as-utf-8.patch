@@ -1,7 +1,7 @@
-From 6e6e0fe9cee2d926aabdf9e74f402e5b875768f9 Mon Sep 17 00:00:00 2001
+From 70142ebd91eff666bb293e467b881377739bc7d4 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Mon, 4 Dec 2017 22:14:32 +0000
-Subject: [PATCH 12/12] Mark sysconfigdata.py as utf-8
+Subject: [PATCH 12/13] Mark sysconfigdata.py as utf-8
 
 This is needed because we do shebang replacement.
 ---
@@ -10,7 +10,7 @@ This is needed because we do shebang replacement.
  2 files changed, 2 insertions(+)
 
 diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
-index 307497526b..fd018e397e 100644
+index 6700cb6582..7c3444033f 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
 @@ -347,6 +347,7 @@ def _generate_posix_vars():
@@ -22,17 +22,17 @@ index 307497526b..fd018e397e 100644
                  ' the sysconfig module\n')
          f.write('build_time_vars = ')
 diff --git a/Mac/BuildScript/build-installer.py b/Mac/BuildScript/build-installer.py
-index cf395fb38f..0069e2db78 100755
+index 7875bc8ef4..4a58befd93 100755
 --- a/Mac/BuildScript/build-installer.py
 +++ b/Mac/BuildScript/build-installer.py
-@@ -1317,6 +1317,7 @@ def buildPython():
+@@ -1282,6 +1282,7 @@ def buildPython():
  
-         fp = open(path, 'w')
-         # duplicated from sysconfig._generate_posix_vars()
-+        fp.write('# -*- coding: utf-8 -*-\n')
-         fp.write('# system configuration generated and used by'
-                     ' the sysconfig module\n')
-         fp.write('build_time_vars = ')
+     fp = open(path, 'w')
+     # duplicated from sysconfig._generate_posix_vars()
++    fp.write('# -*- coding: utf-8 -*-\n')
+     fp.write('# system configuration generated and used by'
+                 ' the sysconfig module\n')
+     fp.write('build_time_vars = ')
 -- 
-2.13.6 (Apple Git-96)
+2.17.0
 
