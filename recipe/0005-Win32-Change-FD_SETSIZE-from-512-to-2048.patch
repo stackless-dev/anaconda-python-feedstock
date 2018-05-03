@@ -1,7 +1,7 @@
-From 53247f5115107513bad487e12a39fb2250307eb2 Mon Sep 17 00:00:00 2001
+From 7289751f890826a4c12c5a049dda6e2c45f8cc6f Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 11:53:55 +0100
-Subject: [PATCH 05/14] Win32: Change FD_SETSIZE from 512 to 2048
+Subject: [PATCH 05/15] Win32: Change FD_SETSIZE from 512 to 2048
 
 https://github.com/ContinuumIO/anaconda-issues/issues/1241
 ---

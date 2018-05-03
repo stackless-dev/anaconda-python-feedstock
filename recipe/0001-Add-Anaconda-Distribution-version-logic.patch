@@ -1,7 +1,7 @@
-From 7c2ef4cd1d3840e3e2431119521f63abb38b29ba Mon Sep 17 00:00:00 2001
+From 764c0905e2d07a3eb4ad0425dbcf8c2273786727 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 15 Aug 2017 22:34:16 +0100
-Subject: [PATCH 01/14] Add Anaconda Distribution version logic
+Subject: [PATCH 01/15] Add Anaconda Distribution version logic
 
 ---
  Include/pylifecycle.h |  1 +
@@ -48,7 +48,7 @@ index f6b5104300..949abe7047 100644
          fprintf(stderr, "%s\n", COPYRIGHT);
      }
 diff --git a/Python/getversion.c b/Python/getversion.c
-index c32b6f9d60..59b0ebc58d 100644
+index c32b6f9d60..03b6888976 100644
 --- a/Python/getversion.c
 +++ b/Python/getversion.c
 @@ -2,9 +2,55 @@

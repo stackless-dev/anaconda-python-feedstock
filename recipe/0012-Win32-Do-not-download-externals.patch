@@ -1,7 +1,7 @@
-From 849f1ee347c310993f885e15af5643bfd5ead17e Mon Sep 17 00:00:00 2001
+From c019c0e7b1f7b1f94785ab2f487d01c638157445 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Thu, 7 Sep 2017 11:35:47 +0100
-Subject: [PATCH 12/14] Win32: Do not download externals
+Subject: [PATCH 12/15] Win32: Do not download externals
 
 ---
  PCbuild/build.bat | 2 +-

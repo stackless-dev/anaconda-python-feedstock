@@ -1,7 +1,7 @@
-From 87288a4eaab237b7784cf2e5a8548c7d3d08a616 Mon Sep 17 00:00:00 2001
+From c376a6ecffa289f50e8e2bd74edda97ad13a74ba Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 5 Dec 2017 22:47:59 +0000
-Subject: [PATCH 14/14] Fix find_library so that it looks in sys.prefix/lib
+Subject: [PATCH 14/15] Fix find_library so that it looks in sys.prefix/lib
  first
 
 ---
@@ -25,11 +25,11 @@ index c158e672f0..a4770ecf5c 100644
          yield os.path.join(executable_path, name[len('@executable_path/'):])
  
 diff --git a/Lib/ctypes/util.py b/Lib/ctypes/util.py
-index 5e8b31a854..4d07d78431 100644
+index 97973bce00..6611a021f0 100644
 --- a/Lib/ctypes/util.py
 +++ b/Lib/ctypes/util.py
 @@ -70,7 +70,8 @@ if os.name == "nt":
- if os.name == "posix" and sys.platform == "darwin":
+ elif os.name == "posix" and sys.platform == "darwin":
      from ctypes.macholib.dyld import dyld_find as _dyld_find
      def find_library(name):
 -        possible = ['lib%s.dylib' % name,

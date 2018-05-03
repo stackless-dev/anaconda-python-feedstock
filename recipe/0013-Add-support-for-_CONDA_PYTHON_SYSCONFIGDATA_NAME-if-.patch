@@ -1,7 +1,7 @@
-From 2377c67d040a4b7aa0b22a33de673a70b7784d25 Mon Sep 17 00:00:00 2001
+From 48bc095a5f0beedab4dc546560e8c0742a5a94c7 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 3 Dec 2017 17:31:27 +0000
-Subject: [PATCH 13/14] Add support for _CONDA_PYTHON_SYSCONFIGDATA_NAME if
+Subject: [PATCH 13/15] Add support for _CONDA_PYTHON_SYSCONFIGDATA_NAME if
  _PYTHON_SYSCONFIGDATA_NAME is not set and ignore
  {_CONDA,}_PYTHON_SYSCONFIGDATA_NAME if it does not exist
 
