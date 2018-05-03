@@ -27,8 +27,7 @@ source:
       - 0012-Win32-Do-not-download-externals.patch
       - 0013-Add-support-for-_CONDA_PYTHON_SYSCONFIGDATA_NAME-if-.patch
       - 0014-Fix-find_library-so-that-it-looks-in-sys.prefix-lib-.patch
-      - 0015-Fix-https-bugs.python.org-issue33281.patch
-      - 0016-Disable-new-dtags-in-unixccompiler.py.patch
+      - 0015-Disable-new-dtags-in-unixccompiler.py.patch
   # TODO :: Depend on our own packages for these:
   - url: https://github.com/python/cpython-source-deps/archive/xz-5.2.2.zip          # [win]
     folder: externals/xz-5.2.2                                                       # [win]
