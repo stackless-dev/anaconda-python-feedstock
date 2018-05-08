@@ -1,10 +1,14 @@
 {% set base_version = "3.7.0" %}
 {% set version = "3.7.0b4" %}
 {% set sha256 = "cc70b75aee541aa25b594f043546c4971f8bc56ff186fce4ebf69914c0353d73" %}
+{% set linkage_nature = os.environ.get('PY_INTERP_LINKAGE_NATURE', '') %}
+{% if linkage_nature != '' %}
+  {% set linkage_nature = "_" ~ linkage_nature %}
+{% endif %}
 
 package:
   name: python
-  # We cannot use 3.7.0b3 here as that is < 3.7.0 and python-3.7.0 dependent packages
+  # We cannot use 3.7.0b4 here as that is < 3.7.0 and python-3.7.0 dependent packages
   # will not be installable (they will have a constraint of >=3.7.0,<=3.8.0a0).
   version: {{ base_version }}
 
@@ -80,7 +84,9 @@ build:
     - bzip2             # [unix]
   # match python.org compiler standard
   skip: True            # [win and vc != 14]
-  string: b4_0
+  string: b4_0{{ linkage_nature }}
+  script_env:
+    - PY_INTERP_LINKAGE_NATURE
 
 requirements:
   build:

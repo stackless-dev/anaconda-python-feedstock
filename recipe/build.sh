@@ -11,6 +11,20 @@
 VER=${PKG_VERSION%.*}
 CONDA_FORGE=no
 
+_buildd_static=build-static
+_buildd_shared=build-shared
+_ENABLE_SHARED=--enable-shared
+# We *still* build a shared lib here for non-static embedded use cases
+_DISABLE_SHARED=--disable-shared
+# Hack to allow easily comparing static vs shared interpreter performance
+# .. hack because we just build it shared in both the build-static and
+# build-shared directories.
+# Yes this hack is a bit confusing, sorry about that.
+if [[ ${PY_INTERP_LINKAGE_NATURE} == shared ]]; then
+  _DISABLE_SHARED=--enable-shared
+  _ENABLE_SHARED=--enable-shared
+fi
+
 # For debugging builds, set this to 0 to disable profile-guided optimization
 if [[ ${DEBUG_C} == yes ]]; then
   _OPTIMIZED=no
@@ -71,8 +85,6 @@ if [[ ${CONDA_FORGE} == yes ]]; then
   ${SYS_PYTHON} ${RECIPE_DIR}/brand_python.py
 fi
 
-_buildd_static=build-static
-_buildd_shared=build-shared
 declare -a LTO_CFLAGS
 
 CPPFLAGS=${CPPFLAGS}" -I${PREFIX}/include"
@@ -202,7 +214,7 @@ pushd ${_buildd_static}
   ${SRC_DIR}/configure "${_common_configure_args[@]}" \
                        "${_extra_opts[@]}" \
                        "${_dbg_opts[@]}" \
-                       --disable-shared
+                       ${_DISABLE_SHARED}
 popd
 
 make -j${CPU_COUNT} -C ${_buildd_static} \
@@ -237,11 +249,11 @@ if [[ ${_OPTIMIZED} == yes ]]; then
   # Linking module extensions to this on Linux is redundant (but harmless).
   # Linking module extensions to this on Darwin is harmful (multiply defined symbols).
   if [[ ${HOST} =~ .*linux.* ]]; then
-    cp -p ${_buildd_shared}/libpython${VER}m${SHLIB_EXT}.1.0 ${PREFIX}/lib/
+    cp -pf ${_buildd_shared}/libpython${VER}m${SHLIB_EXT}.1.0 ${PREFIX}/lib/
     ln -sf ${PREFIX}/lib/libpython${VER}m${SHLIB_EXT}.1.0 ${PREFIX}/lib/libpython${VER}m${SHLIB_EXT}.1
     ln -sf ${PREFIX}/lib/libpython${VER}m${SHLIB_EXT}.1 ${PREFIX}/lib/libpython${VER}m${SHLIB_EXT}
   elif [[ ${HOST} =~ .*darwin.* ]]; then
-    cp -p ${_buildd_shared}/libpython${VER}m${SHLIB_EXT} ${PREFIX}/lib/
+    cp -pf ${_buildd_shared}/libpython${VER}m${SHLIB_EXT} ${PREFIX}/lib/
   fi
 else
   make -C ${_buildd_shared} install
