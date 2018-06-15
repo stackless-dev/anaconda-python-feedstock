@@ -1,6 +1,6 @@
 {% set base_version = "3.7.0" %}
-{% set version = "3.7.0b5" %}
-{% set sha256 = "b8ac2dcfc225a46c461679c854be71e8cf70a092b00270e6cbe262fc9f5785d3" %}
+{% set version = "3.7.0" %}
+{% set md5 = "de8b44e3c94d0144768e923b6ab87c53" %}
 {% set linkage_nature = os.environ.get('PY_INTERP_LINKAGE_NATURE', '') %}
 {% if linkage_nature != '' %}
   {% set linkage_nature = "_" ~ linkage_nature %}
@@ -13,8 +13,9 @@ package:
   version: {{ base_version }}
 
 source:
-  - url: https://www.python.org/ftp/python/{{ base_version }}/Python-{{ version }}.tgz
-    sha256: {{ sha256 }}
+  - url: https://www.python.org/ftp/python/{{ base_version }}/Python-{{ version }}rc1.tar.xz
+  # - url: https://www.python.org/ftp/python/{{ base_version }}/Python-{{ version }}.tgz
+    md5: {{ md5 }}
     patches:
       - 0001-Add-Anaconda-Distribution-version-logic.patch
       - 0002-Darwin-Add-arch-x86_64-to-UnicCCompiler-ld_args.patch
