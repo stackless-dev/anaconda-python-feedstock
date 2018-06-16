@@ -193,7 +193,7 @@ mkdir -p ${_buildd_shared}
 pushd ${_buildd_shared}
   ${SRC_DIR}/configure "${_common_configure_args[@]}" \
                        "${_dbg_opts[@]}" \
-                       --includedir=${BUILD_PREFIX}/${HOST}/sysroot/usr/include \
+                       --oldincludedir=${BUILD_PREFIX}/${HOST}/sysroot/usr/include \
                        --enable-shared
 popd
 
@@ -228,7 +228,7 @@ pushd ${_buildd_static}
   ${SRC_DIR}/configure "${_common_configure_args[@]}" \
                        "${_extra_opts[@]}" \
                        "${_dbg_opts[@]}" \
-                       -includedir=${BUILD_PREFIX}/${HOST}/sysroot/usr/include \
+                       -oldincludedir=${BUILD_PREFIX}/${HOST}/sysroot/usr/include \
                        ${_DISABLE_SHARED}
 popd
 
