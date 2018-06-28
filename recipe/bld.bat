@@ -18,7 +18,6 @@ call build.bat --pgo -m -e -v -p %PLATFORM%
 if errorlevel 1 exit 1
 cd ..
 
-
 REM Populate the root package directory
 for %%x in (python36.dll python3.dll python.exe pythonw.exe) do (
     copy /Y %SRC_DIR%\PCbuild\%BUILD_PATH%\%%x %PREFIX%
@@ -84,6 +83,11 @@ if errorlevel 1 exit 1
 move /y %PREFIX%\Tools\scripts\pyvenv %PREFIX%\Tools\scripts\pyvenv.py
 if errorlevel 1 exit 1
 
+REM Copy OpenSLL DLLs
+copy /Y %SRC_DIR%\PCbuild\%BUILD_PATH%\libcrypto*.dll %PREFIX%\DLLs\
+if errorlevel 1 exit 1
+copy /Y %SRC_DIR%\PCbuild\%BUILD_PATH%\libssl*.dll %PREFIX%\DLLs\
+if errorlevel 1 exit 1
 
 REM Populate the tcl directory
 if "%ARCH%"=="64" (
@@ -94,14 +98,12 @@ if "%ARCH%"=="64" (
    if errorlevel 1 exit 1
 )
 
-
 REM Populate the include directory
 xcopy /s /y %SRC_DIR%\Include %PREFIX%\include\
 if errorlevel 1 exit 1
 
 copy /Y %SRC_DIR%\PC\pyconfig.h %PREFIX%\include\
 if errorlevel 1 exit 1
-
 
 REM Populate the Scripts directory
 IF NOT exist %SCRIPTS% (mkdir %SCRIPTS%)
@@ -114,7 +116,6 @@ for %%x in (idle pydoc) do (
 
 copy /Y %SRC_DIR%\Tools\scripts\2to3 %SCRIPTS%
 if errorlevel 1 exit 1
-
 
 REM Populate the libs directory
 mkdir %PREFIX%\libs

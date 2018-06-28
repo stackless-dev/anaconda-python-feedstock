@@ -1,5 +1,5 @@
-{% set version = "3.6.5" %}
-{% set sha256 = "53a3e17d77cd15c5230192b6a8c1e031c07cd9f34a2f089a731c6f6bd343d5c6" %}
+{% set version = "3.6.6" %}
+{% set sha256 = "7d56dadf6c7d92a238702389e80cfe66fbfae73e584189ed6f89c75bbf3eda58" %}
 
 package:
   name: python
@@ -42,9 +42,13 @@ source:
   - url: https://github.com/python/cpython-source-deps/archive/sqlite-3.21.0.0.zip   # [win]
     folder: externals/sqlite-3.21.0.0                                                # [win]
     sha256: 95a4f2d76aeeb68b51239340e3de26e5714ecfb7c8ad82a67b17af82213a8c20         # [win]
-  - url: https://github.com/python/cpython-source-deps/archive/openssl-1.0.2k.zip    # [win]
-    folder: externals/openssl-1.0.2k                                                 # [win]
-    sha256: e6b8b9293b597df13fb699cdaffe4fbc81c5e8197c044e7c123918bbe7142ece         # [win]
+
+  - url: https://github.com/python/cpython-source-deps/archive/openssl-1.0.2o.zip    # [win]
+    folder: externals/openssl-1.0.2o                                                 # [win]
+    sha256: 9db2a35ef254b57e16a47916810a3bf1cd639b512b5fe6c1cb51afc985113595         # [win]
+#  - url: https://github.com/python/cpython-bin-deps/archive/openssl-bin-1.0.2o.zip   # [win]
+#    folder: externals/openssl-bin-1.0.2o                                             # [win]
+#    sha256: c0e84e40f39b15125a63339f372a62b692ae91f82bf98c9e361b9296ecadcb31         # [win]
   - url: https://github.com/python/cpython-source-deps/archive/bzip2-1.0.6.zip       # [win]
     folder: externals/bzip2-1.0.6                                                    # [win]
     sha256: c42fd1432a2667b964a74bc423bb7485059c4a6d5dc92946d59dbf9a6bdb988d         # [win]
@@ -52,8 +56,9 @@ source:
     folder: externals/nasm-2.11.06                                                   # [win]
     sha256: de3c87b26a80e789986d8e6950c6304175d3829afe9c6c7211eb7257266ab0ac         # [win]
 
+
 build:
-  number: 2
+  number: 0
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
@@ -94,9 +99,7 @@ test:
     - pydoc -h
     - python3-config --help  # [unix]
     - python -c "import sysconfig; print(sysconfig.get_config_var('CC'))"
-    -  _PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_x86_64_conda_cos6_linux_gnu python -c "import sysconfig; print(sysconfig.get_config_var('CC'))"  # [linux64]
-    - conda inspect linkages -p $PREFIX python  # [not win]
-    - conda inspect objects -p $PREFIX python  # [osx]
+    -  _CONDA_PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_x86_64_conda_cos6_linux_gnu python -c "import sysconfig; print(sysconfig.get_config_var('CC'))"  # [linux64]
 
 about:
   home: http://www.python.org/

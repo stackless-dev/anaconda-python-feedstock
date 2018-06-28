@@ -1,4 +1,4 @@
-From 7d3f575212cd47eec98e2680735a8d54188d79db Mon Sep 17 00:00:00 2001
+From 273cf454aefa2241d1883179dd5420d01b17d688 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 29 Apr 2018 16:10:42 +0100
 Subject: [PATCH 16/16] Disable new-dtags in unixccompiler.py.
@@ -16,10 +16,10 @@ bit controversial I am convinced this is the right thing to do.
  2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/Lib/distutils/tests/test_unixccompiler.py b/Lib/distutils/tests/test_unixccompiler.py
-index eef702cf01..2d8d61df03 100644
+index efba27e1c8..4b02cdedbf 100644
 --- a/Lib/distutils/tests/test_unixccompiler.py
 +++ b/Lib/distutils/tests/test_unixccompiler.py
-@@ -59,7 +59,7 @@ class UnixCCompilerTestCase(unittest.TestCase):
+@@ -67,7 +67,7 @@ class UnixCCompilerTestCase(unittest.TestCase):
              elif v == 'GNULD':
                  return 'yes'
          sysconfig.get_config_var = gcv
@@ -28,7 +28,7 @@ index eef702cf01..2d8d61df03 100644
  
          # GCC non-GNULD
          sys.platform = 'bar'
-@@ -69,7 +69,7 @@ class UnixCCompilerTestCase(unittest.TestCase):
+@@ -77,7 +77,7 @@ class UnixCCompilerTestCase(unittest.TestCase):
              elif v == 'GNULD':
                  return 'no'
          sysconfig.get_config_var = gcv
@@ -38,10 +38,10 @@ index eef702cf01..2d8d61df03 100644
          # GCC GNULD with fully qualified configuration prefix
          # see #7617
 diff --git a/Lib/distutils/unixccompiler.py b/Lib/distutils/unixccompiler.py
-index 1b8f31b0f7..13037e479c 100644
+index 06f0f7157f..fcb6e6dac1 100644
 --- a/Lib/distutils/unixccompiler.py
 +++ b/Lib/distutils/unixccompiler.py
-@@ -243,9 +243,9 @@ class UnixCCompiler(CCompiler):
+@@ -245,9 +245,9 @@ class UnixCCompiler(CCompiler):
                  if sysconfig.get_config_var("GNULD") == "yes":
                      # GNU ld needs an extra option to get a RUNPATH
                      # instead of just an RPATH.
@@ -54,5 +54,5 @@ index 1b8f31b0f7..13037e479c 100644
                  # No idea how --enable-new-dtags would be passed on to
                  # ld if this system was using GNU ld.  Don't know if a
 -- 
-2.15.1 (Apple Git-101)
+2.15.2 (Apple Git-101.1)
 

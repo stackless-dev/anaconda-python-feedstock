@@ -1,7 +1,7 @@
-From 3052b2f89e991a2cab7689b861e2a137c8f49e24 Mon Sep 17 00:00:00 2001
+From 806284959bc286ca1753249a9dccee03b0c539b6 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 3 Dec 2017 17:31:27 +0000
-Subject: [PATCH 14/15] Add support for _CONDA_PYTHON_SYSCONFIGDATA_NAME if
+Subject: [PATCH 14/16] Add support for _CONDA_PYTHON_SYSCONFIGDATA_NAME if
  _PYTHON_SYSCONFIGDATA_NAME is not set and ignore
  {_CONDA,}_PYTHON_SYSCONFIGDATA_NAME if it does not exist
 
@@ -10,8 +10,8 @@ a Python that pre-dates this change then you will need to apply this patch
 manually).
 ---
  Lib/distutils/sysconfig.py | 12 +++++++-----
- Lib/sysconfig.py           | 23 +++++++++++++++--------
- 2 files changed, 22 insertions(+), 13 deletions(-)
+ Lib/sysconfig.py           | 24 ++++++++++++++++--------
+ 2 files changed, 23 insertions(+), 13 deletions(-)
 
 diff --git a/Lib/distutils/sysconfig.py b/Lib/distutils/sysconfig.py
 index 2bcd1dd288..237d680d91 100644
@@ -37,10 +37,10 @@ index 2bcd1dd288..237d680d91 100644
      build_time_vars = _temp.build_time_vars
      global _config_vars
 diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
-index 9314e71a2f..121b212388 100644
+index 9314e71a2f..93e5fd53a2 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
-@@ -342,13 +342,20 @@ def get_makefile_filename():
+@@ -342,13 +342,21 @@ def get_makefile_filename():
      return os.path.join(get_path('stdlib'), config_dir_name, 'Makefile')
  
  
@@ -56,6 +56,7 @@ index 9314e71a2f..121b212388 100644
 +        res = os.environ.get(envvar, None)
 +        if res and check_exists:
 +            try:
++                import importlib.util
 +                loader = importlib.util.find_spec(res)
 +            except:
 +                res = None
@@ -68,7 +69,7 @@ index 9314e71a2f..121b212388 100644
  
  
  def _generate_posix_vars():
-@@ -417,7 +424,7 @@ def _generate_posix_vars():
+@@ -417,7 +425,7 @@ def _generate_posix_vars():
  def _init_posix(vars):
      """Initialize the module as appropriate for POSIX systems."""
      # _sysconfigdata is generated at build time, see _generate_posix_vars()
@@ -78,5 +79,5 @@ index 9314e71a2f..121b212388 100644
      build_time_vars = _temp.build_time_vars
      vars.update(build_time_vars)
 -- 
-2.17.0
+2.15.2 (Apple Git-101.1)
 
