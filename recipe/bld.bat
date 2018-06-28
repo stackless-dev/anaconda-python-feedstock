@@ -83,11 +83,12 @@ if errorlevel 1 exit 1
 move /y %PREFIX%\Tools\scripts\pyvenv %PREFIX%\Tools\scripts\pyvenv.py
 if errorlevel 1 exit 1
 
-REM Copy OpenSLL DLLs
-copy /Y %SRC_DIR%\PCbuild\%BUILD_PATH%\libcrypto*.dll %PREFIX%\DLLs\
-if errorlevel 1 exit 1
-copy /Y %SRC_DIR%\PCbuild\%BUILD_PATH%\libssl*.dll %PREFIX%\DLLs\
-if errorlevel 1 exit 1
+:: REM Copy OpenSLL DLLs (not needed as these are
+:: REM statically inked to _ssl and _hashlib now)
+:: copy /Y %SRC_DIR%\PCbuild\%BUILD_PATH%\libcrypto*.dll %PREFIX%\DLLs\
+:: if errorlevel 1 exit 1
+:: copy /Y %SRC_DIR%\PCbuild\%BUILD_PATH%\libssl*.dll %PREFIX%\DLLs\
+:: if errorlevel 1 exit 1
 
 REM Populate the tcl directory
 if "%ARCH%"=="64" (
