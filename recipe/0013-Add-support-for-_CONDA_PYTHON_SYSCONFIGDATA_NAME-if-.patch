@@ -40,7 +40,7 @@ diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
 index 9ee4d3185a..47202b600d 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
-@@ -336,13 +336,20 @@ def get_makefile_filename():
+@@ -336,13 +336,21 @@ def get_makefile_filename():
      return os.path.join(get_path('stdlib'), config_dir_name, 'Makefile')
  
  
@@ -56,6 +56,7 @@ index 9ee4d3185a..47202b600d 100644
 +        res = os.environ.get(envvar, None)
 +        if res and check_exists:
 +            try:
++                import importlib.util
 +                loader = importlib.util.find_spec(res)
 +            except:
 +                res = None
@@ -68,7 +69,7 @@ index 9ee4d3185a..47202b600d 100644
  
  
  def _generate_posix_vars():
-@@ -411,7 +418,7 @@ def _generate_posix_vars():
+@@ -411,7 +419,7 @@ def _generate_posix_vars():
  def _init_posix(vars):
      """Initialize the module as appropriate for POSIX systems."""
      # _sysconfigdata is generated at build time, see _generate_posix_vars()

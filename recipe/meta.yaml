@@ -1,6 +1,6 @@
 {% set base_version = "3.7.0" %}
 {% set version = "3.7.0" %}
-{% set md5 = "de8b44e3c94d0144768e923b6ab87c53" %}
+{% set md5 = "eb8c2a6b1447d50813c02714af4681f3" %}
 {% set linkage_nature = os.environ.get('PY_INTERP_LINKAGE_NATURE', '') %}
 {% if linkage_nature != '' %}
   {% set linkage_nature = "_" ~ linkage_nature %}
@@ -13,7 +13,7 @@ package:
   version: {{ base_version }}
 
 source:
-  - url: https://www.python.org/ftp/python/{{ base_version }}/Python-{{ version }}rc1.tar.xz
+  - url: https://www.python.org/ftp/python/{{ base_version }}/Python-{{ version }}.tar.xz
   # - url: https://www.python.org/ftp/python/{{ base_version }}/Python-{{ version }}.tgz
     md5: {{ md5 }}
     patches:
@@ -56,8 +56,8 @@ source:
     folder: externals/sqlite-3.21.0.0                                                # [win]
     sha256: 95a4f2d76aeeb68b51239340e3de26e5714ecfb7c8ad82a67b17af82213a8c20         # [win]
   # Not used as of 3.7b3 (openssl-bin is), but kept for archival and license reasons.
-  - url: https://github.com/python/cpython-source-deps/archive/openssl-1.1.0f.zip    # [win]
-    folder: externals/openssl-1.1.0f                                                 # [win]
+  - url: https://github.com/python/cpython-source-deps/archive/openssl-1.1.0h.zip    # [win]
+    folder: externals/openssl-1.1.0h                                                 # [win]
     sha256: f9a39b7519d3c1d5b5da7559c0b117f588eea97bc98d4ea8434d078cf5063eaa         # [win]
   - url: https://github.com/python/cpython-bin-deps/archive/openssl-bin-1.1.0h.zip   # [win]
     folder: externals/openssl-bin-1.1.0h                                             # [win]
@@ -74,6 +74,7 @@ source:
 
 
 build:
+  number: 0
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
