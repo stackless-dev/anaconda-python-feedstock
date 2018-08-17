@@ -6,8 +6,11 @@ import re
 
 def pairs(it):
     it = iter(it)
-    while True:
-        yield next(it), next(it)
+    try:
+        while True:
+            yield next(it), next(it)
+    except StopIteration:
+        return
 
 def main():
     rep_dict = dict()

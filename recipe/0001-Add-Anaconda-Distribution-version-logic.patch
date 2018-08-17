@@ -51,7 +51,7 @@ diff --git a/Python/getversion.c b/Python/getversion.c
 index c32b6f9d60..03b6888976 100644
 --- a/Python/getversion.c
 +++ b/Python/getversion.c
-@@ -2,9 +2,55 @@
+@@ -2,9 +2,56 @@
  /* Return the full version string. */
  
  #include "Python.h"
@@ -77,7 +77,8 @@ index c32b6f9d60..03b6888976 100644
 +    static char res[128];
 +    FILE *f;
 +    wchar_t path[MPL + 1];
-+    int c, i;
++    int c;
++    unsigned int i;
 +
 +    wcscpy(path, Py_GetPrefix());
 +    wcscat(path, STDLIB_DIR L"version.txt");
