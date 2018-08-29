@@ -9,6 +9,7 @@
 # "not helpful for PGO".
 
 VER=${PKG_VERSION%.*}
+VERNODOTS=${PKG_VERSION//./}
 CONDA_FORGE=no
 
 _buildd_static=build-static
@@ -40,6 +41,8 @@ if [[ ${DEBUG_PY} == yes ]]; then
 else
   DBG=
 fi
+
+ABIFLAGS=${DBG}m
 
 # This is the mechanism by which we fall back to default gcc, but having it defined here
 # would probably break the build by using incorrect settings and/or importing files that
@@ -339,7 +342,12 @@ pushd $PREFIX/lib/python${VER}
 
   # Copy all "${RECIPE_DIR}"/sysconfigdata/*.py. This is to support cross-compilation. They will be
   # from the previous build unfortunately so care must be taken at version bumps and flag changes.
-  cp -rf "${RECIPE_DIR}"/sysconfigdata/*.py ${PREFIX}/lib/python${VER}/
+  SYSCONFIGS=$(find "${RECIPE_DIR}"/sysconfigdata/*.py -name '*sysconfigdata*')
+  for SYSCONFIG in ${SYSCONFIGS}; do
+    cat ${SYSCONFIG} | sed -e "s|@ABIFLAGS@|${ABIFLAGS}|g" \
+                           -e "s|@PYVERNODOTS@|${VERNODOTS}|g" \
+                           -e "s|@PYVER@|${VER}|g" > $(basename ${SYSCONFIG})
+  done
 
   if [[ ${HOST} =~ .*darwin.* ]]; then
     cp ${RECIPE_DIR}/sysconfigdata/default/_sysconfigdata_osx.py ${recorded_name}
