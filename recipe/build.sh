@@ -9,7 +9,7 @@
 # "not helpful for PGO".
 
 VER=${PKG_VERSION%.*}
-VERNODOTS=${PKG_VERSION//./}
+VERNODOTS=${VER//./}
 CONDA_FORGE=no
 
 _buildd_static=build-static
