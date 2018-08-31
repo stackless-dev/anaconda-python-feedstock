@@ -369,12 +369,16 @@ pushd $PREFIX/lib/python${VER}
     echo "See: https://github.com/conda/conda/issues/6030 for more information."                                   >> ${PREFIX}/compiler_compat/README
   fi
 
+  # We no longer do this since we use sed to replace some tokens now and copying these fully baked ones back would overwrite that.
+  # I should work on something to put the tokens back instead, but also we probably want sysconfig data to be different for debug
+  # versus release.
+  #
   # Copy the latest sysconfigdata for this platform back to the recipe so we can do full cross-compilation.
   # The [^ ]* part after PKG_VERSION is to catch beta versions encoded into the build string but not the version number (e.g. b3).
   # .. there is no variable set that contains this information, though it would be useful. We do have:
   # .. PKG_BUILD_STRING="placeholder" though (pinging @msarahan about this).
-  [[ -f	"${RECIPE_DIR}"/sysconfigdata/${our_compilers_name} ]] && rm -f	"${RECIPE_DIR}"/sysconfigdata/${our_compilers_name}
-  cat ${our_compilers_name} | sed -e "s|${PREFIX}|/opt/anaconda1anaconda2anaconda3|g" \
-                                  -e "s|${SRC_DIR}|\${SRC_DIR}|g" \
-                                  -e "s|${PKG_NAME}-${PKG_VERSION}[^ ]*|\${PKG_NAME}-\${PKG_VERSION}|g" > "${RECIPE_DIR}"/sysconfigdata/${our_compilers_name}
+  # [[ -f	"${RECIPE_DIR}"/sysconfigdata/${our_compilers_name} ]] && rm -f	"${RECIPE_DIR}"/sysconfigdata/${our_compilers_name}
+  # cat ${our_compilers_name} | sed -e "s|${PREFIX}|/opt/anaconda1anaconda2anaconda3|g" \
+  #                                 -e "s|${SRC_DIR}|\${SRC_DIR}|g" \
+  #                                 -e "s|${PKG_NAME}-${PKG_VERSION}[^ ]*|\${PKG_NAME}-\${PKG_VERSION}|g" > "${RECIPE_DIR}"/sysconfigdata/${our_compilers_name}
 popd
