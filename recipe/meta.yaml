@@ -1,12 +1,12 @@
 {% set version = "3.5.6" %}
-{% set md5 = "99a7e803633a627b264a42ce976d8c19" %}
+{% set md5 = "16b0c2319eb1aa8da1aae917e84e0680" %}
 
 package:
   name: python
   version: {{ version }}
 
 source:
-  - url: https://www.python.org/ftp/python/{{ version }}/Python-{{ version }}.tgz
+  - url: http://www.stackless.com/binaries/stackless-356-export.tar.xz
     md5: {{ md5 }}
     patches:
       - 0001-backport-Python-3.6-_PYTHON_SYSCONFIGDATA_NAME-also-.patch
@@ -42,6 +42,8 @@ build:
   ignore_run_exports:   # [unix]
     - bzip2             # [unix]
   skip: True            # [win and vc != 14]
+  features:
+    - stackless
 
 requirements:
   build:
@@ -72,9 +74,11 @@ test:
     - python3-config --help  # [unix]
     - python -c "import sysconfig; print(sysconfig.get_config_var('CC'))"
     -  _PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_x86_64_conda_cos6_linux_gnu python -c "import sysconfig; print(sysconfig.get_config_var('CC'))"  # [linux64]
+  requires:
+    - stackless
 
 about:
-  home: http://www.python.org/
+  home: http://www.stackless.com/
   license: PSF
   license_file: LICENSE
   summary: General purpose programming language
@@ -85,9 +89,9 @@ about:
     fewer lines of code than would be possible in languages such as C++ or
     Java. The language provides constructs intended to enable clear programs
     on both a small and large scale.
-  doc_url: https://www.python.org/doc/versions/
+  doc_url: https://stackless.readthedocs.io/en/3.5-slp/
   doc_source_url: https://github.com/python/pythondotorg/blob/master/docs/source/index.rst
-  dev_url: https://docs.python.org/devguide/
+  dev_url: https://github.com/stackless-dev/stackless
 
 extra:
   recipe-maintainers:
@@ -97,3 +101,4 @@ extra:
     - msarahan
     - pelson
     - ocefpaf
+    - akruis

@@ -22,18 +22,6 @@ index 1c5f7a6374..b0f8aeae76 100644
  PyAPI_FUNC(const char *) Py_GetVersion(void);
  PyAPI_FUNC(const char *) Py_GetPlatform(void);
  PyAPI_FUNC(const char *) Py_GetCopyright(void);
-diff --git a/Lib/platform.py b/Lib/platform.py
-index d3ed5bf4c5..42f959e62b 100755
---- a/Lib/platform.py
-+++ b/Lib/platform.py
-@@ -1088,6 +1088,7 @@ def processor():
- 
- _sys_version_parser = re.compile(
-     r'([\w.+]+)\s*'  # "version<space>"
-+    r'(?:\|[^|]*\|)?\s*' # version extra
-     r'\(#?([^,]+)'  # "(#buildno"
-     r'(?:,\s*([\w ]*)'  # ", builddate"
-     r'(?:,\s*([\w :]*))?)?\)\s*'  # ", buildtime)<space>"
 diff --git a/Modules/main.c b/Modules/main.c
 index d36db6d8b5..227daaf6b7 100644
 --- a/Modules/main.c
@@ -49,10 +37,10 @@ index d36db6d8b5..227daaf6b7 100644
      }
  
 diff --git a/Python/getversion.c b/Python/getversion.c
-index 7bd6efd0a0..17fd1b98c4 100644
+index fb54af8dd7..80d449d3a2 100644
 --- a/Python/getversion.c
 +++ b/Python/getversion.c
-@@ -2,14 +2,50 @@
+@@ -2,9 +2,44 @@
  /* Return the full version string. */
  
  #include "Python.h"
@@ -95,7 +83,21 @@ index 7bd6efd0a0..17fd1b98c4 100644
 +	#undef STDLIB_DIR
 +}
 +
- const char *
+ #ifdef STACKLESS
+ 	/* avoiding to recompile everything for Stackless all the time */
+ #include "stackless_version.h"
+@@ -13,8 +48,8 @@ const char *
+ Py_GetVersion(void)
+ {
+ 	static char version[250];
+-	PyOS_snprintf(version, sizeof(version), "%.80s Stackless %.80s (%.80s) %.80s",
+-		      PY_VERSION, STACKLESS_VERSION, Py_GetBuildInfo(), Py_GetCompiler());
++	PyOS_snprintf(version, sizeof(version), "%.80s Stackless %.80s |%s| (%.80s) %.80s",
++		      PY_VERSION, STACKLESS_VERSION, Anaconda_GetVersion(), Py_GetBuildInfo(), Py_GetCompiler());
+ 	return version;
+ }
+ 
+@@ -24,8 +59,9 @@ const char *
  Py_GetVersion(void)
  {
  	static char version[250];
@@ -106,6 +108,4 @@ index 7bd6efd0a0..17fd1b98c4 100644
 +		      Py_GetBuildInfo(), Py_GetCompiler());
  	return version;
  }
--- 
-2.14.3 (Apple Git-98)
-
+ 
