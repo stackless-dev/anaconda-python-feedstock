@@ -1,13 +1,13 @@
 {% set version = "3.6.6" %}
-{% set sha256 = "7d56dadf6c7d92a238702389e80cfe66fbfae73e584189ed6f89c75bbf3eda58" %}
+{% set md5 = "c01c976bcba70510621c6c16f65c4128" %}
 
 package:
   name: python
   version: {{ version }}
 
 source:
-  - url: https://www.python.org/ftp/python/{{ version }}/Python-{{ version }}.tgz
-    sha256: {{ sha256 }}
+  - url: http://www.stackless.com/binaries/stackless-366-export.tar.xz
+    md5: {{ md5 }}
     patches:
       - 0001-Add-Anaconda-Distribution-version-logic.patch
       - 0002-Darwin-Omit-PYTHONFRAMEWORK-site-packages.patch
@@ -72,6 +72,8 @@ build:
     - bzip2             # [unix]
   # match python.org compiler standard
   skip: True            # [win and vc != 14]
+  features:
+    - stackless
 
 requirements:
   build:
@@ -101,9 +103,11 @@ test:
     - python3-config --help  # [unix]
     - python -c "import sysconfig; print(sysconfig.get_config_var('CC'))"
     -  _CONDA_PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_x86_64_conda_cos6_linux_gnu python -c "import sysconfig; print(sysconfig.get_config_var('CC'))"  # [linux64]
+  requires:
+    - stackless
 
 about:
-  home: http://www.python.org/
+  home: http://www.stackless.com/
   license: PSF
   license_file: LICENSE
   summary: General purpose programming language
@@ -114,9 +118,9 @@ about:
     fewer lines of code than would be possible in languages such as C++ or
     Java. The language provides constructs intended to enable clear programs
     on both a small and large scale.
-  doc_url: https://www.python.org/doc/versions/
+  doc_url: https://stackless.readthedocs.io/en/3.6-slp/
   doc_source_url: https://github.com/python/pythondotorg/blob/master/docs/source/index.rst
-  dev_url: https://docs.python.org/devguide/
+  dev_url: https://github.com/stackless-dev/stackless
 
 extra:
   recipe-maintainers:
@@ -126,3 +130,4 @@ extra:
     - msarahan
     - pelson
     - ocefpaf
+    - akruis

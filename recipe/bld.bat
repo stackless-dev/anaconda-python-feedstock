@@ -106,6 +106,12 @@ if errorlevel 1 exit 1
 copy /Y %SRC_DIR%\PC\pyconfig.h %PREFIX%\include\
 if errorlevel 1 exit 1
 
+xcopy /s /y %SRC_DIR%\Stackless\*.h %PREFIX%\include\Stackless\
+if errorlevel 1 exit 1
+rmdir /S /Q %PREFIX%\include\Stackless\testbench
+if errorlevel 1 exit 1
+
+
 REM Populate the Scripts directory
 IF NOT exist %SCRIPTS% (mkdir %SCRIPTS%)
 if errorlevel 1 exit 1

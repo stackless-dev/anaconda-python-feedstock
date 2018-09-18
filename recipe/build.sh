@@ -156,6 +156,7 @@ declare -a _common_configure_args
 _common_configure_args+=(--prefix=${PREFIX})
 _common_configure_args+=(--build=${BUILD})
 _common_configure_args+=(--host=${HOST})
+_common_configure_args+=(--enable-stacklessfewerregisters)
 _common_configure_args+=(--enable-ipv6)
 _common_configure_args+=(--with-ensurepip=no)
 _common_configure_args+=(--with-computed-gotos)
