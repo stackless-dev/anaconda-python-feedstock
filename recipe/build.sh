@@ -3,6 +3,10 @@
 VER=${PKG_VERSION%.*}
 CONDA_FORGE=no
 
+# prevent make from rebuilding these files
+touch Include/Python-ast.h
+touch Python/Python-ast.c
+
 # this is the mechanism by which we fall back to default gcc, but having it defined here can break the build
 #     or use incorrect settings
 unset _PYTHON_SYSCONFIGDATA_NAME
@@ -90,6 +94,7 @@ declare -a _common_configure_args
 _common_configure_args+=(--prefix=${PREFIX})
 _common_configure_args+=(--build=${BUILD})
 _common_configure_args+=(--host=${HOST})
+_common_configure_args+=(--enable-stacklessfewerregisters)
 _common_configure_args+=(--enable-ipv6)
 _common_configure_args+=(--enable-unicode=${UNICODE})
 _common_configure_args+=(--with-computed-gotos)

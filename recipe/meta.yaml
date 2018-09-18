@@ -1,12 +1,14 @@
 {% set version = "2.7.15" %}
-{% set sha256 = "18617d1f15a380a919d517630a9cd85ce17ea602f9bbdc58ddc672df4b0239db" %}
+# {% set sha256 = "18617d1f15a380a919d517630a9cd85ce17ea602f9bbdc58ddc672df4b0239db" %}
+{% set sha256 = "924ebc76708f76464e90b02bd44790ab79f4bb6b2c8bb31317b59302b87b7e07" %}
 
 package:
   name: python
   version: {{ version }}
 
 source:
-  - url: https://www.python.org/ftp/python/{{ version }}/Python-{{ version }}.tgz
+  - url: https://github.com/stackless-dev/stackless/archive/638e61c650cf55abfbd3c0880a9af51cd491c3fe.zip
+  # - url: https://www.python.org/ftp/python/{{ version }}/Python-{{ version }}.tgz
     sha256: {{ sha256 }}
     patches:
       - 0001-backport-Python-3.6-_PYTHON_SYSCONFIGDATA_NAME.patch
@@ -61,6 +63,8 @@ build:
   ignore_run_exports:   # [unix]
     - bzip2             # [unix]
   skip: True            # [win and vc != 9]
+  features:
+    - stackless
 
 requirements:
   build:
@@ -88,9 +92,11 @@ test:
     - idle -h
     - python -c "import sysconfig; print sysconfig.get_config_var('CC')"
     -  _PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_x86_64_conda_cos6_linux_gnu python -c "import sysconfig; print sysconfig.get_config_var('CC')"  # [linux64]
+  requires:
+    - stackless
 
 about:
-  home: http://www.python.org/
+  home: http://www.stackless.com/
   license: PSF
   license_file: LICENSE
   summary: General purpose programming language
@@ -101,9 +107,9 @@ about:
     fewer lines of code than would be possible in languages such as C++ or
     Java. The language provides constructs intended to enable clear programs
     on both a small and large scale.
-  doc_url: https://www.python.org/doc/versions/
+  doc_url: http://stackless.readthedocs.io/en/2.7-slp/
   doc_source_url: https://github.com/python/pythondotorg/blob/master/docs/source/index.rst
-  dev_url: https://docs.python.org/devguide/
+  dev_url: https://github.com/stackless-dev/stackless
 
 extra:
   recipe-maintainers:
@@ -112,3 +118,4 @@ extra:
     - mingwandroid
     - msarahan
     - pelson
+    - akruis
