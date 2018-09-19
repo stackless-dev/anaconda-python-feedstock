@@ -27,10 +27,23 @@ conda create --yes --name buildslp
 conda config --env --set add_pip_as_python_dependency False
 conda config --env --add channels stackless
 conda update --all --yes
-conda install --yes python="$ver" conda-build
+conda install --yes conda-build
+
+if ! command -v unxz ; then
+  conda install --yes xz
+  # conda unxz does not support the Option "-f"
+  # xz.exe renamed to unxz.exe does
+  xz="$(command -v xz)"
+  unxz="$(command -v unxz)"
+  if [ -f "$xz".exe ] ; then
+    xz="$xz".exe
+	unxz="$unxz".exe
+  fi
+  cp "$xz" "$unxz"
+fi
 
 conda build purge
-conda build "$recipe"
+conda build "$recipe" --python="$ver"
 
 . "$conda_dir/deactivate"
 
