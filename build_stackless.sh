@@ -8,6 +8,9 @@ set -e
 ver="3.5"
 recipe="recipe"
 
+# in case someone enables branding
+export python_branding="| packaged by the Stackless team |"
+
 # Ensure recipe is availabe
 test -f "$recipe/meta.yaml"
 
@@ -17,11 +20,17 @@ conda_dir="$(command -v conda)"
 conda_dir="${conda_dir%/*}"
 test -f "$conda_dir/activate"
 
+# make sure conda-build is available in the base environment
+# I obverved failures on Windows without it
+conda install --yes conda-build
+
+# clean up
 conda remove --yes --name buildslp --all || :
 conda remove --yes --name testslp --all || :
 conda config --env --remove channels local || :
 conda create --yes --name buildslp
 
+# Activate environment "buildslp"
 . "$conda_dir/activate" buildslp
 
 conda config --env --set add_pip_as_python_dependency False
@@ -29,10 +38,12 @@ conda config --env --add channels stackless
 conda update --all --yes
 conda install --yes conda-build
 
+# Stackless Python source archives are "tar.xz" files. Therefore we need
+# the command "unxz" to extract them.
 if ! command -v unxz ; then
   conda install --yes xz
-  # conda unxz does not support the Option "-f"
-  # xz.exe renamed to unxz.exe does
+  # conda "unxz" does not support the Option "-f".
+  # xz.exe renamed to unxz.exe does.
   xz="$(command -v xz)"
   unxz="$(command -v unxz)"
   if [ -f "$xz".exe ] ; then
