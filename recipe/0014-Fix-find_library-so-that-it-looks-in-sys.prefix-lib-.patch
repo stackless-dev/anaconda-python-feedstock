@@ -1,7 +1,7 @@
-From c376a6ecffa289f50e8e2bd74edda97ad13a74ba Mon Sep 17 00:00:00 2001
+From a84ef857215e8e7751bb87b3bdae80582cd76e7e Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 5 Dec 2017 22:47:59 +0000
-Subject: [PATCH 14/15] Fix find_library so that it looks in sys.prefix/lib
+Subject: [PATCH 14/17] Fix find_library so that it looks in sys.prefix/lib
  first
 
 ---
@@ -62,5 +62,5 @@ index 97973bce00..6611a021f0 100644
  
  ################################################################
 -- 
-2.17.0
+2.18.0
 
