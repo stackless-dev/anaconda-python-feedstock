@@ -94,7 +94,7 @@ declare -a _common_configure_args
 _common_configure_args+=(--prefix=${PREFIX})
 _common_configure_args+=(--build=${BUILD})
 _common_configure_args+=(--host=${HOST})
-_common_configure_args+=(--enable-stacklessfewerregisters)
+[[ ${HOST} =~ .*darwin.* ]] || _common_configure_args+=(--enable-stacklessfewerregisters)
 _common_configure_args+=(--enable-ipv6)
 _common_configure_args+=(--enable-unicode=${UNICODE})
 _common_configure_args+=(--with-computed-gotos)
