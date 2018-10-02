@@ -56,4 +56,4 @@ install:
 script:
   - conda build ./recipe
 
-  - upload_or_check_non_existence ./recipe conda-forge --channel=main
+  - echo "Skipping upload_or_check_non_existence ./recipe conda-forge --channel=main"
