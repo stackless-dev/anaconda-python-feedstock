@@ -55,8 +55,8 @@ install:
 
 script:
   - |
-    { ( while sleep 30 ; do echo "." ; done ) < /dev/null 2>/dev/null & } && DOTPRINTER_PID=$! && \
-    conda build ./recipe --python=${CONDA_PY} > build.log ; EXIT_CODE=$?
+    { ( while sleep 30 ; do ls -l build.log ; done ) < /dev/null 2>/dev/null & } && DOTPRINTER_PID=$! && \
+    conda build ./recipe --python=${CONDA_PY} > build.log 2>&1 ; EXIT_CODE=$?
     kill $DOTPRINTER_PID && wait $DOTPRINTER_PIT
     echo "last 200 lines of output:"
     tail -n 200 build.log
