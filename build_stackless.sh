@@ -28,6 +28,7 @@ conda install --yes conda-build
 conda remove --yes --name buildslp --all || :
 conda remove --yes --name testslp --all || :
 conda config --env --remove channels local || :
+conda config --env --remove channels conda-forge || :
 conda create --yes --name buildslp
 
 # Activate environment "buildslp"
