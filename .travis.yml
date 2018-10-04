@@ -1,9 +1,9 @@
 # This file was not generated automatically but written by hand
 
 branches:
-	only:
-		# Build only Stackless banches
-		- /.*-slp$/
+  only:
+    # Build only Stackless banches
+    - /.*-slp$/
 
 language: generic
 
@@ -12,8 +12,8 @@ osx_image: xcode6.4
 
 env:
   matrix:
-    
     - CONDA_PY=36
+
   global:
     # The BINSTAR_TOKEN secure variable for anaconda/stackless
     - secure: "H+zJIY3F897SrKYZBHeusKKTt319z7YIUebYP2KVVlpAt491/4vwYoFvgFyGMMOj5XlQIn0L9cp51ke3dOgYMk/98ZK2O257D4T9rnCXLLDONzdsnJlZ1+wKnz5vfanDMUM58WKKzzMO2LluFfVLdKQXEoLnmKktGoN8/MJRjHYVWH9qepYx/DsC+kvzWtX9+O3rF4PEX6nbpw7IsHfR5LS6iH5GCm9u5zZRwJOx2OEkwq+bQUIPxxCr6f+pBEvITQtTqsrgaUKTMUqqNkKDX8F68oKrfSW5QjpBm6PD93QPezzVb8jYAB4zN1sjbjF+l8FYguvUOzpGpJxThaeyF7wVIygo4Andf1FyHT+pydVsopo2ZqGPdJ84hu7CntppSH7Gy50cu99ozXspC4c2YhyRYwrg5NserAN2Hb8WBk6eTKh2UCINiDsDkCv7jxkBFZXhybBBcnRG3ToUl6AwVK3JFeqdKFQwhCvvj7IA+WgngEJuZ/CNITlEYHwo4vtwTawyCNybj0alDK4dAZuG2psjh8I4PKjAS1PeO0fr7WBHXysHw2dXnz2XsJL1qU73DdtZ6mca1ud5zNEfpTebgGiqnaeWgyHoRqnpFs41UQyPfz+raL+9EeQ8jtXe5zkd/LA2rksLl/v8l9i6f3ID9nXeAZjUvFBN5i5pX361ENg="
