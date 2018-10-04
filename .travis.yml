@@ -76,7 +76,7 @@ script:
 after_success:
   - |
     ARTEFACT="$(conda build --output ./recipe)"
-    test -f "$ARTEFACT" && test "x$BINSTAR_TOKEN" != "x" && anaconda --token "$BINSTAR_TOKEN" upload "$ARTEFACT" --no-progress --label test
+    test -f "$ARTEFACT" && test "x$BINSTAR_TOKEN" != "x" && anaconda --token "$BINSTAR_TOKEN" upload "$ARTEFACT" --user stackless --label test
 
 
 deploy:
