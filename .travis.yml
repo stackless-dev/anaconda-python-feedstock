@@ -1,5 +1,9 @@
-# This file was generated automatically from conda-smithy. To update this configuration,
-# update the conda-forge.yml and/or the recipe/meta.yaml.
+# This file was not generated automatically but written by hand
+
+branches:
+  only:
+    # Build only Stackless banches
+    - /.*-slp$/
 
 language: generic
 
@@ -8,12 +12,10 @@ osx_image: xcode6.4
 
 env:
   matrix:
-    
     - CONDA_PY=27
   global:
-    # The BINSTAR_TOKEN secure variable. This is defined canonically in conda-forge.yml.
-    - secure: "nkZ1RWSP1PIRI6OqCwqeLrib7nXeBzX7PJg+P72RH1LQ56SZCdzqmvr3IoC2gxayZBzDnFsq7bU1ypy/gNtKDfWaXJvUQVKcKrbWF6dQxVXP/X5go+y9stSjI/WGXMbBr8ZwePR3lDmEPifEKdpgOaMWosqnK+ThtRNdxqKbnzRB6cOJSCcRGIMexauJg+IkPyQ5MFh59VHLdvfxfqNXa1Kdv2WkgfKX+apjLlCJoDP34zUcGFyIccbbq130AW0aYiJV3ZJIIVfcAgJqS7Ons0X3biA7/Fp6AWQKx91Ew/aoN3xb878CVr5ygKqjDdVkZClW2JEaSW9w+WG7RWomPJIPvmAuoKg50S4D07iBZf89Hjg+oybZ17ct+OA1UdW8EK8c/gaPFQsBuN1sRG2DNAJug+ViPPl7hnoAfRhRcPnUEuLcPJ6kyEcpYZgPE3MMRtjIiRRyNRzccinjxjPbojFTkiCHM9U9krFVGwIKNHp6623rttriu9YGU7yd6wRGbD09AUajT8r9iPn2OJ1+ibzCIbzJx6Nb7290+Fs4UbU29m1bAiabBTnN6EVim20tMtqCxA6HNbji30SBB/C+lQ/pf9D16Nxy+FCEdQXb193iqBxhjzEpJZHkFY/g8b1C6yJGi6dzbNDKT63HbGduQUZ99rKMmI8XaAf3ANRm/Vs="
-
+    # The BINSTAR_TOKEN secure variable for anaconda/stackless
+    - secure: "H+zJIY3F897SrKYZBHeusKKTt319z7YIUebYP2KVVlpAt491/4vwYoFvgFyGMMOj5XlQIn0L9cp51ke3dOgYMk/98ZK2O257D4T9rnCXLLDONzdsnJlZ1+wKnz5vfanDMUM58WKKzzMO2LluFfVLdKQXEoLnmKktGoN8/MJRjHYVWH9qepYx/DsC+kvzWtX9+O3rF4PEX6nbpw7IsHfR5LS6iH5GCm9u5zZRwJOx2OEkwq+bQUIPxxCr6f+pBEvITQtTqsrgaUKTMUqqNkKDX8F68oKrfSW5QjpBm6PD93QPezzVb8jYAB4zN1sjbjF+l8FYguvUOzpGpJxThaeyF7wVIygo4Andf1FyHT+pydVsopo2ZqGPdJ84hu7CntppSH7Gy50cu99ozXspC4c2YhyRYwrg5NserAN2Hb8WBk6eTKh2UCINiDsDkCv7jxkBFZXhybBBcnRG3ToUl6AwVK3JFeqdKFQwhCvvj7IA+WgngEJuZ/CNITlEYHwo4vtwTawyCNybj0alDK4dAZuG2psjh8I4PKjAS1PeO0fr7WBHXysHw2dXnz2XsJL1qU73DdtZ6mca1ud5zNEfpTebgGiqnaeWgyHoRqnpFs41UQyPfz+raL+9EeQ8jtXe5zkd/LA2rksLl/v8l9i6f3ID9nXeAZjUvFBN5i5pX361ENg="
 
 before_install:
     # Fast finish the PR.
@@ -45,15 +47,42 @@ install:
     - |
       echo ""
       echo "Configuring conda."
-      source /Users/travis/miniconda3/bin/activate root
-      conda config --remove channels defaults
-      conda config --add channels defaults
-      conda config --add channels conda-forge
+      source /Users/travis/miniconda3/bin/activate
+      conda config --remove channels local
+      conda config --set add_pip_as_python_dependency False
+      conda config --add channels stackless
       conda config --set show_channel_urls true
-      conda install --yes --quiet conda-forge-build-setup
-      source run_conda_forge_build_setup
+      conda config --set anaconda_upload no
+      conda install --yes --quiet conda-build xz python
+      conda install -c anaconda anaconda-client
+      python -m pip install base91
 
 script:
-  - conda build ./recipe
+  - |
+    { ( while sleep 30 ; do ls -l build.log ; done ) < /dev/null 2>/dev/null & } && DOTPRINTER_PID=$! && \
+    conda build ./recipe --python=${CONDA_PY} > build.log 2>&1 ; EXIT_CODE=$?
+    kill $DOTPRINTER_PID && wait $DOTPRINTER_PIT
+    echo "last 200 lines of output:"
+    tail -n 200 build.log
+    echo ""
+    if [ $EXIT_CODE -eq 0 ] ; then
+       echo "Created artefact:"
+       conda build --output ./recipe
+    else
+       echo "conda build failed with exit code: $EXIT_CODE"
+    fi
+    echo ""
+    echo "xz compressed and base91 encoded output of the build follows:"
+    xz -z -c -9 -e < build.log | python -c 'import base91,sys;print(base91.encode(getattr(sys.stdin,"buffer",sys.stdin).read()))' | fold
+    echo ""
+    test $EXIT_CODE -eq 0
 
-  - upload_or_check_non_existence ./recipe conda-forge --channel=main
+after_success:
+  - |
+    ARTEFACT="$(conda build --output ./recipe)"
+    test -f "$ARTEFACT" && test "x$BINSTAR_TOKEN" != "x" && anaconda --verbose --token "$BINSTAR_TOKEN" upload "$ARTEFACT" --user stackless --label test
+
+
+deploy:
+  skip_cleanup: true
+
