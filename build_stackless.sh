@@ -50,7 +50,7 @@ if ! command -v unxz ; then
     xz="$xz".exe
 	unxz="$unxz".exe
   fi
-  cp "$xz" "$unxz"
+  cp "$xz" "$unxz" || :
 fi
 
 conda build purge
