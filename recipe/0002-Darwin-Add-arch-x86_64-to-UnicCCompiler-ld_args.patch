@@ -1,4 +1,4 @@
-From 804f4a3fcdc9c7e7a01c4ee68df51854bd9c3823 Mon Sep 17 00:00:00 2001
+From 47205fc1b96e5a1c2cfed9ab12ced048192d3438 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 08:48:16 +0100
 Subject: [PATCH 02/17] Darwin: Add -arch x86_64 to UnicCCompiler ld_args

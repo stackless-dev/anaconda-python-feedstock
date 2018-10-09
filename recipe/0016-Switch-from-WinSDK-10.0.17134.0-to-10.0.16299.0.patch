@@ -1,4 +1,4 @@
-From 7480fb5f7d82750f3b4a25a92332fc5920c57761 Mon Sep 17 00:00:00 2001
+From a1fb08af9b52fab23cac31eae1c81c51cfb88a44 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Mon, 9 Jul 2018 12:21:43 +0100
 Subject: [PATCH 16/17] Switch from WinSDK 10.0.17134.0 to 10.0.16299.0

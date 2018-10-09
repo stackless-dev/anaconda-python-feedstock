@@ -1,4 +1,4 @@
-From f16dc3b27bbf806e3b5ec62a3b56426d47bca58b Mon Sep 17 00:00:00 2001
+From 0daff7024577afab1dc1d633b60460f5028d81a7 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 11:15:26 +0100
 Subject: [PATCH 04/17] Win32: Ensure Library\bin is in os.environ["PATH"]

@@ -1,4 +1,4 @@
-From 2cef981c88e805d09611e6d8b223ed821ddfb36d Mon Sep 17 00:00:00 2001
+From 4111ddc3eeccb6d9f8590f9e360d231f0e411d69 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 11:07:08 +0100
 Subject: [PATCH 03/17] Win32: distutils: Also look for executable.bat

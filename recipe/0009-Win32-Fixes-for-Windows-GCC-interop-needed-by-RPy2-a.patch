@@ -1,4 +1,4 @@
-From 9eefd8708a4571654fcf2ddb9f7d2c50bcd51a1f Mon Sep 17 00:00:00 2001
+From 3db1f87da4adba63fdb7d949fa86ea804681403d Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 12:23:02 +0100
 Subject: [PATCH 09/17] Win32: Fixes for Windows GCC interop needed by RPy2 and
