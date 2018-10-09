@@ -59,7 +59,7 @@ index ab10ec52ee..5616c30f72 100644
 +            # the full path.
 +            # When objdump is unavailable this returns None
 +            so_name = _get_soname(_findLib_prefix(name)) or name
-+            if so_name != so_name:
++            if so_name != name:
 +                return _findLib_prefix(so_name) or \
 +                       _findLib_prefix(name) or \
 +                       _findSoname_ldconfig(name) or \
