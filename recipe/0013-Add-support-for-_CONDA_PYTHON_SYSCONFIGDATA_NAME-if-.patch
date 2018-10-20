@@ -1,4 +1,4 @@
-From 8d4b2bed9ec33380ba6a3b47b5ba00190d86053a Mon Sep 17 00:00:00 2001
+From 12cdff1f47d2be8a88cc6227e8b866d2d035c1b1 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 3 Dec 2017 17:31:27 +0000
 Subject: [PATCH 13/17] Add support for _CONDA_PYTHON_SYSCONFIGDATA_NAME if
@@ -79,5 +79,5 @@ index 9ee4d3185a..b649f0863b 100644
      build_time_vars = _temp.build_time_vars
      vars.update(build_time_vars)
 -- 
-2.18.0
+2.19.1
 

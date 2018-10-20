@@ -1,4 +1,4 @@
-From 3db1f87da4adba63fdb7d949fa86ea804681403d Mon Sep 17 00:00:00 2001
+From cd3170276cf889148ee5ff70a605eef48526965f Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 12:23:02 +0100
 Subject: [PATCH 09/17] Win32: Fixes for Windows GCC interop needed by RPy2 and
@@ -31,5 +31,5 @@ index 48013e1000..339c2782f0 100644
                               linker_so='%s %s %s'
                                          % (self.linker_dll, shared_option,
 -- 
-2.18.0
+2.19.1
 

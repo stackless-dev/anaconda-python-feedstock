@@ -1,6 +1,6 @@
-{% set base_version = "3.7.0" %}
-{% set version = "3.7.0" %}
-{% set md5 = "eb8c2a6b1447d50813c02714af4681f3" %}
+{% set base_version = "3.7.1" %}
+{% set version = "3.7.1" %}
+{% set md5 = "0a57e9022c07fad3dadb2eef58568edb" %}
 {% set linkage_nature = os.environ.get('PY_INTERP_LINKAGE_NATURE', '') %}
 {% if linkage_nature != '' %}
   {% set linkage_nature = "_" ~ linkage_nature %}
@@ -8,13 +8,10 @@
 
 package:
   name: python
-  # We cannot use 3.7.0b5 here as that is < 3.7.0 and python-3.7.0 dependent packages
-  # will not be installable (they will have a constraint of >=3.7.0,<=3.8.0a0).
   version: {{ base_version }}
 
 source:
   - url: https://www.python.org/ftp/python/{{ base_version }}/Python-{{ version }}.tar.xz
-  # - url: https://www.python.org/ftp/python/{{ base_version }}/Python-{{ version }}.tgz
     md5: {{ md5 }}
     patches:
       - 0001-Add-Anaconda-Distribution-version-logic.patch
@@ -57,12 +54,11 @@ source:
     folder: externals/sqlite-3.21.0.0                                                # [win]
     sha256: 95a4f2d76aeeb68b51239340e3de26e5714ecfb7c8ad82a67b17af82213a8c20         # [win]
   # Not used as of 3.7b3 (openssl-bin is), but kept for archival and license reasons.
-  - url: https://github.com/python/cpython-source-deps/archive/openssl-1.1.0h.zip    # [win]
-    folder: externals/openssl-1.1.0h                                                 # [win]
-    sha256: 65facaa26aad903889f1ef8e4d14542a0c0d142940a8cf47d6f57516fba6a41f         # [win]
-  - url: https://github.com/python/cpython-bin-deps/archive/openssl-bin-1.1.0h.zip   # [win]
-    folder: externals/openssl-bin-1.1.0h                                             # [win]
-    sha256: 8388d90b06b878a7fd980a46264d2d2aca2900ce36dd6834cf85861921534c35         # [win]
+  - url: https://github.com/python/cpython-source-deps/archive/openssl-1.1.0i.zip    # [win]
+    folder: externals/openssl-1.1.0i                                                 # [win]
+    sha256: 71db5e71d2d6307379bac6c581492d37b65f2ad67fea207f6c0222150a4a46a7         # [win]
+  - url: https://github.com/python/cpython-bin-deps/archive/openssl-bin-1.1.0i.zip   # [win]
+    folder: externals/openssl-bin-1.1.0i                                             # [win]
   - url: https://github.com/python/cpython-source-deps/archive/bzip2-1.0.6.zip       # [win]
     folder: externals/bzip2-1.0.6                                                    # [win]
     sha256: c42fd1432a2667b964a74bc423bb7485059c4a6d5dc92946d59dbf9a6bdb988d         # [win]

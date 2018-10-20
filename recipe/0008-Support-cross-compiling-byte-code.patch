@@ -1,4 +1,4 @@
-From c33be0ce352ef05a050d3b4a05e74bb453cd3f67 Mon Sep 17 00:00:00 2001
+From ebeaa28b17160005360317fe0a97951e76fd086f Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 12:17:33 +0100
 Subject: [PATCH 08/17] Support cross-compiling byte-code
@@ -86,7 +86,7 @@ index 4c23c0e411..824b33f0a0 100644
  	--install-scripts=$(BINDIR) \
  	--root=$(DESTDIR)/
 diff --git a/configure b/configure
-index 1cca828d15..e556e3dece 100755
+index 2ee719b0b7..106e3bedc3 100755
 --- a/configure
 +++ b/configure
 @@ -748,6 +748,7 @@ CONFIG_ARGS
@@ -97,7 +97,7 @@ index 1cca828d15..e556e3dece 100755
  PYTHON_FOR_REGEN
  host_os
  host_vendor
-@@ -2933,7 +2934,8 @@ $as_echo_n "checking for python interpreter for cross build... " >&6; }
+@@ -2929,7 +2930,8 @@ $as_echo_n "checking for python interpreter for cross build... " >&6; }
  	fi
          { $as_echo "$as_me:${as_lineno-$LINENO}: result: $interp" >&5
  $as_echo "$interp" >&6; }
@@ -108,7 +108,7 @@ index 1cca828d15..e556e3dece 100755
  elif test "$cross_compiling" = maybe; then
      as_fn_error $? "Cross compiling required --host=HOST-TUPLE and --build=ARCH" "$LINENO" 5
 diff --git a/configure.ac b/configure.ac
-index 2462ccdab2..4b8bbd45c2 100644
+index 8050d77650..130310365b 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -75,13 +75,15 @@ if test "$cross_compiling" = yes; then
@@ -129,5 +129,5 @@ index 2462ccdab2..4b8bbd45c2 100644
  
  dnl Ensure that if prefix is specified, it does not end in a slash. If
 -- 
-2.18.0
+2.19.1
 
