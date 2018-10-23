@@ -68,6 +68,7 @@ import test.support
 import unicodedata
 import zlib
 from os import urandom
+import os
 
 t = 100 * b'Foo '
 assert lzma.decompress(lzma.compress(t)) == t
@@ -92,10 +93,9 @@ if not (armv6l or armv7l or ppc64le or osx105):
     import _tkinter
     print('TK_VERSION: %s' % _tkinter.TK_VERSION)
     print('TCL_VERSION: %s' % _tkinter.TCL_VERSION)
-    TCLTK_VER = '8.6'
-    assert _tkinter.TK_VERSION == _tkinter.TCL_VERSION == TCLTK_VER
+    assert _tkinter.TK_VERSION == _tkinter.TCL_VERSION == os.getenv("tk")
 
 import ssl
 print('OPENSSL_VERSION:', ssl.OPENSSL_VERSION)
 if sys.platform != 'win32':
-    assert '1.0.2' in ssl.OPENSSL_VERSION
+    assert os.getenv("openssl") in ssl.OPENSSL_VERSION
