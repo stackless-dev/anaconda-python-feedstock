@@ -30,7 +30,6 @@ source:
       - 0013-Add-support-for-_CONDA_PYTHON_SYSCONFIGDATA_NAME-if-.patch
       - 0014-Fix-find_library-so-that-it-looks-in-sys.prefix-lib-.patch
       - 0015-Disable-new-dtags-in-unixccompiler.py.patch
-      - 0016-Switch-from-WinSDK-10.0.17134.0-to-10.0.16299.0.patch
       - 0017-Fix-cross-compilation-on-Debian-based-distros.patch
   # TODO :: Depend on our own packages for these:
   - url: https://github.com/python/cpython-source-deps/archive/xz-5.2.2.zip          # [win]
@@ -56,7 +55,7 @@ source:
   # Not used as of 3.7b3 (openssl-bin is), but kept for archival and license reasons.
   - url: https://github.com/python/cpython-source-deps/archive/openssl-1.1.0i.zip    # [win]
     folder: externals/openssl-1.1.0i                                                 # [win]
-    sha256: 71db5e71d2d6307379bac6c581492d37b65f2ad67fea207f6c0222150a4a46a7         # [win]
+    sha256: 2280b9b4cba4dfcffc96d41860c79bdfd2d35945f9dd5e5a545b467ef6f96603         # [win]
   - url: https://github.com/python/cpython-bin-deps/archive/openssl-bin-1.1.0i.zip   # [win]
     folder: externals/openssl-bin-1.1.0i                                             # [win]
   - url: https://github.com/python/cpython-source-deps/archive/bzip2-1.0.6.zip       # [win]
