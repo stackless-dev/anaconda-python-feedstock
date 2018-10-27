@@ -1,7 +1,7 @@
 From cd3170276cf889148ee5ff70a605eef48526965f Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 12:23:02 +0100
-Subject: [PATCH 09/17] Win32: Fixes for Windows GCC interop needed by RPy2 and
+Subject: [PATCH 09/18] Win32: Fixes for Windows GCC interop needed by RPy2 and
  CVXOPT
 
 We must pass -DMS_WIN32 or -DMS_WIN64

@@ -1,7 +1,7 @@
 From 04d6cc1d5b878b99b775b54bfcc437784f2dceb8 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 29 Apr 2018 16:10:42 +0100
-Subject: [PATCH 15/17] Disable new-dtags in unixccompiler.py
+Subject: [PATCH 15/18] Disable new-dtags in unixccompiler.py
 
 They prevent isolation from system libraries and the HPC 'modules' system
 by giving precedence to LD_LIBRARY_PATH. We never want our libraries to

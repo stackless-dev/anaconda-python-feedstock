@@ -1,7 +1,7 @@
 From 7f2cba001ae2f008590a02c717fe1206e20b305f Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 26 Aug 2018 17:10:08 +0100
-Subject: [PATCH 17/17] Fix cross-compilation on Debian-based distros
+Subject: [PATCH 17/18] Fix cross-compilation on Debian-based distros
 
 ---
  setup.py | 3 ++-
