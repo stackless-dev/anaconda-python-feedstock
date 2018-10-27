@@ -1,7 +1,7 @@
-From dd30dab6924f9892f9511d70324bf543490bf5fc Mon Sep 17 00:00:00 2001
+From ed4c1bd98fbd0546747ec955cdd3121baeb1c484 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 15 Aug 2017 22:34:16 +0100
-Subject: [PATCH 01/17] Add Anaconda Distribution version logic
+Subject: [PATCH 01/18] Add Anaconda Distribution version logic
 
 ---
  Include/pylifecycle.h |  1 +
@@ -23,10 +23,10 @@ index 01abfa9fcd..ac8e19a308 100644
  PyAPI_FUNC(const char *) Py_GetPlatform(void);
  PyAPI_FUNC(const char *) Py_GetCopyright(void);
 diff --git a/Lib/platform.py b/Lib/platform.py
-index cc2db9870d..b2053295d8 100755
+index 4205abde03..4e79cc73e4 100755
 --- a/Lib/platform.py
 +++ b/Lib/platform.py
-@@ -1087,6 +1087,7 @@ def processor():
+@@ -1118,6 +1118,7 @@ def processor():
  
  _sys_version_parser = re.compile(
      r'([\w.+]+)\s*'  # "version<space>"
@@ -109,5 +109,5 @@ index 7bd6efd0a0..46554e6a37 100644
  	return version;
  }
 -- 
-2.18.0
+2.19.1
 
