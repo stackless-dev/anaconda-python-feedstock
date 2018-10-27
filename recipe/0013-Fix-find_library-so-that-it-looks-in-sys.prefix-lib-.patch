@@ -1,7 +1,7 @@
-From e65783ef3293e6c33d2da9391512466d3d92616c Mon Sep 17 00:00:00 2001
+From b26963c9d698c477be5d762db4cb5fc52ed91db9 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 5 Dec 2017 22:47:59 +0000
-Subject: [PATCH 13/14] Fix find_library so that it looks in sys.prefix/lib
+Subject: [PATCH 13/15] Fix find_library so that it looks in sys.prefix/lib
  first
 
 ---
@@ -25,7 +25,7 @@ index 1fdf8d648f..c6ffd15d2c 100644
          yield os.path.join(executable_path, name[len('@executable_path/'):])
  
 diff --git a/Lib/ctypes/util.py b/Lib/ctypes/util.py
-index ab10ec52ee..5616c30f72 100644
+index ab10ec52ee..9e082e623b 100644
 --- a/Lib/ctypes/util.py
 +++ b/Lib/ctypes/util.py
 @@ -73,7 +73,8 @@ if os.name == "ce":
@@ -72,5 +72,5 @@ index ab10ec52ee..5616c30f72 100644
  ################################################################
  # test code
 -- 
-2.18.0
+2.19.1
 

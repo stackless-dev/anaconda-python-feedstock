@@ -1,7 +1,7 @@
-From 685a3d4c529170b30afe3945c3c48caff48cab0e Mon Sep 17 00:00:00 2001
+From 14e4dc71bfe2dab9dc28ce2e07eaa67879fa3afd Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 26 Aug 2018 18:07:08 +0100
-Subject: [PATCH 14/14] Fix cross-compilation on Debian-based distros
+Subject: [PATCH 14/15] Fix cross-compilation on Debian-based distros
 
 ---
  setup.py | 3 ++-
@@ -22,5 +22,5 @@ index 94396bf324..eb7a6b14c8 100644
          # Add paths specified in the environment variables LDFLAGS and
          # CPPFLAGS for header and library files.
 -- 
-2.18.0
+2.19.1
 
