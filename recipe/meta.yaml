@@ -6,8 +6,9 @@ package:
   version: {{ version }}
 
 source:
-  - url: http://www.stackless.com/binaries/stackless-366-export.tar.xz
-    md5: {{ md5 }}
+  - url: https://github.com/stackless-dev/stackless/archive/a8cf08d9e6db3d3e6ec457505f25f4063b0dacb4.zip
+#  - url: http://www.stackless.com/binaries/stackless-366-export.tar.xz
+#    md5: {{ md5 }}
     patches:
       - 0001-Add-Anaconda-Distribution-version-logic.patch
       - 0002-Darwin-Omit-PYTHONFRAMEWORK-site-packages.patch
