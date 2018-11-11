@@ -249,6 +249,8 @@ else
   declare -a _FLAGS_REPLACE
 fi
 
+make -C ${_buildd_static} teststackless
+
 SYSCONFIG=$(find ${_buildd_static}/$(cat ${_buildd_static}/pybuilddir.txt) -name "_sysconfigdata*.py" -print0)
 cat ${SYSCONFIG} | ${SYS_PYTHON} "${RECIPE_DIR}"/replace-word-pairs.py \
   "${_FLAGS_REPLACE[@]}"  \
