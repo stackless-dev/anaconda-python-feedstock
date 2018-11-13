@@ -87,6 +87,7 @@ import unicodedata
 import zlib
 import gzip
 from os import urandom
+import os
 
 a = 20 * 'Ilan'
 b = 'x\x9c\xf3\xccI\xcc\xf3\xa4"\x06\x00\xc8L\x1eQ'
@@ -121,12 +122,12 @@ if not (armv7l or ppc64le):
     if sys.platform == 'win32':
         TCLTK_VER = '8.5'
     else:
-        TCLTK_VER = '8.6'
+        TCLTK_VER = os.getenv("tk")
     assert _tkinter.TK_VERSION == _tkinter.TCL_VERSION == TCLTK_VER
 
 print('OPENSSL_VERSION:', ssl.OPENSSL_VERSION)
 if sys.platform != 'win32':
-    assert '1.0.2' in ssl.OPENSSL_VERSION
+    assert os.getenv("openssl") in ssl.OPENSSL_VERSION
 
 pprint(platform._sys_version())
 
