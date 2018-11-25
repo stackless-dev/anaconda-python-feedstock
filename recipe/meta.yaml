@@ -31,6 +31,7 @@ source:
       - 0014-Fix-find_library-so-that-it-looks-in-sys.prefix-lib-.patch
       - 0015-Disable-new-dtags-in-unixccompiler.py.patch
       - 0017-Fix-cross-compilation-on-Debian-based-distros.patch
+      - 0018-Disable-registry-lookup-unless-CONDA_PY_ALLOW_REG_PA.patch
   # TODO :: Depend on our own packages for these:
   - url: https://github.com/python/cpython-source-deps/archive/xz-5.2.2.zip          # [win]
     folder: externals/xz-5.2.2                                                       # [win]
