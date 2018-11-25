@@ -32,6 +32,7 @@ source:
       - 0015-Disable-new-dtags-in-unixccompiler.py.patch
       - 0017-Fix-cross-compilation-on-Debian-based-distros.patch
       - 0018-Disable-registry-lookup-unless-CONDA_PY_ALLOW_REG_PA.patch
+      - 0019-Unvendor-openssl.patch
   # TODO :: Depend on our own packages for these:
   - url: https://github.com/python/cpython-source-deps/archive/xz-5.2.2.zip          # [win]
     folder: externals/xz-5.2.2                                                       # [win]
@@ -53,12 +54,6 @@ source:
   - url: https://github.com/python/cpython-source-deps/archive/sqlite-3.21.0.0.zip   # [win]
     folder: externals/sqlite-3.21.0.0                                                # [win]
     sha256: 95a4f2d76aeeb68b51239340e3de26e5714ecfb7c8ad82a67b17af82213a8c20         # [win]
-  # Not used as of 3.7b3 (openssl-bin is), but kept for archival and license reasons.
-  - url: https://github.com/python/cpython-source-deps/archive/openssl-1.1.0i.zip    # [win]
-    folder: externals/openssl-1.1.0i                                                 # [win]
-    sha256: 2280b9b4cba4dfcffc96d41860c79bdfd2d35945f9dd5e5a545b467ef6f96603         # [win]
-  - url: https://github.com/python/cpython-bin-deps/archive/openssl-bin-1.1.0i.zip   # [win]
-    folder: externals/openssl-bin-1.1.0i                                             # [win]
   - url: https://github.com/python/cpython-source-deps/archive/bzip2-1.0.6.zip       # [win]
     folder: externals/bzip2-1.0.6                                                    # [win]
     sha256: c42fd1432a2667b964a74bc423bb7485059c4a6d5dc92946d59dbf9a6bdb988d         # [win]
@@ -71,7 +66,7 @@ source:
 
 
 build:
-  number: 4
+  number: 5
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
@@ -103,7 +98,7 @@ requirements:
     - sqlite                             # [unix]
     - xz                                 # [unix]
     - zlib                               # [unix]
-    - openssl                            # [unix]
+    - openssl
     - readline                           # [unix]
     - tk                                 # [unix]
     - ncurses                            # [unix]

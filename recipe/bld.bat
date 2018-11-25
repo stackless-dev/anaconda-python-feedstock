@@ -13,6 +13,8 @@ if "%ARCH%"=="64" (
    set BUILD_PATH=win32
 )
 
+set "OPENSSL_DIR=%LIBRARY_PREFIX%"
+
 cd PCbuild
 call build.bat --pgo -m -e -v -p %PLATFORM%
 if errorlevel 1 exit 1
@@ -81,12 +83,6 @@ if errorlevel 1 exit 1
 move /y %PREFIX%\Tools\scripts\pydoc3 %PREFIX%\Tools\scripts\pydoc3.py
 if errorlevel 1 exit 1
 move /y %PREFIX%\Tools\scripts\pyvenv %PREFIX%\Tools\scripts\pyvenv.py
-if errorlevel 1 exit 1
-
-REM Copy OpenSLL DLLs
-copy /Y %SRC_DIR%\PCbuild\%BUILD_PATH%\libcrypto*.dll %PREFIX%\DLLs\
-if errorlevel 1 exit 1
-copy /Y %SRC_DIR%\PCbuild\%BUILD_PATH%\libssl*.dll %PREFIX%\DLLs\
 if errorlevel 1 exit 1
 
 REM Populate the tcl directory
