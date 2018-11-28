@@ -24,6 +24,7 @@ source:
       - 0012-Mark-sysconfigdata.py-as-utf-8.patch
       - 0013-Fix-find_library-so-that-it-looks-in-sys.prefix-lib-.patch
       - 0014-Fix-cross-compilation-on-Debian-based-distros.patch
+      - 0015-Disable-registry-lookup-unless-CONDA_PY_ALLOW_REG_PA.patch
       - 0019-Use-XML_SetHashSalt-in-_elmenttree.patch
   - url: https://github.com/python/cpython-source-deps/archive/bzip2-1.0.6.zip      # [win]
     folder: externals/bzip2-1.0.6                                                   # [win]
