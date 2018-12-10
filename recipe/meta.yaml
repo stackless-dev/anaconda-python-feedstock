@@ -25,6 +25,7 @@ source:
       - 0013-Fix-find_library-so-that-it-looks-in-sys.prefix-lib-.patch
       - 0014-Fix-cross-compilation-on-Debian-based-distros.patch
       - 0015-Disable-registry-lookup-unless-CONDA_PY_ALLOW_REG_PA.patch
+      - 0016-Unvendor-sqlite3.patch
       - 0019-Use-XML_SetHashSalt-in-_elmenttree.patch
   - url: https://github.com/python/cpython-source-deps/archive/bzip2-1.0.6.zip      # [win]
     folder: externals/bzip2-1.0.6                                                   # [win]
@@ -35,9 +36,6 @@ source:
   - url: https://github.com/python/cpython-source-deps/archive/openssl-1.0.2o.zip   # [win]
     folder: externals/openssl-1.0.2o                                                # [win]
     sha256: 9db2a35ef254b57e16a47916810a3bf1cd639b512b5fe6c1cb51afc985113595        # [win]
-  - url: https://github.com/python/cpython-source-deps/archive/sqlite-3.14.2.0.zip  # [win]
-    folder: externals/sqlite-3.14.2.0                                               # [win]
-    sha256: c1ff98c76c11dc10b2abe94d72ea5bae7da64ba8da9455a9af5dc3eae0f2f880        # [win]
   - url: https://github.com/python/cpython-source-deps/archive/tcl-8.5.19.0.zip     # [win]
     folder: externals/tcl-8.5.19.0                                                  # [win]
     sha256: 8520a7d6df448770ec129f497b0b16fdddc6876905ffce2ad13d12180598ce48        # [win]
@@ -74,7 +72,7 @@ requirements:
     - pkg-config                         # [unix]
   host:
     - bzip2                              # [unix]
-    - sqlite                             # [unix]
+    - sqlite
     - zlib                               # [unix]
     - openssl                            # [unix]
     - readline                           # [unix]

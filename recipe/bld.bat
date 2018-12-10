@@ -24,6 +24,8 @@ if "%ARCH%"=="64" (
    set PCB=%SRC_DIR%\PCbuild
 )
 
+set "SQLITE3_DIR=%LIBRARY_PREFIX%"
+
 cd PCbuild
 call build.bat -e -p %PLATFORM%
 if errorlevel 1 exit 1
@@ -45,8 +47,6 @@ for %%x in (python.pdb python27.pdb pythonw.pdb) do (
 REM Populate the DLLs directory
 mkdir %PREFIX%\DLLs
 xcopy /s /y %PCB%\*.pyd %PREFIX%\DLLs\
-if errorlevel 1 exit 1
-copy /Y %PCB%\sqlite3.dll %PREFIX%\DLLs\
 if errorlevel 1 exit 1
 copy /Y %PCB%\tcl85.dll %PREFIX%\DLLs\
 if errorlevel 1 exit 1
@@ -131,7 +131,7 @@ REM Populate the libs directory
 mkdir %PREFIX%\libs
 xcopy /s /y %PCB%\*.lib %PREFIX%\libs\
 if errorlevel 1 exit 1
-del %PREFIX%\libs\libeay.lib %PREFIX%\libs\sqlite3.lib %PREFIX%\libs\ssleay.lib
+del %PREFIX%\libs\libeay.lib %PREFIX%\libs\ssleay.lib
 
 
 ::REM Populate the Lib directory
