@@ -33,6 +33,7 @@ source:
       - 0017-Fix-cross-compilation-on-Debian-based-distros.patch
       - 0018-Disable-registry-lookup-unless-CONDA_PY_ALLOW_REG_PA.patch
       - 0019-Unvendor-openssl.patch
+      - 0020-Unvendor-sqlite3.patch
   # TODO :: Depend on our own packages for these:
   - url: https://github.com/python/cpython-source-deps/archive/xz-5.2.2.zip          # [win]
     folder: externals/xz-5.2.2                                                       # [win]
@@ -51,9 +52,6 @@ source:
   - url: https://github.com/python/cpython-source-deps/archive/tix-8.4.3.6.zip       # [win]
     folder: externals/tix-8.4.3.6                                                    # [win]
     sha256: e558e3dc5e67ac0942f8fceafce00ca46b177da9ebeaf38ec7fafd9b9913ac56         # [win]
-  - url: https://github.com/python/cpython-source-deps/archive/sqlite-3.21.0.0.zip   # [win]
-    folder: externals/sqlite-3.21.0.0                                                # [win]
-    sha256: 95a4f2d76aeeb68b51239340e3de26e5714ecfb7c8ad82a67b17af82213a8c20         # [win]
   - url: https://github.com/python/cpython-source-deps/archive/bzip2-1.0.6.zip       # [win]
     folder: externals/bzip2-1.0.6                                                    # [win]
     sha256: c42fd1432a2667b964a74bc423bb7485059c4a6d5dc92946d59dbf9a6bdb988d         # [win]
@@ -66,7 +64,7 @@ source:
 
 
 build:
-  number: 5
+  number: 6
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
@@ -95,7 +93,7 @@ requirements:
     - pkg-config                         # [unix]
   host:
     - bzip2                              # [unix]
-    - sqlite                             # [unix]
+    - sqlite
     - xz                                 # [unix]
     - zlib                               # [unix]
     - openssl
