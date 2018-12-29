@@ -1,7 +1,7 @@
-From ed4c1bd98fbd0546747ec955cdd3121baeb1c484 Mon Sep 17 00:00:00 2001
+From 218ca631727207485a1ae66cc4812835a8743067 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 15 Aug 2017 22:34:16 +0100
-Subject: [PATCH 01/18] Add Anaconda Distribution version logic
+Subject: [PATCH 01/19] Add Anaconda Distribution version logic
 
 ---
  Include/pylifecycle.h |  1 +
@@ -11,10 +11,10 @@ Subject: [PATCH 01/18] Add Anaconda Distribution version logic
  4 files changed, 45 insertions(+), 4 deletions(-)
 
 diff --git a/Include/pylifecycle.h b/Include/pylifecycle.h
-index 01abfa9fcd..ac8e19a308 100644
+index 9a528218e4..4b84977e61 100644
 --- a/Include/pylifecycle.h
 +++ b/Include/pylifecycle.h
-@@ -64,6 +64,7 @@ int _Py_CheckPython3();
+@@ -66,6 +66,7 @@ int _Py_CheckPython3();
  #endif
  
  /* In their own files */
@@ -23,10 +23,10 @@ index 01abfa9fcd..ac8e19a308 100644
  PyAPI_FUNC(const char *) Py_GetPlatform(void);
  PyAPI_FUNC(const char *) Py_GetCopyright(void);
 diff --git a/Lib/platform.py b/Lib/platform.py
-index 4205abde03..4e79cc73e4 100755
+index fa56d4114c..9e5295e646 100755
 --- a/Lib/platform.py
 +++ b/Lib/platform.py
-@@ -1118,6 +1118,7 @@ def processor():
+@@ -1120,6 +1120,7 @@ def processor():
  
  _sys_version_parser = re.compile(
      r'([\w.+]+)\s*'  # "version<space>"
@@ -109,5 +109,5 @@ index 7bd6efd0a0..46554e6a37 100644
  	return version;
  }
 -- 
-2.19.1
+2.17.2 (Apple Git-113)
 

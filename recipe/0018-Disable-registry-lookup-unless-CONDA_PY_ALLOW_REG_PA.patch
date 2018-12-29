@@ -1,7 +1,7 @@
-From e08b1c8125f8f16ccc3e60261b5efdd0ed26ef14 Mon Sep 17 00:00:00 2001
+From 29724d5bfd35add6123698f3a6516a60fa4553e8 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sat, 27 Oct 2018 18:48:30 +0100
-Subject: [PATCH 18/18] Disable registry lookup unless CONDA_PY_ALLOW_REG_PATHS
+Subject: [PATCH 18/19] Disable registry lookup unless CONDA_PY_ALLOW_REG_PATHS
  is not 0
 
 ---
@@ -9,10 +9,10 @@ Subject: [PATCH 18/18] Disable registry lookup unless CONDA_PY_ALLOW_REG_PATHS
  1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/PC/getpathp.c b/PC/getpathp.c
-index af4af766a7..8b6cbb72af 100644
+index 880ea7b966..4c3f933d88 100644
 --- a/PC/getpathp.c
 +++ b/PC/getpathp.c
-@@ -664,6 +664,7 @@ calculate_path(void)
+@@ -672,6 +672,7 @@ calculate_path(void)
      size_t bufsz;
      wchar_t *pythonhome = Py_GetPythonHome();
      wchar_t *envpath = NULL;
@@ -20,7 +20,7 @@ index af4af766a7..8b6cbb72af 100644
  
      int skiphome, skipdefault;
      wchar_t *machinepath = NULL;
-@@ -748,8 +749,17 @@ calculate_path(void)
+@@ -756,8 +757,17 @@ calculate_path(void)
  
      skiphome = pythonhome==NULL ? 0 : 1;
  #ifdef Py_ENABLE_SHARED
@@ -41,5 +41,5 @@ index af4af766a7..8b6cbb72af 100644
      /* We only use the default relative PYTHONPATH if we havent
         anything better to use! */
 -- 
-2.19.1
+2.17.2 (Apple Git-113)
 

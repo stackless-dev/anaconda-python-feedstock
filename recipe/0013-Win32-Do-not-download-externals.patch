@@ -1,14 +1,14 @@
-From b97ea5c33c1a436d9896fcfbc39b6b06f4bc29b9 Mon Sep 17 00:00:00 2001
+From 73c2e4e3c4fa59feb12d5f929066eaa92fc765c1 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Thu, 7 Sep 2017 11:35:47 +0100
-Subject: [PATCH 13/18] Win32: Do not download externals
+Subject: [PATCH 13/19] Win32: Do not download externals
 
 ---
  PCbuild/build.bat | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/PCbuild/build.bat b/PCbuild/build.bat
-index 5828b518b1..17a413f0ec 100644
+index 0df64ee6e1..535e2e4173 100644
 --- a/PCbuild/build.bat
 +++ b/PCbuild/build.bat
 @@ -81,7 +81,7 @@ if "%IncludeExternals%"=="" set IncludeExternals=true
@@ -21,5 +21,5 @@ index 5828b518b1..17a413f0ec 100644
  if "%do_pgo%" EQU "true" if "%platf%" EQU "x64" (
      if "%PROCESSOR_ARCHITEW6432%" NEQ "AMD64" if "%PROCESSOR_ARCHITECTURE%" NEQ "AMD64" (
 -- 
-2.19.1
+2.17.2 (Apple Git-113)
 
