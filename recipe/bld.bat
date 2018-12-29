@@ -1,3 +1,5 @@
+setlocal EnableDelayedExpansion
+
 REM brand Python with conda-forge startup message
 REM %SYS_PYTHON% %RECIPE_DIR%\brand_python.py
 REM if errorlevel 1 exit 1
@@ -15,6 +17,9 @@ if "%ARCH%"=="64" (
 
 set "OPENSSL_DIR=%LIBRARY_PREFIX%"
 set "SQLITE3_DIR=%LIBRARY_PREFIX%"
+for /f "usebackq delims=" %%i in (`conda list -p %PREFIX% sqlite --no-show-channel-urls --json ^| findstr "version"`) do set SQLITE3_VERSION_LINE=%%i
+for /f "tokens=2 delims==/ " %%i IN ('echo %SQLITE3_VERSION_LINE%') do (set SQLITE3_VERSION=%%~i)
+echo SQLITE3_VERSION detected as %SQLITE3_VERSION%
 
 cd PCbuild
 call build.bat --pgo -m -e -v -p %PLATFORM%

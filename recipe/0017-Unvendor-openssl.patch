@@ -1,4 +1,4 @@
-From be26c73284a34210c8a60fb292135dd46d66b597 Mon Sep 17 00:00:00 2001
+From 759a61331b078678187db71022680e56dcfaaede Mon Sep 17 00:00:00 2001
 From: Nehal J Wani <nehaljw.kkd1@gmail.com>
 Date: Sat, 24 Nov 2018 20:38:02 -0600
 Subject: [PATCH 17/18] Unvendor openssl
@@ -8,8 +8,9 @@ Subject: [PATCH 17/18] Unvendor openssl
  PCbuild/_ssl.vcxproj.filters | 3 ---
  PCbuild/openssl.props        | 2 +-
  PCbuild/python.props         | 6 +++---
+ PCbuild/python.vcxproj       | 3 +++
  PCbuild/pythonw.vcxproj      | 3 +++
- 5 files changed, 7 insertions(+), 10 deletions(-)
+ 6 files changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/PCbuild/_ssl.vcxproj b/PCbuild/_ssl.vcxproj
 index aaf95a361c..b59f2d0ab1 100644
@@ -48,7 +49,7 @@ index 257cc857d0..1aa9de875c 100644
      </ClCompile>
      <Link>
 -      <AdditionalLibraryDirectories>$(opensslOutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-+      <AdditionalLibraryDirectories>$(opensslDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
++      <AdditionalLibraryDirectories>$(opensslDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
        <AdditionalDependencies>ws2_32.lib;libcrypto.lib;libssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
    </ItemDefinitionGroup>
@@ -69,6 +70,20 @@ index f83d4df0d5..b2a9f798f2 100644
      <nasmDir>$(ExternalsDir)\nasm-2.11.06\</nasmDir>
      <zlibDir>$(ExternalsDir)\zlib-1.2.11\</zlibDir>
      
+diff --git a/PCbuild/python.vcxproj b/PCbuild/python.vcxproj
+index 8b64e364f1..5b0fa34c36 100644
+--- a/PCbuild/python.vcxproj
++++ b/PCbuild/python.vcxproj
+@@ -72,6 +72,9 @@
+   </ItemGroup>
+   <ItemGroup>
+     <ClCompile Include="..\Programs\python.c" />
++    <ClCompile Include="$(opensslIncludeDir)\openssl\applink.c">
++      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;$(PreprocessorDefinitions)</PreprocessorDefinitions>
++    </ClCompile>
+   </ItemGroup>
+   <ItemGroup>
+     <ProjectReference Include="pythoncore.vcxproj">
 diff --git a/PCbuild/pythonw.vcxproj b/PCbuild/pythonw.vcxproj
 index 19d64a332b..d6d9b14efc 100644
 --- a/PCbuild/pythonw.vcxproj
@@ -84,5 +99,5 @@ index 19d64a332b..d6d9b14efc 100644
    <ItemGroup>
      <ProjectReference Include="pythoncore.vcxproj">
 -- 
-2.17.2 (Apple Git-113)
+2.20.1
 
