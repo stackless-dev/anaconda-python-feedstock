@@ -1,0 +1,112 @@
+From 13be9e1d59c708e1845bdc317f5bbd903df2c41d Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Tue, 22 Jan 2019 20:52:48 -0600
+Subject: [PATCH 20/20] Add CondaEcosystemModifyDllSearchPath()
+
+This changes the DLL search order so that C:\Windows\System32 does not
+get searched in before entries in PATH.
+---
+ PC/WinMain.c | 81 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 81 insertions(+)
+
+diff --git a/PC/WinMain.c b/PC/WinMain.c
+index e439bed9ed..a94cb3af16 100644
+--- a/PC/WinMain.c
++++ b/PC/WinMain.c
+@@ -4,6 +4,86 @@
+ 
+ #define WIN32_LEAN_AND_MEAN
+ #include <windows.h>
++#include <shlwapi.h>
++#include <string.h>
++#include <malloc.h>
++#include <libloaderapi.h>
++
++/*
++   Unless CONDA_DISABLE_DLL_SEARCH_MODIFICATION is set (to anything at all!)
++   this function will modify the DLL search path so that C:\Windows\System32
++   does not appear before entries in PATH. If it does appear in PATH then it
++   gets added at the position it was in in PATH.
++
++   This is achieved via a call to SetDefaultDllDirectories() then calls to
++   AddDllDirectory() for each entry in PATH. We also take the opportunity to
++   clean-up these PATH entries such that any '/' are replaced with '\', no
++   double quotes occour and no PATH entry ends with '\'.
++
++   Caution: Microsoft's documentation says that the search order of entries
++   passed to AddDllDirectory is not respected and arbitrary. I do not think
++   this will be the case but it is worth bearing in mind.
++*/
++
++void CondaEcosystemModifyDllSearchPath()
++{
++    if (_wgetenv(L"CONDA_DISABLE_DLL_SEARCH_MODIFICATION") == NULL)
++    {
++        const wchar_t *path_env = _wgetenv(L"PATH");
++        if (path_env != NULL)
++        {
++            size_t len = wcslen(path_env);
++            wchar_t *path = (wchar_t *)alloca((len + 1) * sizeof(wchar_t));
++            if (path != NULL)
++            {
++                memcpy(path, path_env, (len + 1) * sizeof(wchar_t));
++                /* Convert any / to \ */
++                wchar_t *path_end = wcschr(path, L'/');
++                while (path_end != NULL)
++                {
++                    *path_end = L'\\';
++                    path_end = wcschr(path_end, L'/');
++                }
++                /* Remove all double quotes */
++                path_end = wcschr(path, L'"');
++                while (path_end != NULL)
++                {
++                    memmove(path_end, path_end + 1, len - (path_end - path));
++                    --len;
++                    path_end = wcschr(path_end, L'"');
++                }
++                path_end = wcschr(path, L';');
++                /* It does not matter what flags are passed to SetDefaultDllDirectories(), only that more than
++                   one flag is passed; this seems like an odd API decision.
++                */
++                SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR | LOAD_LIBRARY_SEARCH_APPLICATION_DIR);
++                while (path != path_end)
++                {
++                    if (path_end != NULL)
++                    {
++                        *path_end = L'\0';
++                        /* Hygiene, no \ at the end */
++                        while (path_end > path && path_end[-1] == L'\\')
++                        {
++                            --path_end;
++                            *path_end = L'\0';
++                        }
++                    }
++                    if (wcslen(path) != 0)
++                    {
++                        AddDllDirectory(path);
++                    }
++                    path = path_end;
++                    if (path != NULL)
++                    {
++                        ++path;
++                        path_end = wcschr(path, L';');
++                    }
++                }
++            }
++        }
++    }
++}
+ 
+ int WINAPI wWinMain(
+     HINSTANCE hInstance,      /* handle to current instance */
+@@ -12,5 +92,6 @@ int WINAPI wWinMain(
+     int nCmdShow              /* show state of window */
+ )
+ {
++    CondaEcosystemModifyDllSearchPath();
+     return Py_Main(__argc, __wargv);
+ }
+-- 
+2.17.2 (Apple Git-113)
+
