@@ -22,7 +22,14 @@ for /f "tokens=2 delims==/ " %%i IN ('echo %SQLITE3_VERSION_LINE%') do (set SQLI
 echo SQLITE3_VERSION detected as %SQLITE3_VERSION%
 
 cd PCbuild
-call build.bat --pgo -m -e -v -p %PLATFORM%
+if "%DEBUG_C%"=="yes" (
+  set PGO=
+) else (
+  set PGO=--pgo
+)
+
+call build.bat %PGO% -m -e -v -p %PLATFORM%
+exit 1
 if errorlevel 1 exit 1
 cd ..
 
@@ -40,7 +47,6 @@ for %%x in (python.pdb python37.pdb pythonw.pdb) do (
 copy %SRC_DIR%\LICENSE %PREFIX%\LICENSE_PYTHON.txt
 if errorlevel 1 exit 1
 
-
 REM Populate the DLLs directory
 mkdir %PREFIX%\DLLs
 xcopy /s /y %SRC_DIR%\PCBuild\%BUILD_PATH%\*.pyd %PREFIX%\DLLs\
@@ -54,7 +60,6 @@ copy /Y %SRC_DIR%\PC\icons\py.ico %PREFIX%\DLLs\
 if errorlevel 1 exit 1
 copy /Y %SRC_DIR%\PC\icons\pyc.ico %PREFIX%\DLLs\
 if errorlevel 1 exit 1
-
 
 REM Populate the Tools directory
 mkdir %PREFIX%\Tools
@@ -121,7 +126,6 @@ if errorlevel 1 exit 1
 copy /Y %SRC_DIR%\PCbuild\%BUILD_PATH%\_tkinter.lib %PREFIX%\libs\
 if errorlevel 1 exit 1
 
-
 REM Populate the Lib directory
 del %PREFIX%\libs\libpython*.a
 xcopy /s /y %SRC_DIR%\Lib %PREFIX%\Lib\
@@ -139,15 +143,12 @@ rd /s /q %PREFIX%\Lib\test
 if errorlevel 1 exit 1
 move %PREFIX%\Lib\test_keep %PREFIX%\Lib\test
 if errorlevel 1 exit 1
-
-REM bytecode compile the standard library
-
 rd /s /q %PREFIX%\Lib\lib2to3\tests\
 if errorlevel 1 exit 1
 
+REM bytecode compile the standard library
 %PREFIX%\python.exe -Wi %PREFIX%\Lib\compileall.py -f -q -x "bad_coding|badsyntax|py2_" %PREFIX%\Lib
 if errorlevel 1 exit 1
-
 
 REM Pickle lib2to3 Grammar
 %PREFIX%\python.exe -m lib2to3 --help
