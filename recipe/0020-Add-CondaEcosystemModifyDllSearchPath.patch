@@ -1,73 +1,80 @@
-From f94b7074c61b601eead130c5de00db53b92aefbb Mon Sep 17 00:00:00 2001
+From d1cdbddbfd362c4c0a57460ce935c796890321f3 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
-Date: Thu, 24 Jan 2019 23:35:57 +0000
+Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 20/20] Add CondaEcosystemModifyDllSearchPath()
 
 This changes the DLL search order so that C:\Windows\System32 does not
 get searched in before entries in PATH.
 ---
- PC/WinMain.c | 153 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ Modules/main.c | 153 +++++++++++++++++++++++++++++++++++++++++++++++++
  1 file changed, 153 insertions(+)
 
-diff --git a/PC/WinMain.c b/PC/WinMain.c
-index e439bed9ed..2cc58c4fcf 100644
---- a/PC/WinMain.c
-+++ b/PC/WinMain.c
-@@ -4,6 +4,151 @@
+diff --git a/Modules/main.c b/Modules/main.c
+index 514f809939..2fa3699713 100644
+--- a/Modules/main.c
++++ b/Modules/main.c
+@@ -16,6 +16,10 @@
+ #  ifdef HAVE_FCNTL_H
+ #    include <fcntl.h>
+ #  endif
++#  include <shlwapi.h>
++#  include <string.h>
++#  include <malloc.h>
++#  include <libloaderapi.h>
+ #endif
  
- #define WIN32_LEAN_AND_MEAN
- #include <windows.h>
-+#include <shlwapi.h>
-+#include <string.h>
-+#include <malloc.h>
-+#include <libloaderapi.h>
-+
+ #ifdef _MSC_VER
+@@ -3026,9 +3030,158 @@ pymain_init(_PyMain *pymain)
+ }
+ 
+ 
++#ifdef MS_WINDOWS
 +/* Please do not remove this function. It is needed for testing
 +   CondaEcosystemModifyDllSearchPath(). */
 +
-+   /*
-+   void LoadAndUnloadTestDLL(wchar_t* test_dll)
-+   {
-+       wchar_t test_path[MAX_PATH + 1];
-+       HMODULE hDLL = LoadLibraryExW(&test_dll[0], NULL, 0);
-+       GetModuleFileNameW(hDLL, &test_path[0], MAX_PATH);
-+       if (hDLL == NULL)
-+       {
-+           wchar_t err_msg[256];
-+           DWORD err_code = GetLastError();
-+           FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-+               NULL, err_code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-+               err_msg, (sizeof(err_msg) / sizeof(wchar_t)), NULL);
-+           wprintf(L"LoadAndUnloadTestDLL() :: ERROR :: Failed to load %ls, error is: %ls\n", &test_dll[0], &err_msg[0]);
-+       }
-+       wprintf(L"LoadAndUnloadTestDLL() :: %ls loaded from %ls\n", &test_dll[0], &test_path[0]);
-+       if (FreeLibrary(hDLL) == 0)
-+       {
-+           wchar_t err_msg[256];
-+           DWORD err_code = GetLastError();
-+           FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-+               NULL, err_code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-+               err_msg, (sizeof(err_msg) / sizeof(wchar_t)), NULL);
-+           wprintf(L"LoadAndUnloadTestDLL() :: ERROR :: Failed to free %ls, error is: %ls\n", &test_dll[0], &err_msg[0]);
-+       }
-+   }
-+   */
++/*
++void LoadAndUnloadTestDLL(wchar_t* test_dll)
++{
++    wchar_t test_path[MAX_PATH + 1];
++    HMODULE hDLL = LoadLibraryExW(&test_dll[0], NULL, 0);
++    if (hDLL == NULL)
++    {
++        wchar_t err_msg[256];
++        DWORD err_code = GetLastError();
++        FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
++            NULL, err_code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
++            err_msg, (sizeof(err_msg) / sizeof(wchar_t)), NULL);
++        wprintf(L"LoadAndUnloadTestDLL() :: ERROR :: Failed to load %ls, error is: %ls\n", &test_dll[0], &err_msg[0]);
++    }
++    GetModuleFileNameW(hDLL, &test_path[0], MAX_PATH);
++    wprintf(L"LoadAndUnloadTestDLL() :: %ls loaded from %ls\n", &test_dll[0], &test_path[0]);
++    if (FreeLibrary(hDLL) == 0)
++    {
++        wchar_t err_msg[256];
++        DWORD err_code = GetLastError();
++        FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
++            NULL, err_code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
++            err_msg, (sizeof(err_msg) / sizeof(wchar_t)), NULL);
++        wprintf(L"LoadAndUnloadTestDLL() :: ERROR :: Failed to free %ls, error is: %ls\n", &test_dll[0], &err_msg[0]);
++    }
++}
++*/
 +
-+   /*
-+      Unless CONDA_DISABLE_DLL_SEARCH_MODIFICATION is set (to anything at all!)
-+      this function will modify the DLL search path so that C:\Windows\System32
-+      does not appear before entries in PATH. If it does appear in PATH then it
-+      gets added at the position it was in in PATH.
++/*
++    Unless CONDA_DISABLE_DLL_SEARCH_MODIFICATION is set (to anything at all!)
++    this function will modify the DLL search path so that C:\Windows\System32
++    does not appear before entries in PATH. If it does appear in PATH then it
++    gets added at the position it was in in PATH.
 +
-+      This is achieved via a call to SetDefaultDllDirectories() then calls to
-+      AddDllDirectory() for each entry in PATH. We also take the opportunity to
-+      clean-up these PATH entries such that any '/' are replaced with '\', no
-+      double quotes occour and no PATH entry ends with '\'.
++    This is achieved via a call to SetDefaultDllDirectories() then calls to
++    AddDllDirectory() for each entry in PATH. We also take the opportunity to
++    clean-up these PATH entries such that any '/' are replaced with '\', no
++    double quotes occour and no PATH entry ends with '\'.
 +
-+      Caution: Microsoft's documentation says that the search order of entries
-+      passed to AddDllDirectory is not respected and arbitrary. I do not think
-+      this will be the case but it is worth bearing in mind.
-+   */
++    Caution: Microsoft's documentation says that the search order of entries
++    passed to AddDllDirectory is not respected and arbitrary. I do not think
++    this will be the case but it is worth bearing in mind.
++*/
 +
 +int CondaEcosystemModifyDllSearchPath()
 +{
@@ -84,7 +91,7 @@ index e439bed9ed..2cc58c4fcf 100644
 +        {
 +            if (debug_it)
 +                wprintf(L"CondaEcosystemModifyDllSearchPath() :: WARNING :: Please install KB2533623 from http://go.microsoft.com/fwlink/p/?linkid=217865\n"\
-+                        L"CondaEcosystemModifyDllSearchPath() :: WARNING :: to improve conda ecosystem DLL isolation");
++                    L"CondaEcosystemModifyDllSearchPath() :: WARNING :: to improve conda ecosystem DLL isolation");
 +            return 1;
 +        }
 +
@@ -162,23 +169,20 @@ index e439bed9ed..2cc58c4fcf 100644
 +    }
 +    return 0;
 +}
- 
- int WINAPI wWinMain(
-     HINSTANCE hInstance,      /* handle to current instance */
-@@ -12,5 +157,13 @@ int WINAPI wWinMain(
-     int nCmdShow              /* show state of window */
- )
++#endif
++
++
+ static int
+ pymain_main(_PyMain *pymain)
  {
-+    /*
-+        wchar_t test_dll[] = L"libiomp5md.dll";
-+        LoadAndUnloadTestDLL(test_dll);
-+    */
++#ifdef MS_WINDOWS
++    /* LoadAndUnloadTestDLL(L"libiomp5md.dll"); */
 +    CondaEcosystemModifyDllSearchPath();
-+    /*
-+        LoadAndUnloadTestDLL(test_dll);
-+    */
-     return Py_Main(__argc, __wargv);
- }
++    /* LoadAndUnloadTestDLL(L"libiomp5md.dll"); */
++#endif
+     int res = pymain_init(pymain);
+     if (res == 1) {
+         goto done;
 -- 
 2.20.1
 
