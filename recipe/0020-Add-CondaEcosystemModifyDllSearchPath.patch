@@ -91,7 +91,7 @@ index 514f809939..2fa3699713 100644
 +        {
 +            if (debug_it)
 +                wprintf(L"CondaEcosystemModifyDllSearchPath() :: WARNING :: Please install KB2533623 from http://go.microsoft.com/fwlink/p/?linkid=217865\n"\
-+                    L"CondaEcosystemModifyDllSearchPath() :: WARNING :: to improve conda ecosystem DLL isolation");
++                        L"CondaEcosystemModifyDllSearchPath() :: WARNING :: to improve conda ecosystem DLL isolation");
 +            return 1;
 +        }
 +
