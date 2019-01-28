@@ -1,7 +1,7 @@
-From 18b20bad75b4ff0486940fba4ec680e96e70f3a2 Mon Sep 17 00:00:00 2001
+From 6dae6eaad17804b42d693c2bccfee102c48342bf Mon Sep 17 00:00:00 2001
 From: Christian Heimes <christian@python.org>
 Date: Tue, 18 Sep 2018 15:13:09 +0200
-Subject: [PATCH] [2.7] bpo-34623: Use XML_SetHashSalt in _elementtree
+Subject: [PATCH 17/18] bpo-34623: Use XML_SetHashSalt in _elementtree
  (GH-9146) (GH-9394)
 
 The C accelerated _elementtree module now initializes hash randomization
@@ -14,8 +14,6 @@ https://bugs.python.org/issue34623.
 
 Co-authored-by: Christian Heimes <christian@python.org>
 
-
-
 https://bugs.python.org/issue34623
 ---
  Include/pyexpat.h                                            | 4 +++-
@@ -26,7 +24,7 @@ https://bugs.python.org/issue34623
  create mode 100644 Misc/NEWS.d/next/Security/2018-09-10-16-05-39.bpo-34623.Ua9jMv.rst
 
 diff --git a/Include/pyexpat.h b/Include/pyexpat.h
-index 5340ef5fa386..3fc5fa54da63 100644
+index 5340ef5fa3..3fc5fa54da 100644
 --- a/Include/pyexpat.h
 +++ b/Include/pyexpat.h
 @@ -3,7 +3,7 @@
@@ -49,14 +47,14 @@ index 5340ef5fa386..3fc5fa54da63 100644
  
 diff --git a/Misc/NEWS.d/next/Security/2018-09-10-16-05-39.bpo-34623.Ua9jMv.rst b/Misc/NEWS.d/next/Security/2018-09-10-16-05-39.bpo-34623.Ua9jMv.rst
 new file mode 100644
-index 000000000000..31ad92ef8582
+index 0000000000..31ad92ef85
 --- /dev/null
 +++ b/Misc/NEWS.d/next/Security/2018-09-10-16-05-39.bpo-34623.Ua9jMv.rst
 @@ -0,0 +1,2 @@
 +The C accelerated _elementtree module now initializes hash randomization
 +salt from _Py_HashSecret instead of libexpat's default CSPRNG.
 diff --git a/Modules/_elementtree.c b/Modules/_elementtree.c
-index f7f992dd3a95..b38e0ab329c7 100644
+index 1d316a1c91..a19cbf7480 100644
 --- a/Modules/_elementtree.c
 +++ b/Modules/_elementtree.c
 @@ -2574,6 +2574,11 @@ xmlparser(PyObject* self_, PyObject* args, PyObject* kw)
@@ -72,7 +70,7 @@ index f7f992dd3a95..b38e0ab329c7 100644
      ALLOC(sizeof(XMLParserObject), "create expatparser");
  
 diff --git a/Modules/pyexpat.c b/Modules/pyexpat.c
-index 2b4d31293c64..1f8c0d70a559 100644
+index 2b4d31293c..1f8c0d70a5 100644
 --- a/Modules/pyexpat.c
 +++ b/Modules/pyexpat.c
 @@ -2042,6 +2042,11 @@ MODULE_INITFUNC(void)
@@ -87,3 +85,6 @@ index 2b4d31293c64..1f8c0d70a559 100644
  
      /* export using capsule */
      capi_object = PyCapsule_New(&capi, PyExpat_CAPSULE_NAME, NULL);
+-- 
+2.17.2 (Apple Git-113)
+

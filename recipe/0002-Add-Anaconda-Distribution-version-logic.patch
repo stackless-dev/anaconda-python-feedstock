@@ -1,7 +1,7 @@
-From 1b4dd8f4872c99c46f17ae607f1c91a6d69bc4aa Mon Sep 17 00:00:00 2001
+From 7d3c437f07b21b4624d2e428b4c8dc266b5450b1 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 15 Aug 2017 22:40:59 +0100
-Subject: [PATCH 02/15] Add Anaconda Distribution version logic
+Subject: [PATCH 02/18] Add Anaconda Distribution version logic
 
 ---
  Include/pythonrun.h |  1 +
@@ -103,5 +103,5 @@ index 7bd6efd0a0..12ec7c4315 100644
  	return version;
  }
 -- 
-2.19.1
+2.17.2 (Apple Git-113)
 

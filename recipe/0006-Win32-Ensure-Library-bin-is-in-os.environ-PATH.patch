@@ -1,7 +1,7 @@
-From 0393f6bdf6489963dd20717ce9f3c06a1bd29dd3 Mon Sep 17 00:00:00 2001
+From f094bf3984b3429a0f341a79980b52439561a194 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 16 Aug 2017 11:15:26 +0100
-Subject: [PATCH 06/15] Win32: Ensure Library\bin is in os.environ["PATH"]
+Subject: [PATCH 06/18] Win32: Ensure Library\bin is in os.environ["PATH"]
 
 ---
  Lib/site.py | 5 +++++
@@ -24,5 +24,5 @@ index aa5dcac36d..6ef06c38d1 100644
  main()
  
 -- 
-2.19.1
+2.17.2 (Apple Git-113)
 
