@@ -1,4 +1,4 @@
-From 1bd1d28a002e0d7e4e0d9b41d32c03f79017beeb Mon Sep 17 00:00:00 2001
+From 40e65b90a76af591f9e4c1ddf8c5936dbf313982 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 18/18] Add CondaEcosystemModifyDllSearchPath()
@@ -6,11 +6,11 @@ Subject: [PATCH 18/18] Add CondaEcosystemModifyDllSearchPath()
 This changes the DLL search order so that C:\Windows\System32 does not
 get searched in before entries in PATH.
 ---
- Modules/main.c | 151 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 151 insertions(+)
+ Modules/main.c | 154 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 154 insertions(+)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index e5357cf9b4..7bf4fe4674 100644
+index e5357cf9b4..86c074c07c 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -20,11 +20,11 @@ index e5357cf9b4..7bf4fe4674 100644
 +#  include <shlwapi.h>
 +#  include <string.h>
 +#  include <malloc.h>
-+#  include <libloaderapi.h>
++#  /* include <libloaderapi.h> */
  #endif
  
  #if (defined(PYOS_OS2) && !defined(PYCC_GCC)) || defined(MS_WINDOWS)
-@@ -238,6 +242,150 @@ static int RunMainFromImporter(char *filename)
+@@ -238,6 +242,153 @@ static int RunMainFromImporter(char *filename)
  }
  
  
@@ -85,6 +85,7 @@ index e5357cf9b4..7bf4fe4674 100644
 +        typedef void (WINAPI *SDDD)(DWORD DirectoryFlags);
 +        ADD pADD;
 +        SDDD pSDDD;
++        const wchar_t *path_env = _wgetenv(L"PATH");
 +        pADD = (ADD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "AddDllDirectory");
 +        pSDDD = (SDDD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "SetDefaultDllDirectories");
 +        if (pADD == NULL || pSDDD == NULL)
@@ -95,17 +96,20 @@ index e5357cf9b4..7bf4fe4674 100644
 +            return 1;
 +        }
 +
-+        const wchar_t *path_env = _wgetenv(L"PATH");
 +        if (path_env != NULL)
 +        {
-+            if (debug_it) wprintf(L"CondaEcosystemModifyDllSearchPath() :: PATH=%ls\n\b", path_env);
 +            size_t len = wcslen(path_env);
 +            wchar_t *path = (wchar_t *)alloca((len + 1) * sizeof(wchar_t));
++			ssize_t entry_num = 0;
++			ssize_t i;
++            if (debug_it) wprintf(L"CondaEcosystemModifyDllSearchPath() :: PATH=%ls\n\b", path_env);
 +            if (path != NULL)
 +            {
++                wchar_t **path_entries;
++                wchar_t *path_end;
++                ssize_t num_entries = 1;
 +                memcpy(path, path_env, (len + 1) * sizeof(wchar_t));
 +                /* Convert any / to \ */
-+                wchar_t *path_end;
 +                while ((path_end = wcschr(path, L'/')))
 +                    *path_end = L'\\';
 +                /* Remove all double quotes */
@@ -119,7 +123,6 @@ index e5357cf9b4..7bf4fe4674 100644
 +                    return 2;
 +
 +                /* Count the number of path entries */
-+                ssize_t num_entries = 1;
 +                path_end = path;
 +                while ((path_end = wcschr(path_end, L';')))
 +                {
@@ -127,15 +130,15 @@ index e5357cf9b4..7bf4fe4674 100644
 +                    ++path_end;
 +                }
 +
-+                wchar_t **path_entries = (wchar_t **)alloca((num_entries) * sizeof(wchar_t *));
++                path_entries = (wchar_t **)alloca((num_entries) * sizeof(wchar_t *));
 +                if (path_entries != NULL)
 +                {
 +                    path_end = wcschr(path, L';');
 +                    /* It does not matter what flags are passed to SetDefaultDllDirectories(), only that more than
 +                       one flag is passed; this seems like an odd API decision.
 +                    */
++#define LOAD_LIBRARY_SEARCH_DEFAULT_DIRS 0x00001000
 +                    pSDDD(LOAD_LIBRARY_SEARCH_DEFAULT_DIRS);
-+                    ssize_t entry_num = 0;
 +                    while (path != NULL)
 +                    {
 +                        if (path_end != NULL)
@@ -158,7 +161,7 @@ index e5357cf9b4..7bf4fe4674 100644
 +                            path_end = wcschr(path, L';');
 +                        }
 +                    }
-+                    for (ssize_t i = num_entries - 1; i > -1; --i)
++                    for (i = num_entries - 1; i > -1; --i)
 +                    {
 +                        if (debug_it) wprintf(L"CondaEcosystemModifyDllSearchPath() :: AddDllDirectory(%ls)\n", path_entries[i]);
 +                        pADD(path_entries[i]);
@@ -175,7 +178,7 @@ index e5357cf9b4..7bf4fe4674 100644
  /* Main program */
  
  int
-@@ -258,6 +406,9 @@ Py_Main(int argc, char **argv)
+@@ -258,6 +409,9 @@ Py_Main(int argc, char **argv)
      int saw_unbuffered_flag = 0;
      PyCompilerFlags cf;
  
