@@ -29,6 +29,7 @@ source:
       - 0017-Fix-cross-compilation-on-Debian-based-distros.patch
       - 0018-Disable-registry-lookup-unless-CONDA_PY_ALLOW_REG_PA.patch
       - 0019-Unvendor-sqlite3.patch
+      - 0020-Add-CondaEcosystemModifyDllSearchPath.patch
   # TODO :: Depend on our own packages for these:
   - url: https://github.com/python/cpython-source-deps/archive/xz-5.2.2.zip          # [win]
     folder: externals/xz-5.2.2                                                       # [win]
@@ -57,7 +58,7 @@ source:
 
 
 build:
-  number: 0
+  number: 1
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
