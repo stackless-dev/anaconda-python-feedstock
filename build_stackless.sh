@@ -54,6 +54,10 @@ if ! command -v unxz ; then
   cp "$xz" "$unxz" || :
 fi
 
+# See recipe/run_test.py for details
+export tk='8.6'
+export openssl=''
+
 conda build purge
 conda build "$recipe" --python="$ver"
 
