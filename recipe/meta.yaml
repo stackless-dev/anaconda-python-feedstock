@@ -1,14 +1,14 @@
-{% set version = "3.6.6" %}
-{% set md5 = "c01c976bcba70510621c6c16f65c4128" %}
+{% set version = "3.6.8" %}
+{% set md5 = "f5e398432f8958310566106efbc90703" %}
 
 package:
   name: python
   version: {{ version }}
 
 source:
-  - url: https://github.com/akruis/cpython/archive/ae7db35c3ab2833f4f4a0febb60a0f19e203809d.zip
-#  - url: http://www.stackless.com/binaries/stackless-366-export.tar.xz
-#    md5: {{ md5 }}
+  # - url: https://github.com/akruis/cpython/archive/ae7db35c3ab2833f4f4a0febb60a0f19e203809d.zip
+  - url: http://www.stackless.com/binaries/stackless-368-export.tar.xz
+    md5: {{ md5 }}
     patches:
       - 0001-Add-Anaconda-Distribution-version-logic.patch
       - 0002-Darwin-Omit-PYTHONFRAMEWORK-site-packages.patch
@@ -28,6 +28,9 @@ source:
       - 0015-Fix-find_library-so-that-it-looks-in-sys.prefix-lib-.patch
       - 0016-Disable-new-dtags-in-unixccompiler.py.patch
       - 0017-Fix-cross-compilation-on-Debian-based-distros.patch
+      - 0018-Disable-registry-lookup-unless-CONDA_PY_ALLOW_REG_PA.patch
+      - 0019-Unvendor-sqlite3.patch
+      - 0020-Add-CondaEcosystemModifyDllSearchPath.patch
   # TODO :: Depend on our own packages for these:
   - url: https://github.com/python/cpython-source-deps/archive/xz-5.2.2.zip          # [win]
     folder: externals/xz-5.2.2                                                       # [win]
@@ -41,13 +44,9 @@ source:
   - url: https://github.com/python/cpython-source-deps/archive/tix-8.4.3.6.zip       # [win]
     folder: externals/tix-8.4.3.6                                                    # [win]
     sha256: e558e3dc5e67ac0942f8fceafce00ca46b177da9ebeaf38ec7fafd9b9913ac56         # [win]
-  - url: https://github.com/python/cpython-source-deps/archive/sqlite-3.21.0.0.zip   # [win]
-    folder: externals/sqlite-3.21.0.0                                                # [win]
-    sha256: 95a4f2d76aeeb68b51239340e3de26e5714ecfb7c8ad82a67b17af82213a8c20         # [win]
-
-  - url: https://github.com/python/cpython-source-deps/archive/openssl-1.0.2o.zip    # [win]
-    folder: externals/openssl-1.0.2o                                                 # [win]
-    sha256: 9db2a35ef254b57e16a47916810a3bf1cd639b512b5fe6c1cb51afc985113595         # [win]
+  - url: https://github.com/python/cpython-source-deps/archive/openssl-1.0.2q.zip    # [win]
+    folder: externals/openssl-1.0.2q                                                 # [win]
+    sha256: d0e7bc44ab7ea2d43837ccc648a6f94702f3bad870318c0c8c771afd9c347d16         # [win]
 #  - url: https://github.com/python/cpython-bin-deps/archive/openssl-bin-1.0.2o.zip   # [win]
 #    folder: externals/openssl-bin-1.0.2o                                             # [win]
 #    sha256: c0e84e40f39b15125a63339f372a62b692ae91f82bf98c9e361b9296ecadcb31         # [win]
@@ -60,7 +59,7 @@ source:
 
 
 build:
-  number: 0
+  number: 1
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
@@ -86,7 +85,7 @@ requirements:
     - pkg-config                         # [unix]
   host:
     - bzip2                              # [unix]
-    - sqlite                             # [unix]
+    - sqlite
     - xz                                 # [unix]
     - zlib                               # [unix]
     - openssl                            # [unix]

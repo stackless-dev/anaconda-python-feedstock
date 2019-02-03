@@ -1,20 +1,20 @@
-From f1b29597d5250704f227aba35030186b77a58ccb Mon Sep 17 00:00:00 2001
+From 218ca631727207485a1ae66cc4812835a8743067 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 15 Aug 2017 22:34:16 +0100
-Subject: [PATCH 01/16] Add Anaconda Distribution version logic
+Subject: [PATCH 01/19] Add Anaconda Distribution version logic
 
 ---
  Include/pylifecycle.h |  1 +
  Lib/platform.py       |  1 +
  Modules/main.c        |  3 ++-
- Python/getversion.c   | 44 +++++++++++++++++++++++++++++++++++++++++---
+ Python/getversion.c   | 44 ++++++++++++++++++++++++++++++++++++++++---
  4 files changed, 45 insertions(+), 4 deletions(-)
 
 diff --git a/Include/pylifecycle.h b/Include/pylifecycle.h
-index 01abfa9fcd..ac8e19a308 100644
+index 9a528218e4..4b84977e61 100644
 --- a/Include/pylifecycle.h
 +++ b/Include/pylifecycle.h
-@@ -64,6 +64,7 @@ int _Py_CheckPython3();
+@@ -66,6 +66,7 @@ int _Py_CheckPython3();
  #endif
  
  /* In their own files */
