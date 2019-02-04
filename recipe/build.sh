@@ -184,6 +184,7 @@ declare -a _common_configure_args
 _common_configure_args+=(--prefix=${PREFIX})
 _common_configure_args+=(--build=${BUILD})
 _common_configure_args+=(--host=${HOST})
+[[ ${HOST} =~ .*darwin.* ]] || _common_configure_args+=(--enable-stacklessfewerregisters)
 _common_configure_args+=(--enable-ipv6)
 _common_configure_args+=(--with-ensurepip=no)
 _common_configure_args+=(--with-computed-gotos)
@@ -277,6 +278,8 @@ else
   make -C ${_buildd_shared} install
   declare -a _FLAGS_REPLACE
 fi
+
+make -C ${_buildd_static} teststackless
 
 SYSCONFIG=$(find ${_buildd_static}/$(cat ${_buildd_static}/pybuilddir.txt) -name "_sysconfigdata*.py" -print0)
 cat ${SYSCONFIG} | ${SYS_PYTHON} "${RECIPE_DIR}"/replace-word-pairs.py \
