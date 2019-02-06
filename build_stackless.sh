@@ -60,6 +60,7 @@ export openssl=''
 # Fix a few Patches (CRLF mixup)
 sed -i -e 's/\r//g' "$recipe/0011-Win32-Do-not-download-externals.patch"
 sed -i -e 's/\r//g' "$recipe/0017-Unvendor-openssl.patch"
+sed -i -e 's/\r//g' "$recipe/0018-Unvendor-sqlite3.patch"
 
 conda build purge
 conda build "$recipe" --python="$ver"
