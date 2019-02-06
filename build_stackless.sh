@@ -57,6 +57,9 @@ fi
 # See recipe/run_test.py for details
 export tk='8.6'
 export openssl=''
+# Fix a few Patches (CRLF mixup)
+sed -i -e 's/\r//g' "$recipe/0011-Win32-Do-not-download-externals.patch"
+sed -i -e 's/\r//g' "$recipe/0017-Unvendor-openssl.patch"
 
 conda build purge
 conda build "$recipe" --python="$ver"
