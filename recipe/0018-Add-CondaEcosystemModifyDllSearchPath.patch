@@ -1,4 +1,4 @@
-From 40e65b90a76af591f9e4c1ddf8c5936dbf313982 Mon Sep 17 00:00:00 2001
+From af8fab494aecab0a7e16491eddc99d972e9c26fa Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 18/18] Add CondaEcosystemModifyDllSearchPath()
@@ -6,11 +6,11 @@ Subject: [PATCH 18/18] Add CondaEcosystemModifyDllSearchPath()
 This changes the DLL search order so that C:\Windows\System32 does not
 get searched in before entries in PATH.
 ---
- Modules/main.c | 154 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 154 insertions(+)
+ Modules/main.c | 150 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 150 insertions(+)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index e5357cf9b4..86c074c07c 100644
+index e5357cf9b4..d3c8d0701a 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -24,7 +24,7 @@ index e5357cf9b4..86c074c07c 100644
  #endif
  
  #if (defined(PYOS_OS2) && !defined(PYCC_GCC)) || defined(MS_WINDOWS)
-@@ -238,6 +242,153 @@ static int RunMainFromImporter(char *filename)
+@@ -238,6 +242,149 @@ static int RunMainFromImporter(char *filename)
  }
  
  
@@ -86,6 +86,11 @@ index e5357cf9b4..86c074c07c 100644
 +        ADD pADD;
 +        SDDD pSDDD;
 +        const wchar_t *path_env = _wgetenv(L"PATH");
++        ssize_t entry_num = 0;
++        ssize_t i;
++        wchar_t **path_entries;
++        wchar_t *path_end;
++        ssize_t num_entries = 1;
 +        pADD = (ADD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "AddDllDirectory");
 +        pSDDD = (SDDD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "SetDefaultDllDirectories");
 +        if (pADD == NULL || pSDDD == NULL)
@@ -100,73 +105,64 @@ index e5357cf9b4..86c074c07c 100644
 +        {
 +            size_t len = wcslen(path_env);
 +            wchar_t *path = (wchar_t *)alloca((len + 1) * sizeof(wchar_t));
-+			ssize_t entry_num = 0;
-+			ssize_t i;
 +            if (debug_it) wprintf(L"CondaEcosystemModifyDllSearchPath() :: PATH=%ls\n\b", path_env);
-+            if (path != NULL)
++            memcpy(path, path_env, (len + 1) * sizeof(wchar_t));
++            /* Convert any / to \ */
++            while ((path_end = wcschr(path, L'/')))
++                *path_end = L'\\';
++            /* Remove all double quotes */
++            while ((path_end = wcschr(path, L'"')))
++                memmove(path_end, path_end + 1, sizeof(wchar_t) * (len-- - (path_end - path)));
++            /* Remove all leading and double ';' */
++            while ( *path == L';' )
++                memmove(path, path + 1, sizeof(wchar_t) * len--);
++            while ((path_end = wcsstr(path, L";;")))
++                memmove(path_end, path_end + 1, sizeof(wchar_t) * (len-- - (path_end - path)));
++
++            if (len == 0)
++                return 2;
++
++            /* Count the number of path entries */
++            path_end = path;
++            while ((path_end = wcschr(path_end, L';')))
 +            {
-+                wchar_t **path_entries;
-+                wchar_t *path_end;
-+                ssize_t num_entries = 1;
-+                memcpy(path, path_env, (len + 1) * sizeof(wchar_t));
-+                /* Convert any / to \ */
-+                while ((path_end = wcschr(path, L'/')))
-+                    *path_end = L'\\';
-+                /* Remove all double quotes */
-+                while ((path_end = wcschr(path, L'"')))
-+                    memmove(path_end, path_end + 1, len-- - (path_end - path));
-+                /* Remove all double ';' */
-+                while ((path_end = wcsstr(path, L";;")))
-+                    memmove(path_end, path_end + 1, len-- - (path_end - path));
++               ++num_entries;
++               ++path_end;
++            }
 +
-+                if (wcslen(path) == 0)
-+                    return 2;
-+
-+                /* Count the number of path entries */
-+                path_end = path;
-+                while ((path_end = wcschr(path_end, L';')))
-+                {
-+                    ++num_entries;
-+                    ++path_end;
-+                }
-+
-+                path_entries = (wchar_t **)alloca((num_entries) * sizeof(wchar_t *));
-+                if (path_entries != NULL)
-+                {
-+                    path_end = wcschr(path, L';');
-+                    /* It does not matter what flags are passed to SetDefaultDllDirectories(), only that more than
-+                       one flag is passed; this seems like an odd API decision.
-+                    */
++            path_entries = (wchar_t **)alloca((num_entries) * sizeof(wchar_t *));
++            path_end = wcschr(path, L';');
++            /* It does not matter what flags are passed to SetDefaultDllDirectories(), only that more than
++               one flag is passed; this seems like an odd API decision.
++            */
 +#define LOAD_LIBRARY_SEARCH_DEFAULT_DIRS 0x00001000
-+                    pSDDD(LOAD_LIBRARY_SEARCH_DEFAULT_DIRS);
-+                    while (path != NULL)
++            pSDDD(LOAD_LIBRARY_SEARCH_DEFAULT_DIRS);
++            while (path != NULL)
++            {
++                if (path_end != NULL)
++                {
++                    *path_end = L'\0';
++                    /* Hygiene, no \ at the end */
++                    while (path_end > path && path_end[-1] == L'\\')
 +                    {
-+                        if (path_end != NULL)
-+                        {
-+                            *path_end = L'\0';
-+                            /* Hygiene, no \ at the end */
-+                            while (path_end > path && path_end[-1] == L'\\')
-+                            {
-+                                --path_end;
-+                                *path_end = L'\0';
-+                            }
-+                        }
-+                        if (wcslen(path) != 0)
-+                            path_entries[entry_num++] = path;
-+                        path = path_end;
-+                        if (path != NULL)
-+                        {
-+                            while (*path == L'\0')
-+                                ++path;
-+                            path_end = wcschr(path, L';');
-+                        }
-+                    }
-+                    for (i = num_entries - 1; i > -1; --i)
-+                    {
-+                        if (debug_it) wprintf(L"CondaEcosystemModifyDllSearchPath() :: AddDllDirectory(%ls)\n", path_entries[i]);
-+                        pADD(path_entries[i]);
++                        --path_end;
++                        *path_end = L'\0';
 +                    }
 +                }
++                if (wcslen(path) != 0)
++                    path_entries[entry_num++] = path;
++                path = path_end;
++                if (path != NULL)
++                {
++                    while (*path == L'\0')
++                       ++path;
++                    path_end = wcschr(path, L';');
++                }
++            }
++            for (i = num_entries - 1; i > -1; --i)
++            {
++                if (debug_it) wprintf(L"CondaEcosystemModifyDllSearchPath() :: AddDllDirectory(%ls)\n", path_entries[i]);
++                pADD(path_entries[i]);
 +            }
 +        }
 +    }
@@ -178,7 +174,7 @@ index e5357cf9b4..86c074c07c 100644
  /* Main program */
  
  int
-@@ -258,6 +409,9 @@ Py_Main(int argc, char **argv)
+@@ -258,6 +405,9 @@ Py_Main(int argc, char **argv)
      int saw_unbuffered_flag = 0;
      PyCompilerFlags cf;
  
