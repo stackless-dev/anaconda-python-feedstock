@@ -1,4 +1,4 @@
-From cf5b7fef34ce70ba13ce1047a42a73a8db0de9e6 Mon Sep 17 00:00:00 2001
+From 45c9da6eec3325396ba58787f610976a50b7aa64 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 20/20] Add CondaEcosystemModifyDllSearchPath()
@@ -7,12 +7,14 @@ This changes the DLL search order so that C:\Windows\System32 does not
 get searched in before entries in PATH.
 
 Reviewed by Kai Tietz 7.2.2019
+
+Revised by Kai 15.2.2019
 ---
- Modules/main.c | 152 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 152 insertions(+)
+ Modules/main.c | 169 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 169 insertions(+)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index 514f809939..7f744c0938 100644
+index 514f809939..43a4b6a879 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -26,7 +28,7 @@ index 514f809939..7f744c0938 100644
  #endif
  
  #ifdef _MSC_VER
-@@ -3026,9 +3030,157 @@ pymain_init(_PyMain *pymain)
+@@ -3026,9 +3030,174 @@ pymain_init(_PyMain *pymain)
  }
  
  
@@ -78,23 +80,29 @@ index 514f809939..7f744c0938 100644
 +    this will be the case but it is worth bearing in mind.
 +*/
 +
++/* Caching of prior processed PATH environment */
++static wchar_t *sv_path_env = NULL;
++
 +int CondaEcosystemModifyDllSearchPath()
 +{
 +    if (_wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_DISABLE") == NULL)
 +    {
 +        int debug_it = _wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_DEBUG") ? 1 : 0;
-+        typedef void (WINAPI *ADD)(PCWSTR NewDirectory);
 +        typedef void (WINAPI *SDDD)(DWORD DirectoryFlags);
-+        ADD pADD;
++        typedef void (WINAPI *SDD)(PCWSTR SetDir);
++        typedef void (WINAPI *ADD)(PCWSTR NewDirectory);
 +        SDDD pSDDD;
++        SDD pSDD;
++        ADD pADD;
 +        const wchar_t *path_env = _wgetenv(L"PATH");
 +        ssize_t entry_num = 0;
 +        ssize_t i;
 +        wchar_t **path_entries;
 +        wchar_t *path_end;
 +        ssize_t num_entries = 1;
-+        pADD = (ADD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "AddDllDirectory");
 +        pSDDD = (SDDD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "SetDefaultDllDirectories");
++        pSDD = (SDD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "SetDllDirectory");
++        pADD = (ADD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "AddDllDirectory");
 +        if (pADD == NULL || pSDDD == NULL)
 +        {
 +            if (debug_it)
@@ -102,6 +110,17 @@ index 514f809939..7f744c0938 100644
 +                        L"CondaEcosystemModifyDllSearchPath() :: WARNING :: to improve conda ecosystem DLL isolation");
 +            return 1;
 +        }
++
++        /* cache path to avoid multiple adds */
++        if (sv_path_env != NULL && path_env != NULL && !wcscmp(path_env, sv_path_env))
++            return 0;
++        if (sv_path_env != NULL)
++        {
++            free(sv_path_env);
++            /* Reset to default search order */
++            pSDD(NULL);
++        }
++        sv_path_env = path_env == NULL ? NULL : _wcsdup(path_env);
 +
 +        if (path_env != NULL)
 +        {
@@ -185,5 +204,5 @@ index 514f809939..7f744c0938 100644
      if (res == 1) {
          goto done;
 -- 
-2.17.2 (Apple Git-113)
+2.20.1
 
