@@ -1,4 +1,4 @@
-From 33f71009c6f9f43f368d6dc7a20840d979be5d96 Mon Sep 17 00:00:00 2001
+From c5769ede865103119ac40ac13686bdb490a39677 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Mon, 4 Dec 2017 22:14:32 +0000
 Subject: [PATCH 12/17] Mark sysconfigdata.py as utf-8
@@ -22,10 +22,10 @@ index 6700cb6582..7c3444033f 100644
                  ' the sysconfig module\n')
          f.write('build_time_vars = ')
 diff --git a/Mac/BuildScript/build-installer.py b/Mac/BuildScript/build-installer.py
-index 74d1e84f4a..bd5b3ba66d 100755
+index 7875bc8ef4..4a58befd93 100755
 --- a/Mac/BuildScript/build-installer.py
 +++ b/Mac/BuildScript/build-installer.py
-@@ -1291,6 +1291,7 @@ def buildPython():
+@@ -1282,6 +1282,7 @@ def buildPython():
  
      fp = open(path, 'w')
      # duplicated from sysconfig._generate_posix_vars()
@@ -34,5 +34,5 @@ index 74d1e84f4a..bd5b3ba66d 100755
                  ' the sysconfig module\n')
      fp.write('build_time_vars = ')
 -- 
-2.20.1
+2.17.2 (Apple Git-113)
 

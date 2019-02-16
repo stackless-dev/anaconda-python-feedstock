@@ -1,4 +1,4 @@
-From fdb70264e0e95744b12be775053f59a261a5899d Mon Sep 17 00:00:00 2001
+From cfedce3eaed29a34d37c2afef63c344f6daf2766 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 20 Aug 2017 00:22:22 +0100
 Subject: [PATCH 10/17] Darwin: Look in ${sysroot}/usr/{lib,include} if sysroot
@@ -28,5 +28,5 @@ index 33cecc6875..94396bf324 100644
                  '/usr/include',
                  ):
 -- 
-2.20.1
+2.17.2 (Apple Git-113)
 

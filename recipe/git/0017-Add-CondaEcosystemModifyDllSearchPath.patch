@@ -1,4 +1,4 @@
-From c3a5e156a35a4fa95e2622854a4481f0e2f9afc3 Mon Sep 17 00:00:00 2001
+From 71a9236725891307eb3dc6c63a05f9f52cf21841 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 17/17] Add CondaEcosystemModifyDllSearchPath()
@@ -189,5 +189,5 @@ index e5357cf9b4..86c074c07c 100644
  
      orig_argc = argc;           /* For Py_GetArgcArgv() */
 -- 
-2.20.1
+2.17.2 (Apple Git-113)
 

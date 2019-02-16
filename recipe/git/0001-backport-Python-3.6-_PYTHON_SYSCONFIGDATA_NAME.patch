@@ -1,4 +1,4 @@
-From 0b3ca7d6d03882a677bf752345f8e779fed51cae Mon Sep 17 00:00:00 2001
+From daa4bf40a21928c4734d3603d84ec65335377214 Mon Sep 17 00:00:00 2001
 From: Jonathan Helmus <jjhelmus@gmail.com>
 Date: Thu, 28 Sep 2017 15:47:20 -0500
 Subject: [PATCH 01/17] backport Python 3.6 _PYTHON_SYSCONFIGDATA_NAME
@@ -51,5 +51,5 @@ index 9c8350d953..6700cb6582 100644
  
  def _init_non_posix(vars):
 -- 
-2.20.1
+2.17.2 (Apple Git-113)
 
