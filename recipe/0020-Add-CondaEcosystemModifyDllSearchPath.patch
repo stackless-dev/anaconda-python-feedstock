@@ -1,4 +1,4 @@
-From 45c9da6eec3325396ba58787f610976a50b7aa64 Mon Sep 17 00:00:00 2001
+From 3300d99241380f5ee44859e251fd88b436b93116 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 20/20] Add CondaEcosystemModifyDllSearchPath()
@@ -10,8 +10,9 @@ Reviewed by Kai Tietz 7.2.2019
 
 Revised by Kai 15.2.2019
 ---
- Modules/main.c | 169 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 169 insertions(+)
+ Modules/main.c       | 169 +++++++++++++++++++++++++++++++++++++++++++
+ Python/dynload_win.c |   3 +
+ 2 files changed, 172 insertions(+)
 
 diff --git a/Modules/main.c b/Modules/main.c
 index 514f809939..43a4b6a879 100644
@@ -203,6 +204,20 @@ index 514f809939..43a4b6a879 100644
      int res = pymain_init(pymain);
      if (res == 1) {
          goto done;
+diff --git a/Python/dynload_win.c b/Python/dynload_win.c
+index 0fdf77f552..cc3d35bf25 100644
+--- a/Python/dynload_win.c
++++ b/Python/dynload_win.c
+@@ -215,6 +215,9 @@ dl_funcptr _PyImport_FindSharedFuncptrWindows(const char *prefix,
+ #if HAVE_SXS
+         cookie = _Py_ActivateActCtx();
+ #endif
++        /* This resyncs values in PATH to AddDllDirectory() */
++        extern int CondaEcosystemModifyDllSearchPath();
++        CondaEcosystemModifyDllSearchPath();
+         /* We use LoadLibraryEx so Windows looks for dependent DLLs
+             in directory of pathname first. */
+         /* XXX This call doesn't exist in Windows CE */
 -- 
 2.20.1
 
