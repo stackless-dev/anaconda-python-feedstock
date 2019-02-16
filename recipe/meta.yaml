@@ -1,5 +1,6 @@
 {% set version = "2.7.15" %}
 {% set sha256 = "18617d1f15a380a919d517630a9cd85ce17ea602f9bbdc58ddc672df4b0239db" %}
+{% set pdir = "2.7.15" %}
 
 package:
   name: python
@@ -9,25 +10,25 @@ source:
   - url: https://www.python.org/ftp/python/{{ version }}/Python-{{ version }}.tgz
     sha256: {{ sha256 }}
     patches:
-      - 0001-backport-Python-3.6-_PYTHON_SYSCONFIGDATA_NAME.patch
-      - 0002-Add-Anaconda-Distribution-version-logic.patch
-      - 0003-Darwin-Hack-sys.-exec_-prefix-if-run-from-python.app.patch
-      - 0004-Darwin-Add-arch-x86_64-to-UnicCCompiler-ld_args.patch
-      - 0005-Win32-distutils-Also-look-for-executable.bat.patch
+      - {{ pdir }}/0001-backport-Python-3.6-_PYTHON_SYSCONFIGDATA_NAME.patch
+      - {{ pdir }}/0002-Add-Anaconda-Distribution-version-logic.patch
+      - {{ pdir }}/0003-Darwin-Hack-sys.-exec_-prefix-if-run-from-python.app.patch
+      - {{ pdir }}/0004-Darwin-Add-arch-x86_64-to-UnicCCompiler-ld_args.patch
+      - {{ pdir }}/0005-Win32-distutils-Also-look-for-executable.bat.patch
       # TODO :: This breaks conda activate and deactivate.
-      - 0006-Win32-Ensure-Library-bin-is-in-os.environ-PATH.patch
-      - 0007-Win32-Change-FD_SETSIZE-from-512-to-2048.patch
-      - 0008-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
-      - 0009-Do-not-pass-g-to-GCC-when-not-Py_DEBUG.patch
-      - 0010-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
-      - 0011-runtime_library_dir_option-Use-1st-word-of-CC-as-com.patch
-      - 0012-Mark-sysconfigdata.py-as-utf-8.patch
-      - 0013-Fix-find_library-so-that-it-looks-in-sys.prefix-lib-.patch
-      - 0014-Fix-cross-compilation-on-Debian-based-distros.patch
-      - 0015-Disable-registry-lookup-unless-CONDA_PY_ALLOW_REG_PA.patch
-      - 0016-Unvendor-sqlite3.patch
-      - 0017-bpo-34623-Use-XML_SetHashSalt-in-_elementtree-GH-914.patch
-      - 0018-Add-CondaEcosystemModifyDllSearchPath.patch
+      - {{ pdir }}/0006-Win32-Ensure-Library-bin-is-in-os.environ-PATH.patch
+      - {{ pdir }}/0007-Win32-Change-FD_SETSIZE-from-512-to-2048.patch
+      - {{ pdir }}/0008-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
+      - {{ pdir }}/0009-Do-not-pass-g-to-GCC-when-not-Py_DEBUG.patch
+      - {{ pdir }}/0010-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
+      - {{ pdir }}/0011-runtime_library_dir_option-Use-1st-word-of-CC-as-com.patch
+      - {{ pdir }}/0012-Mark-sysconfigdata.py-as-utf-8.patch
+      - {{ pdir }}/0013-Fix-find_library-so-that-it-looks-in-sys.prefix-lib-.patch
+      - {{ pdir }}/0014-Fix-cross-compilation-on-Debian-based-distros.patch
+      - {{ pdir }}/0015-Disable-registry-lookup-unless-CONDA_PY_ALLOW_REG_PA.patch
+      - {{ pdir }}/0016-Unvendor-sqlite3.patch
+      - {{ pdir }}/0017-bpo-34623-Use-XML_SetHashSalt-in-_elementtree-GH-914.patch
+      - {{ pdir }}/0018-Add-CondaEcosystemModifyDllSearchPath.patch
   - url: https://github.com/python/cpython-source-deps/archive/bzip2-1.0.6.zip      # [win]
     folder: externals/bzip2-1.0.6                                                   # [win]
     sha256: c42fd1432a2667b964a74bc423bb7485059c4a6d5dc92946d59dbf9a6bdb988d        # [win]
@@ -52,7 +53,7 @@ source:
 
 
 build:
-  number: 7
+  number: 8
   no_link:
     - bin/python2.7     # [unix]
     - DLLs/_ctypes.pyd  # [win]
