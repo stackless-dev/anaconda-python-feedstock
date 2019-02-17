@@ -1,4 +1,4 @@
-From f39ef3ac2fb48072b0e521dc85bbf77dc796ea47 Mon Sep 17 00:00:00 2001
+From 408d586c1356f3fcd4978eccafbdaf14d69b9978 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 17/17] Add CondaEcosystemModifyDllSearchPath()
@@ -8,12 +8,12 @@ get searched in before entries in PATH.
 
 Modified twice and backported.
 ---
- Modules/main.c       | 167 +++++++++++++++++++++++++++++++++++++++++++
+ Modules/main.c       | 171 +++++++++++++++++++++++++++++++++++++++++++
  Python/dynload_win.c |   3 +
- 2 files changed, 170 insertions(+)
+ 2 files changed, 174 insertions(+)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index e5357cf9b4..385596f990 100644
+index e5357cf9b4..b6701626e3 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -27,7 +27,7 @@ index e5357cf9b4..385596f990 100644
  #endif
  
  #if (defined(PYOS_OS2) && !defined(PYCC_GCC)) || defined(MS_WINDOWS)
-@@ -238,6 +242,166 @@ static int RunMainFromImporter(char *filename)
+@@ -238,6 +242,170 @@ static int RunMainFromImporter(char *filename)
  }
  
  
@@ -78,6 +78,10 @@ index e5357cf9b4..385596f990 100644
 +    passed to AddDllDirectory is not respected and arbitrary. I do not think
 +    this will be the case but it is worth bearing in mind.
 +*/
++
++#if !defined(LOAD_LIBRARY_SEARCH_DEFAULT_DIRS)
++#define LOAD_LIBRARY_SEARCH_DEFAULT_DIRS 0x00001000
++#endif
 +
 +/* Caching of prior processed PATH environment */
 +static wchar_t *sv_path_env = NULL;
@@ -194,7 +198,7 @@ index e5357cf9b4..385596f990 100644
  /* Main program */
  
  int
-@@ -258,6 +422,9 @@ Py_Main(int argc, char **argv)
+@@ -258,6 +426,9 @@ Py_Main(int argc, char **argv)
      int saw_unbuffered_flag = 0;
      PyCompilerFlags cf;
  

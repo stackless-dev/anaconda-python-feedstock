@@ -51,7 +51,7 @@ source:
 
 
 build:
-  number: 8
+  number: 9
   no_link:
     - bin/python2.7     # [unix]
     - DLLs/_ctypes.pyd  # [win]
@@ -60,6 +60,8 @@ build:
   # We delete the shared libraries.
   ignore_run_exports:   # [unix]
     - bzip2             # [unix]
+    - libcxx            # [osx]
+    - openssl           # [osx]
   skip: True            # [win and vc != 9]
 
 requirements:
