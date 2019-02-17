@@ -10,7 +10,7 @@ Reviewed by Kai Tietz 7.2.2019
 
 Updated a bit to include other directories.
 ---
- Modules/main.c       | 254 +++++++++++++++++++++++++++++++++++++++++++
+ Modules/main.c       | 253 +++++++++++++++++++++++++++++++++++++++++++
  Python/dynload_win.c |   4 +
  2 files changed, 258 insertions(+)
 
@@ -29,7 +29,7 @@ index 514f809939..74b3255e42 100644
  #endif
  
  #ifdef _MSC_VER
-@@ -3026,9 +3030,259 @@ pymain_init(_PyMain *pymain)
+@@ -3026,9 +3030,258 @@ pymain_init(_PyMain *pymain)
  }
  
  
@@ -280,7 +280,6 @@ index 514f809939..74b3255e42 100644
  static int
  pymain_main(_PyMain *pymain)
  {
-+x
 +#ifdef MS_WINDOWS
 +    /* LoadAndUnloadTestDLL(L"libiomp5md.dll"); */
 +    CondaEcosystemModifyDllSearchPath(1, 1);
