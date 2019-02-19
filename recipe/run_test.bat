@@ -1,6 +1,7 @@
 pushd %TEMP%
-conda create -p %TEMP%\_py37_dll_bug python=3.7 numba=0.42 -y
-call activate -p %TEMP%\_py37_dll_bug
+if exist %CD%\_py37_dll_bug rm rd /s /q %CD%\_py37_dll_bug
+conda create -p %CD%\_py37_dll_bug python=3.7 numba=0.42 -y
+call activate -p %CD%\_py37_dll_bug
 conda info
 %PYTHON% --version
 set fname="aot.py"

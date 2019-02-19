@@ -1,4 +1,4 @@
-From 7b81ba5125b0634e5395d8af6a299330c69abfe1 Mon Sep 17 00:00:00 2001
+From 97f408c7abbe611d7e91cc9cc7fba1f4cfb07e72 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 20/20] Add CondaEcosystemModifyDllSearchPath()
@@ -10,12 +10,12 @@ Reviewed by Kai Tietz 7.2.2019
 
 Updated a bit to include other directories.
 ---
- Modules/main.c       | 253 +++++++++++++++++++++++++++++++++++++++++++
+ Modules/main.c       | 326 +++++++++++++++++++++++++++++++++++++++++++
  Python/dynload_win.c |   4 +
- 2 files changed, 258 insertions(+)
+ 2 files changed, 330 insertions(+)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index 514f809939..74b3255e42 100644
+index 514f809939..3582353a58 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -29,7 +29,7 @@ index 514f809939..74b3255e42 100644
  #endif
  
  #ifdef _MSC_VER
-@@ -3026,9 +3030,258 @@ pymain_init(_PyMain *pymain)
+@@ -3026,9 +3030,331 @@ pymain_init(_PyMain *pymain)
  }
  
  
@@ -96,6 +96,29 @@ index 514f809939..74b3255e42 100644
 +static int failed_to_find_dll_fns = 0;
 +/* sv_executable_dirname is gotten but not used ATM. */
 +static wchar_t sv_executable_dirname[1024];
++/* Have hidden this behind a define because it is clearly not code that
++   could be considered for upstreaming so clearly delimiting it makes it
++   easier to remove. */
++#define HARDCODE_CONDA_PATHS
++#if defined(HARDCODE_CONDA_PATHS)
++typedef struct
++{
++    int exists;
++    wchar_t *p_relative;
++    wchar_t *p_name;
++} CONDA_PATH;
++
++#define NUM_CONDA_PATHS 4
++
++static CONDA_PATH condaPaths[NUM_CONDA_PATHS] =
++{
++    {0, L"Library\\mingw-w64\\bin", NULL},
++    {0, L"Library\\usr\\bin", NULL},
++    {0, L"Scripts", NULL},
++    {0, L"bin", NULL}
++};
++#endif /* HARDCODE_CONDA_PATHS */
++static wchar_t sv_executable_dirname[1024];
 +static wchar_t sv_windows_directory[1024];
 +static wchar_t *sv_added_windows_directory = NULL;
 +static wchar_t *sv_added_cwd = NULL;
@@ -110,6 +133,13 @@ index 514f809939..74b3255e42 100644
 +    wchar_t **path_entries;
 +    wchar_t *path_end;
 +    ssize_t num_entries = 1;
++#if defined(HARDCODE_CONDA_PATHS)
++    ssize_t j;
++    CONDA_PATH *p_conda_path;
++    struct _stat64i32 sb;
++    int foundCondaPath[NUM_CONDA_PATHS] = {0, 0, 0, 0};
++#endif /* defined(HARDCODE_CONDA_PATHS) */
++
 +    int SetDllDirectoryValue = LOAD_LIBRARY_SEARCH_DEFAULT_DIRS;
 +    if (failed_to_find_dll_fns)
 +        return 1;
@@ -130,6 +160,21 @@ index 514f809939..74b3255e42 100644
 +        sv_executable_dirname[sizeof(sv_executable_dirname)/sizeof(sv_executable_dirname[0])-1] = L'\0';
 +        if (wcsrchr(sv_executable_dirname, L'\\'))
 +            *wcsrchr(sv_executable_dirname, L'\\') = L'\0';
++#if defined(HARDCODE_CONDA_PATHS)
++        for (p_conda_path = &condaPaths[0]; p_conda_path < &condaPaths[NUM_CONDA_PATHS]; ++p_conda_path)
++        {
++            size_t n_chars_executable_dirname = wcslen(sv_executable_dirname);
++            size_t n_chars_p_relative = wcslen(p_conda_path->p_relative);
++            p_conda_path->p_name = malloc(sizeof(wchar_t) * (n_chars_executable_dirname + n_chars_p_relative + 2));
++            wcsncpy(p_conda_path->p_name, sv_executable_dirname, n_chars_executable_dirname+1);
++            wcsncat(p_conda_path->p_name, L"\\", 2);
++            wcsncat(p_conda_path->p_name, p_conda_path->p_relative, n_chars_p_relative+1);
++            if (_wstat(p_conda_path->p_name, &sb) == 0 && S_ISDIR(sb.st_mode))
++                p_conda_path->exists = 1;
++            else
++                p_conda_path->exists = 0;
++        }
++#endif /* defined(HARDCODE_CONDA_PATHS) */
 +
 +        /* Determine sv_windows_directory */
 +        {
@@ -199,10 +244,13 @@ index 514f809939..74b3255e42 100644
 +        while ((path_end = wcschr(path, L'"')))
 +            memmove(path_end, path_end + 1, sizeof(wchar_t) * (len-- - (path_end - path)));
 +        /* Remove all leading and double ';' */
-+        while ( *path == L';' )
++        while (*path == L';')
 +            memmove(path, path + 1, sizeof(wchar_t) * len--);
 +        while ((path_end = wcsstr(path, L";;")))
 +            memmove(path_end, path_end + 1, sizeof(wchar_t) * (len-- - (path_end - path)));
++        /* Remove trailing ;'s */
++        while(path[len-1] == L';')
++            path[len-- - 1] = L'\0';
 +
 +        if (len == 0)
 +            return 2;
@@ -245,10 +293,35 @@ index 514f809939..74b3255e42 100644
 +        }
 +        for (i = num_entries - 1; i > -1; --i)
 +        {
++#if defined(HARDCODE_CONDA_PATHS)
++            for (j = 0, p_conda_path = &condaPaths[0]; p_conda_path < &condaPaths[NUM_CONDA_PATHS]; ++j, ++p_conda_path)
++            {
++                if (!foundCondaPath[j] && p_conda_path->exists && !wcscmp(path_entries[i], p_conda_path->p_name))
++                {
++                    foundCondaPath[j] = 1;
++                    break;
++                }
++            }
++#endif /* defined(HARDCODE_CONDA_PATHS) */
 +            if (debug_it) wprintf(L"CondaEcosystemModifyDllSearchPath() :: AddDllDirectory(%ls)\n", path_entries[i]);
 +            pAddDllDirectory(path_entries[i]);
 +        }
 +    }
++
++#if defined(HARDCODE_CONDA_PATHS)
++    if (_wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_DO_NOT_ADD_EXEPREFIX") == NULL)
++    {
++        for (j = 0, p_conda_path = &condaPaths[0]; p_conda_path < &condaPaths[NUM_CONDA_PATHS]; ++j, ++p_conda_path)
++        {
++            if (debug_it) wprintf(L"CondaEcosystemModifyDllSearchPath() :: p_conda_path->p_name = %ls, p_conda_path->exists = %d, foundCondaPath[%d] = %d\n", p_conda_path->p_name, p_conda_path->exists, j, foundCondaPath[j]);
++            if (!foundCondaPath[j] && p_conda_path->exists)
++            {
++                if (debug_it) wprintf(L"CondaEcosystemModifyDllSearchPath() :: AddDllDirectory(%ls - ExePrefix)\n", p_conda_path->p_name);
++                pAddDllDirectory(p_conda_path->p_name);
++            }
++        }
++    }
++#endif /* defined(HARDCODE_CONDA_PATHS) */
 +
 +    if (p_cwd)
 +    {
