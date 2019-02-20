@@ -1,4 +1,4 @@
-From f9e7537637997d269fe7e3440664de71e5ba3d32 Mon Sep 17 00:00:00 2001
+From 0eeca7ecd7b18fb758eab9bbdb824ecacb92ae12 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 17/17] Add CondaEcosystemModifyDllSearchPath()
@@ -19,7 +19,7 @@ in procmon what directories get looked in in the non-fullpath case.
  2 files changed, 339 insertions(+), 3 deletions(-)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index e5357cf9b4..f7f18c4967 100644
+index e5357cf9b4..b85b3031cb 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -115,11 +115,11 @@ index e5357cf9b4..f7f18c4967 100644
 +
 +static CONDA_PATH condaPaths[NUM_CONDA_PATHS] =
 +{
-+    {0, L"Library\\mingw-w64\\bin", NULL},
-+    {0, L"Library\\usr\\bin", NULL},
-+    {0, L"Library\\bin", NULL},
-+    {0, L"Scripts", NULL},
-+    {0, L"bin", NULL}
++    {L"Library\\mingw-w64\\bin", NULL},
++    {L"Library\\usr\\bin", NULL},
++    {L"Library\\bin", NULL},
++    {L"Scripts", NULL},
++    {L"bin", NULL}
 +};
 +#endif /* HARDCODE_CONDA_PATHS */
 +static wchar_t sv_executable_dirname[1024];
