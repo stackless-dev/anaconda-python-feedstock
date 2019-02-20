@@ -1,4 +1,4 @@
-From 29ed3c57d45a5c5acad8636c97719a9694b3b30b Mon Sep 17 00:00:00 2001
+From 3f653167b5d04425c714617b2300a3d999d26825 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 20/20] Add CondaEcosystemModifyDllSearchPath()
@@ -10,12 +10,12 @@ Reviewed by Kai Tietz 7.2.2019
 
 Updated a bit to include other directories.
 ---
- Modules/main.c       | 321 +++++++++++++++++++++++++++++++++++++++++++
+ Modules/main.c       | 339 +++++++++++++++++++++++++++++++++++++++++++
  Python/dynload_win.c |   4 +
- 2 files changed, 325 insertions(+)
+ 2 files changed, 343 insertions(+)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index 514f809939..99eb576c59 100644
+index 514f809939..72f339f117 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -29,7 +29,7 @@ index 514f809939..99eb576c59 100644
  #endif
  
  #ifdef _MSC_VER
-@@ -3026,9 +3030,326 @@ pymain_init(_PyMain *pymain)
+@@ -3026,9 +3030,344 @@ pymain_init(_PyMain *pymain)
  }
  
  
@@ -142,14 +142,12 @@ index 514f809939..99eb576c59 100644
 +    int SetDllDirectoryValue = LOAD_LIBRARY_SEARCH_DEFAULT_DIRS;
 +    if (failed_to_find_dll_fns)
 +        return 1;
-+    if (_wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_DISABLE"))
-+        return 0;
-+    if (_wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_NEVER_ADD_WINDOWS_DIRECTORY"))
-+        add_windows_directory = 0;
-+    if (_wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_NEVER_ADD_CWD"))
-+        add_cwd = 0;
++
 +    if (pSetDefaultDllDirectories == NULL)  /* Really we mean 'have we not inited yet?' */
 +    {
++        wchar_t *conda_prefix = _wgetenv(L"CONDA_PREFIX");
++        wchar_t *build_prefix = _wgetenv(L"BUILD_PREFIX");
++        wchar_t *build_prefix = _wgetenv(L"PREFIX");
 +        pSetDefaultDllDirectories = (SDDD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "SetDefaultDllDirectories");
 +        pSetDllDirectory = (SDD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "SetDllDirectoryW");
 +        pAddDllDirectory = (ADD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "AddDllDirectory");
@@ -180,7 +178,27 @@ index 514f809939..99eb576c59 100644
 +            mbstowcs_s(&convertedChars, sv_windows_directory, strlen(tmp_ascii)+1, tmp_ascii, _TRUNCATE);
 +            sv_windows_directory[sizeof(sv_windows_directory) / sizeof(sv_windows_directory[0]) - 1] = L'\0';
 +        }
++
++        /* This has been put here for expediency purposes */
++        if (conda_prefix == NULL || wcstr(sv_executable_dirname, conda_prefix) != sv_executable_dirname)
++        {
++            if (build_prefix == NULL || wcstr(sv_executable_dirname, build_prefix) != sv_executable_dirname)
++            {
++                if (prefix == NULL || wcstr(sv_executable_dirname, prefix) != sv_executable_dirname)
++                {
++                    wfprintf(stderr, L"WARNING :: No conda environment has been activated.  Please use the `Anaconda Prompt`,\n"
++                                     L"        :: `Anaconda Navigator` or one of the activate scripts in <INSTALL_ROOT>\Scripts\n");
++                }
++            }
++        }
 +    }
++
++    if (_wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_ENABLE") == NULL)
++        return 0;
++    if (_wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_NEVER_ADD_WINDOWS_DIRECTORY"))
++        add_windows_directory = 0;
++    if (_wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_NEVER_ADD_CWD"))
++        add_cwd = 0;
 +
 +    if (pSetDefaultDllDirectories == NULL || pSetDllDirectory == NULL || pAddDllDirectory == NULL)
 +    {
