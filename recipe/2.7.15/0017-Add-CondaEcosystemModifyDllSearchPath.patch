@@ -1,4 +1,4 @@
-From 867caa346053378144511fd987ce1ae8f0fc2626 Mon Sep 17 00:00:00 2001
+From 43de719022aff5d7dfd2a448455e7d1cad8bd103 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 17/17] Add CondaEcosystemModifyDllSearchPath()
@@ -14,12 +14,12 @@ I observed that you must call LoadLibraryExW() with the fullpath of
 the DLL for this stuff to not fail. It is probably worthwhile checking
 in procmon what directories get looked in in the non-fullpath case.
 ---
- Modules/main.c       | 324 +++++++++++++++++++++++++++++++++++++++++++
+ Modules/main.c       | 325 +++++++++++++++++++++++++++++++++++++++++++
  Python/dynload_win.c |  23 ++-
- 2 files changed, 344 insertions(+), 3 deletions(-)
+ 2 files changed, 345 insertions(+), 3 deletions(-)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index e5357cf9b4..bfa78b392c 100644
+index e5357cf9b4..5ce6a6ee72 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -33,7 +33,7 @@ index e5357cf9b4..bfa78b392c 100644
  #endif
  
  #if (defined(PYOS_OS2) && !defined(PYCC_GCC)) || defined(MS_WINDOWS)
-@@ -238,6 +242,323 @@ static int RunMainFromImporter(char *filename)
+@@ -238,6 +242,324 @@ static int RunMainFromImporter(char *filename)
  }
  
  
@@ -112,12 +112,13 @@ index e5357cf9b4..bfa78b392c 100644
 +    wchar_t *p_name;
 +} CONDA_PATH;
 +
-+#define NUM_CONDA_PATHS 4
++#define NUM_CONDA_PATHS 5
 +
 +static CONDA_PATH condaPaths[NUM_CONDA_PATHS] =
 +{
 +    {0, L"Library\\mingw-w64\\bin", NULL},
 +    {0, L"Library\\usr\\bin", NULL},
++    {0, L"Library\\bin", NULL},
 +    {0, L"Scripts", NULL},
 +    {0, L"bin", NULL}
 +};
@@ -141,7 +142,7 @@ index e5357cf9b4..bfa78b392c 100644
 +    ssize_t j;
 +    CONDA_PATH *p_conda_path;
 +    struct _stat64i32 sb;
-+    int foundCondaPath[NUM_CONDA_PATHS] = {0, 0, 0, 0};
++    int foundCondaPath[NUM_CONDA_PATHS] = {0, 0, 0, 0, 0};
 +#endif /* defined(HARDCODE_CONDA_PATHS) */
 +
 +    int SetDllDirectoryValue = LOAD_LIBRARY_SEARCH_DEFAULT_DIRS;
@@ -357,7 +358,7 @@ index e5357cf9b4..bfa78b392c 100644
  /* Main program */
  
  int
-@@ -258,6 +579,9 @@ Py_Main(int argc, char **argv)
+@@ -258,6 +580,9 @@ Py_Main(int argc, char **argv)
      int saw_unbuffered_flag = 0;
      PyCompilerFlags cf;
  
