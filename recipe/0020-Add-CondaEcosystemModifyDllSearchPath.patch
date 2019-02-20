@@ -1,4 +1,4 @@
-From 3f653167b5d04425c714617b2300a3d999d26825 Mon Sep 17 00:00:00 2001
+From 9e6050ade7aa87c1c05d4dd478eefe78f8e596af Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 20/20] Add CondaEcosystemModifyDllSearchPath()
@@ -10,12 +10,12 @@ Reviewed by Kai Tietz 7.2.2019
 
 Updated a bit to include other directories.
 ---
- Modules/main.c       | 339 +++++++++++++++++++++++++++++++++++++++++++
+ Modules/main.c       | 376 +++++++++++++++++++++++++++++++++++++++++++
  Python/dynload_win.c |   4 +
- 2 files changed, 343 insertions(+)
+ 2 files changed, 380 insertions(+)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index 514f809939..72f339f117 100644
+index 514f809939..bd5bdbf34a 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -29,7 +29,7 @@ index 514f809939..72f339f117 100644
  #endif
  
  #ifdef _MSC_VER
-@@ -3026,9 +3030,344 @@ pymain_init(_PyMain *pymain)
+@@ -3026,9 +3030,381 @@ pymain_init(_PyMain *pymain)
  }
  
  
@@ -93,7 +93,8 @@ index 514f809939..72f339f117 100644
 +static SDDD pSetDefaultDllDirectories = NULL;
 +static SDD pSetDllDirectory = NULL;
 +static ADD pAddDllDirectory = NULL;
-+static int failed_to_find_dll_fns = 0;
++static int sv_failed_to_find_dll_fns = 0;
++static int sv_conda_not_activated = 0;
 +/* sv_executable_dirname is gotten but not used ATM. */
 +static wchar_t sv_executable_dirname[1024];
 +/* Have hidden this behind a define because it is clearly not code that
@@ -122,32 +123,20 @@ index 514f809939..72f339f117 100644
 +static wchar_t sv_windows_directory[1024];
 +static wchar_t *sv_added_windows_directory = NULL;
 +static wchar_t *sv_added_cwd = NULL;
-+int CondaEcosystemModifyDllSearchPath(int add_windows_directory, int add_cwd)
++
++int CondaEcosystemModifyDllSearchPath_Init(int argc, wchar_t *argv[])
 +{
 +    int debug_it = _wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_DEBUG") ? 1 : 0;
-+    const wchar_t *path_env = _wgetenv(L"PATH");
-+    wchar_t current_working_directory[1024];
-+    const wchar_t *p_cwd = NULL;
-+    ssize_t entry_num = 0;
-+    ssize_t i;
-+    wchar_t **path_entries;
-+    wchar_t *path_end;
-+    ssize_t num_entries = 1;
++    int res = 0;
 +#if defined(HARDCODE_CONDA_PATHS)
-+    ssize_t j;
 +    CONDA_PATH *p_conda_path;
-+    int foundCondaPath[NUM_CONDA_PATHS] = {0, 0, 0, 0, 0};
 +#endif /* defined(HARDCODE_CONDA_PATHS) */
 +
-+    int SetDllDirectoryValue = LOAD_LIBRARY_SEARCH_DEFAULT_DIRS;
-+    if (failed_to_find_dll_fns)
-+        return 1;
-+
-+    if (pSetDefaultDllDirectories == NULL)  /* Really we mean 'have we not inited yet?' */
++    if (pSetDefaultDllDirectories == NULL)
 +    {
 +        wchar_t *conda_prefix = _wgetenv(L"CONDA_PREFIX");
 +        wchar_t *build_prefix = _wgetenv(L"BUILD_PREFIX");
-+        wchar_t *build_prefix = _wgetenv(L"PREFIX");
++        wchar_t *prefix = _wgetenv(L"PREFIX");
 +        pSetDefaultDllDirectories = (SDDD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "SetDefaultDllDirectories");
 +        pSetDllDirectory = (SDD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "SetDllDirectoryW");
 +        pAddDllDirectory = (ADD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "AddDllDirectory");
@@ -179,19 +168,76 @@ index 514f809939..72f339f117 100644
 +            sv_windows_directory[sizeof(sv_windows_directory) / sizeof(sv_windows_directory[0]) - 1] = L'\0';
 +        }
 +
-+        /* This has been put here for expediency purposes */
-+        if (conda_prefix == NULL || wcstr(sv_executable_dirname, conda_prefix) != sv_executable_dirname)
++        if (conda_prefix == NULL || wcsstr(sv_executable_dirname, conda_prefix) != sv_executable_dirname)
 +        {
-+            if (build_prefix == NULL || wcstr(sv_executable_dirname, build_prefix) != sv_executable_dirname)
++            if (build_prefix == NULL || wcsstr(sv_executable_dirname, build_prefix) != sv_executable_dirname)
 +            {
-+                if (prefix == NULL || wcstr(sv_executable_dirname, prefix) != sv_executable_dirname)
++                if (prefix == NULL || wcsstr(sv_executable_dirname, prefix) != sv_executable_dirname)
 +                {
-+                    wfprintf(stderr, L"WARNING :: No conda environment has been activated.  Please use the `Anaconda Prompt`,\n"
-+                                     L"        :: `Anaconda Navigator` or one of the activate scripts in <INSTALL_ROOT>\Scripts\n");
++                    int found_conda = 0;
++                    int argi;
++                    /* If any of the args contain 'conda' .. I am very sorry and there's probably a better way. */
++                    for (argi = 1; argi < argc; ++argi)
++                    {
++                        if (wcscmp(argv[argi], L"conda") == NULL)
++                        {
++                            found_conda = 1;
++                            break;
++                        }
++                    }
++                    if (found_conda == 0)
++                    {
++                        sv_conda_not_activated = 1;
++                        res = 1;
++                    }
 +                }
 +            }
 +        }
 +    }
++
++    if (pSetDefaultDllDirectories == NULL || pSetDllDirectory == NULL || pAddDllDirectory == NULL)
++    {
++        if (debug_it)
++            fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: WARNING :: Please install KB2533623 from http://go.microsoft.com/fwlink/p/?linkid=217865\n"\
++                             L"CondaEcosystemModifyDllSearchPath() :: WARNING :: to improve conda ecosystem DLL isolation");
++        sv_failed_to_find_dll_fns = 1;
++        res = 2;
++    }
++    return res;
++}
++
++void CondaEcosystemDisplayWarnings()
++{
++    if (sv_conda_not_activated == 1)
++    {
++        fwprintf(stderr, L"Warning:\n"
++                         L"The conda environment for this python interpreter has not been activated."
++                         L"Libraries may fail to load.  To activate this environment please use:"
++                         L"`conda activation`:"
++                         L"https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#activating-an-environment"
++                         L"\n");
++    }
++}
++
++int CondaEcosystemModifyDllSearchPath(int add_windows_directory, int add_cwd) {
++    int debug_it = _wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_DEBUG") ? 1 : 0;
++    const wchar_t *path_env = _wgetenv(L"PATH");
++    wchar_t current_working_directory[1024];
++    const wchar_t *p_cwd = NULL;
++    ssize_t entry_num = 0;
++    ssize_t i;
++    wchar_t **path_entries;
++    wchar_t *path_end;
++    ssize_t num_entries = 1;
++#if defined(HARDCODE_CONDA_PATHS)
++    ssize_t j;
++    CONDA_PATH *p_conda_path;
++    int foundCondaPath[NUM_CONDA_PATHS] = {0, 0, 0, 0, 0};
++#endif /* defined(HARDCODE_CONDA_PATHS) */
++
++    int SetDllDirectoryValue = LOAD_LIBRARY_SEARCH_DEFAULT_DIRS;
++    if (sv_failed_to_find_dll_fns)
++        return 1;
 +
 +    if (_wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_ENABLE") == NULL)
 +        return 0;
@@ -199,15 +245,6 @@ index 514f809939..72f339f117 100644
 +        add_windows_directory = 0;
 +    if (_wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_NEVER_ADD_CWD"))
 +        add_cwd = 0;
-+
-+    if (pSetDefaultDllDirectories == NULL || pSetDllDirectory == NULL || pAddDllDirectory == NULL)
-+    {
-+        if (debug_it)
-+            fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: WARNING :: Please install KB2533623 from http://go.microsoft.com/fwlink/p/?linkid=217865\n"\
-+                             L"CondaEcosystemModifyDllSearchPath() :: WARNING :: to improve conda ecosystem DLL isolation");
-+        failed_to_find_dll_fns = 1;
-+        return 1;
-+    }
 +
 +    if (add_cwd)
 +    {
@@ -368,7 +405,7 @@ index 514f809939..72f339f117 100644
  {
 +#ifdef MS_WINDOWS
 +    /* LoadAndUnloadTestDLL(L"libiomp5md.dll"); */
-+    CondaEcosystemModifyDllSearchPath(1, 1);
++    CondaEcosystemModifyDllSearchPath_Init(pymain->argc, pymain->argv);
 +    /* LoadAndUnloadTestDLL(L"libiomp5md.dll"); */
 +#endif
      int res = pymain_init(pymain);
