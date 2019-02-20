@@ -1,4 +1,4 @@
-From 1a5d17ef341792ed09a4e3280cd42a48f8bd11b4 Mon Sep 17 00:00:00 2001
+From 29ed3c57d45a5c5acad8636c97719a9694b3b30b Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 20/20] Add CondaEcosystemModifyDllSearchPath()
@@ -15,7 +15,7 @@ Updated a bit to include other directories.
  2 files changed, 325 insertions(+)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index 514f809939..c060f7eead 100644
+index 514f809939..99eb576c59 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -111,11 +111,11 @@ index 514f809939..c060f7eead 100644
 +
 +static CONDA_PATH condaPaths[NUM_CONDA_PATHS] =
 +{
-+    {0, L"Library\\mingw-w64\\bin", NULL},
-+    {0, L"Library\\usr\\bin", NULL},
-+    {0, L"Library\\bin", NULL},
-+    {0, L"Scripts", NULL},
-+    {0, L"bin", NULL}
++    {L"Library\\mingw-w64\\bin", NULL},
++    {L"Library\\usr\\bin", NULL},
++    {L"Library\\bin", NULL},
++    {L"Scripts", NULL},
++    {L"bin", NULL}
 +};
 +#endif /* HARDCODE_CONDA_PATHS */
 +static wchar_t sv_executable_dirname[1024];
