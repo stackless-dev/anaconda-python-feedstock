@@ -1,4 +1,4 @@
-From 43de719022aff5d7dfd2a448455e7d1cad8bd103 Mon Sep 17 00:00:00 2001
+From f9e7537637997d269fe7e3440664de71e5ba3d32 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 17/17] Add CondaEcosystemModifyDllSearchPath()
@@ -14,12 +14,12 @@ I observed that you must call LoadLibraryExW() with the fullpath of
 the DLL for this stuff to not fail. It is probably worthwhile checking
 in procmon what directories get looked in in the non-fullpath case.
 ---
- Modules/main.c       | 325 +++++++++++++++++++++++++++++++++++++++++++
- Python/dynload_win.c |  23 ++-
- 2 files changed, 345 insertions(+), 3 deletions(-)
+ Modules/main.c       | 319 +++++++++++++++++++++++++++++++++++++++++++
+ Python/dynload_win.c |  23 +++-
+ 2 files changed, 339 insertions(+), 3 deletions(-)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index e5357cf9b4..5ce6a6ee72 100644
+index e5357cf9b4..f7f18c4967 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -33,7 +33,7 @@ index e5357cf9b4..5ce6a6ee72 100644
  #endif
  
  #if (defined(PYOS_OS2) && !defined(PYCC_GCC)) || defined(MS_WINDOWS)
-@@ -238,6 +242,324 @@ static int RunMainFromImporter(char *filename)
+@@ -238,6 +242,318 @@ static int RunMainFromImporter(char *filename)
  }
  
  
@@ -53,10 +53,10 @@ index e5357cf9b4..5ce6a6ee72 100644
 +        FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 +            NULL, err_code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 +            err_msg, (sizeof(err_msg) / sizeof(wchar_t)), NULL);
-+        wprintf(L"LoadAndUnloadTestDLL() :: ERROR :: Failed to load %ls, error is: %ls\n", &test_dll[0], &err_msg[0]);
++        fwprintf(stderr, L"LoadAndUnloadTestDLL() :: ERROR :: Failed to load %ls, error is: %ls\n", &test_dll[0], &err_msg[0]);
 +    }
 +    GetModuleFileNameW(hDLL, &test_path[0], MAX_PATH);
-+    wprintf(L"LoadAndUnloadTestDLL() :: %ls loaded from %ls\n", &test_dll[0], &test_path[0]);
++    fwprintf(stderr, L"LoadAndUnloadTestDLL() :: %ls loaded from %ls\n", &test_dll[0], &test_path[0]);
 +    if (FreeLibrary(hDLL) == 0)
 +    {
 +        wchar_t err_msg[256];
@@ -64,7 +64,7 @@ index e5357cf9b4..5ce6a6ee72 100644
 +        FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 +            NULL, err_code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 +            err_msg, (sizeof(err_msg) / sizeof(wchar_t)), NULL);
-+        wprintf(L"LoadAndUnloadTestDLL() :: ERROR :: Failed to free %ls, error is: %ls\n", &test_dll[0], &err_msg[0]);
++        fwprintf(stderr, L"LoadAndUnloadTestDLL() :: ERROR :: Failed to free %ls, error is: %ls\n", &test_dll[0], &err_msg[0]);
 +    }
 +}
 +*/
@@ -107,7 +107,6 @@ index e5357cf9b4..5ce6a6ee72 100644
 +#if defined(HARDCODE_CONDA_PATHS)
 +typedef struct
 +{
-+    int exists;
 +    wchar_t *p_relative;
 +    wchar_t *p_name;
 +} CONDA_PATH;
@@ -141,7 +140,6 @@ index e5357cf9b4..5ce6a6ee72 100644
 +#if defined(HARDCODE_CONDA_PATHS)
 +    ssize_t j;
 +    CONDA_PATH *p_conda_path;
-+    struct _stat64i32 sb;
 +    int foundCondaPath[NUM_CONDA_PATHS] = {0, 0, 0, 0, 0};
 +#endif /* defined(HARDCODE_CONDA_PATHS) */
 +
@@ -174,10 +172,6 @@ index e5357cf9b4..5ce6a6ee72 100644
 +            wcsncpy(p_conda_path->p_name, sv_executable_dirname, n_chars_executable_dirname+1);
 +            wcsncat(p_conda_path->p_name, L"\\", 2);
 +            wcsncat(p_conda_path->p_name, p_conda_path->p_relative, n_chars_p_relative+1);
-+            if (_wstat(p_conda_path->p_name, &sb) == 0 && S_ISDIR(sb.st_mode))
-+                p_conda_path->exists = 1;
-+            else
-+                p_conda_path->exists = 0;
 +        }
 +#endif /* defined(HARDCODE_CONDA_PATHS) */
 +
@@ -195,8 +189,8 @@ index e5357cf9b4..5ce6a6ee72 100644
 +    if (pSetDefaultDllDirectories == NULL || pSetDllDirectory == NULL || pAddDllDirectory == NULL)
 +    {
 +        if (debug_it)
-+            wprintf(L"CondaEcosystemModifyDllSearchPath() :: WARNING :: Please install KB2533623 from http://go.microsoft.com/fwlink/p/?linkid=217865\n"\
-+                    L"CondaEcosystemModifyDllSearchPath() :: WARNING :: to improve conda ecosystem DLL isolation");
++            fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: WARNING :: Please install KB2533623 from http://go.microsoft.com/fwlink/p/?linkid=217865\n"\
++                             L"CondaEcosystemModifyDllSearchPath() :: WARNING :: to improve conda ecosystem DLL isolation");
 +        failed_to_find_dll_fns = 1;
 +        return 1;
 +    }
@@ -219,7 +213,7 @@ index e5357cf9b4..5ce6a6ee72 100644
 +            {
 +                if (_wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_NEVER_CACHE") == NULL)
 +                {
-+                    if (debug_it) wprintf(L"CondaEcosystemModifyDllSearchPath() :: INFO :: Values unchanged\n");
++                    if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: INFO :: Values unchanged\n");
 +                    return 0;
 +                }
 +            }
@@ -239,7 +233,7 @@ index e5357cf9b4..5ce6a6ee72 100644
 +    {
 +        size_t len = wcslen(path_env);
 +        wchar_t *path = (wchar_t *)alloca((len + 1) * sizeof(wchar_t));
-+        if (debug_it) wprintf(L"CondaEcosystemModifyDllSearchPath() :: PATH=%ls\n\b", path_env);
++        if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: PATH=%ls\n\b", path_env);
 +        memcpy(path, path_env, (len + 1) * sizeof(wchar_t));
 +        /* Convert any / to \ */
 +        /* Replace slash with backslash */
@@ -301,14 +295,14 @@ index e5357cf9b4..5ce6a6ee72 100644
 +#if defined(HARDCODE_CONDA_PATHS)
 +            for (j = 0, p_conda_path = &condaPaths[0]; p_conda_path < &condaPaths[NUM_CONDA_PATHS]; ++j, ++p_conda_path)
 +            {
-+                if (!foundCondaPath[j] && p_conda_path->exists && !wcscmp(path_entries[i], p_conda_path->p_name))
++                if (!foundCondaPath[j] && !wcscmp(path_entries[i], p_conda_path->p_name))
 +                {
 +                    foundCondaPath[j] = 1;
 +                    break;
 +                }
 +            }
 +#endif /* defined(HARDCODE_CONDA_PATHS) */
-+            if (debug_it) wprintf(L"CondaEcosystemModifyDllSearchPath() :: AddDllDirectory(%ls)\n", path_entries[i]);
++            if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: AddDllDirectory(%ls)\n", path_entries[i]);
 +            pAddDllDirectory(path_entries[i]);
 +        }
 +    }
@@ -318,10 +312,10 @@ index e5357cf9b4..5ce6a6ee72 100644
 +    {
 +        for (j = NUM_CONDA_PATHS-1, p_conda_path = &condaPaths[NUM_CONDA_PATHS-1]; j > -1; --j, --p_conda_path)
 +        {
-+            if (debug_it) wprintf(L"CondaEcosystemModifyDllSearchPath() :: p_conda_path->p_name = %ls, p_conda_path->exists = %d, foundCondaPath[%d] = %d\n", p_conda_path->p_name, p_conda_path->exists, j, foundCondaPath[j]);
-+            if (!foundCondaPath[j] && p_conda_path->exists)
++            if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: p_conda_path->p_name = %ls, foundCondaPath[%d] = %d\n", p_conda_path->p_name, j, foundCondaPath[j]);
++            if (!foundCondaPath[j])
 +            {
-+                if (debug_it) wprintf(L"CondaEcosystemModifyDllSearchPath() :: AddDllDirectory(%ls - ExePrefix)\n", p_conda_path->p_name);
++                if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: AddDllDirectory(%ls - ExePrefix)\n", p_conda_path->p_name);
 +                pAddDllDirectory(p_conda_path->p_name);
 +            }
 +        }
@@ -335,14 +329,14 @@ index e5357cf9b4..5ce6a6ee72 100644
 +            free(sv_added_cwd);
 +        }
 +        sv_added_cwd = _wcsdup(p_cwd);
-+        if (debug_it) wprintf(L"CondaEcosystemModifyDllSearchPath() :: AddDllDirectory(%ls - CWD)\n", sv_added_cwd);
++        if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: AddDllDirectory(%ls - CWD)\n", sv_added_cwd);
 +        pAddDllDirectory(sv_added_cwd);
 +    }
 +
 +    if (add_windows_directory)
 +    {
 +        sv_added_windows_directory = &sv_windows_directory[0];
-+        if (debug_it) wprintf(L"CondaEcosystemModifyDllSearchPath() :: AddDllDirectory(%ls - WinDir)\n", sv_windows_directory);
++        if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: AddDllDirectory(%ls - WinDir)\n", sv_windows_directory);
 +        pAddDllDirectory(sv_windows_directory);
 +    }
 +    else
@@ -358,7 +352,7 @@ index e5357cf9b4..5ce6a6ee72 100644
  /* Main program */
  
  int
-@@ -258,6 +580,9 @@ Py_Main(int argc, char **argv)
+@@ -258,6 +574,9 @@ Py_Main(int argc, char **argv)
      int saw_unbuffered_flag = 0;
      PyCompilerFlags cf;
  

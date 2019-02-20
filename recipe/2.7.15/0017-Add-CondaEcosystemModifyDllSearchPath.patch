@@ -1,4 +1,4 @@
-From 43de719022aff5d7dfd2a448455e7d1cad8bd103 Mon Sep 17 00:00:00 2001
+From f9e7537637997d269fe7e3440664de71e5ba3d32 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 17/17] Add CondaEcosystemModifyDllSearchPath()
@@ -14,12 +14,12 @@ I observed that you must call LoadLibraryExW() with the fullpath of
 the DLL for this stuff to not fail. It is probably worthwhile checking
 in procmon what directories get looked in in the non-fullpath case.
 ---
- Modules/main.c       | 325 +++++++++++++++++++++++++++++++++++++++++++
- Python/dynload_win.c |  23 ++-
- 2 files changed, 345 insertions(+), 3 deletions(-)
+ Modules/main.c       | 319 +++++++++++++++++++++++++++++++++++++++++++
+ Python/dynload_win.c |  23 +++-
+ 2 files changed, 339 insertions(+), 3 deletions(-)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index e5357cf9b4..5ce6a6ee72 100644
+index e5357cf9b4..f7f18c4967 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -33,7 +33,7 @@ index e5357cf9b4..5ce6a6ee72 100644
  #endif
  
  #if (defined(PYOS_OS2) && !defined(PYCC_GCC)) || defined(MS_WINDOWS)
-@@ -238,6 +242,324 @@ static int RunMainFromImporter(char *filename)
+@@ -238,6 +242,318 @@ static int RunMainFromImporter(char *filename)
  }
  
  
@@ -107,7 +107,6 @@ index e5357cf9b4..5ce6a6ee72 100644
 +#if defined(HARDCODE_CONDA_PATHS)
 +typedef struct
 +{
-+    int exists;
 +    wchar_t *p_relative;
 +    wchar_t *p_name;
 +} CONDA_PATH;
@@ -141,7 +140,6 @@ index e5357cf9b4..5ce6a6ee72 100644
 +#if defined(HARDCODE_CONDA_PATHS)
 +    ssize_t j;
 +    CONDA_PATH *p_conda_path;
-+    struct _stat64i32 sb;
 +    int foundCondaPath[NUM_CONDA_PATHS] = {0, 0, 0, 0, 0};
 +#endif /* defined(HARDCODE_CONDA_PATHS) */
 +
@@ -174,10 +172,6 @@ index e5357cf9b4..5ce6a6ee72 100644
 +            wcsncpy(p_conda_path->p_name, sv_executable_dirname, n_chars_executable_dirname+1);
 +            wcsncat(p_conda_path->p_name, L"\\", 2);
 +            wcsncat(p_conda_path->p_name, p_conda_path->p_relative, n_chars_p_relative+1);
-+            if (_wstat(p_conda_path->p_name, &sb) == 0 && S_ISDIR(sb.st_mode))
-+                p_conda_path->exists = 1;
-+            else
-+                p_conda_path->exists = 0;
 +        }
 +#endif /* defined(HARDCODE_CONDA_PATHS) */
 +
@@ -301,7 +295,7 @@ index e5357cf9b4..5ce6a6ee72 100644
 +#if defined(HARDCODE_CONDA_PATHS)
 +            for (j = 0, p_conda_path = &condaPaths[0]; p_conda_path < &condaPaths[NUM_CONDA_PATHS]; ++j, ++p_conda_path)
 +            {
-+                if (!foundCondaPath[j] && p_conda_path->exists && !wcscmp(path_entries[i], p_conda_path->p_name))
++                if (!foundCondaPath[j] && !wcscmp(path_entries[i], p_conda_path->p_name))
 +                {
 +                    foundCondaPath[j] = 1;
 +                    break;
@@ -318,8 +312,8 @@ index e5357cf9b4..5ce6a6ee72 100644
 +    {
 +        for (j = NUM_CONDA_PATHS-1, p_conda_path = &condaPaths[NUM_CONDA_PATHS-1]; j > -1; --j, --p_conda_path)
 +        {
-+            if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: p_conda_path->p_name = %ls, p_conda_path->exists = %d, foundCondaPath[%d] = %d\n", p_conda_path->p_name, p_conda_path->exists, j, foundCondaPath[j]);
-+            if (!foundCondaPath[j] && p_conda_path->exists)
++            if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: p_conda_path->p_name = %ls, foundCondaPath[%d] = %d\n", p_conda_path->p_name, j, foundCondaPath[j]);
++            if (!foundCondaPath[j])
 +            {
 +                if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: AddDllDirectory(%ls - ExePrefix)\n", p_conda_path->p_name);
 +                pAddDllDirectory(p_conda_path->p_name);
@@ -358,7 +352,7 @@ index e5357cf9b4..5ce6a6ee72 100644
  /* Main program */
  
  int
-@@ -258,6 +580,9 @@ Py_Main(int argc, char **argv)
+@@ -258,6 +574,9 @@ Py_Main(int argc, char **argv)
      int saw_unbuffered_flag = 0;
      PyCompilerFlags cf;
  
