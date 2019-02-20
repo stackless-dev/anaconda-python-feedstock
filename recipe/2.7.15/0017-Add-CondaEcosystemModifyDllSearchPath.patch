@@ -1,4 +1,4 @@
-From d1b48515ce3634ad126c1677018fa8e186a6015a Mon Sep 17 00:00:00 2001
+From 32a13de952d2c95fde5760baae4dd21f28986c5e Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 17/17] Add CondaEcosystemModifyDllSearchPath()
@@ -14,12 +14,12 @@ I observed that you must call LoadLibraryExW() with the fullpath of
 the DLL for this stuff to not fail. It is probably worthwhile checking
 in procmon what directories get looked in in the non-fullpath case.
 ---
- Modules/main.c       | 371 +++++++++++++++++++++++++++++++++++++++++++
+ Modules/main.c       | 373 +++++++++++++++++++++++++++++++++++++++++++
  Python/dynload_win.c |  23 ++-
- 2 files changed, 391 insertions(+), 3 deletions(-)
+ 2 files changed, 393 insertions(+), 3 deletions(-)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index e5357cf9b4..d5a24615d0 100644
+index e5357cf9b4..c01aae4829 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -33,7 +33,7 @@ index e5357cf9b4..d5a24615d0 100644
  #endif
  
  #if (defined(PYOS_OS2) && !defined(PYCC_GCC)) || defined(MS_WINDOWS)
-@@ -238,6 +242,369 @@ static int RunMainFromImporter(char *filename)
+@@ -238,6 +242,371 @@ static int RunMainFromImporter(char *filename)
  }
  
  
@@ -130,6 +130,7 @@ index e5357cf9b4..d5a24615d0 100644
 +
 +int CondaEcosystemModifyDllSearchPath_Init(int argc, char *argv[])
 +{
++    int debug_it = _wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_DEBUG") ? 1 : 0;
 +    int res = 0;
 +#if defined(HARDCODE_CONDA_PATHS)
 +    CONDA_PATH *p_conda_path;
@@ -178,10 +179,11 @@ index e5357cf9b4..d5a24615d0 100644
 +                if (prefix == NULL || wcsstr(sv_executable_dirname, prefix) != sv_executable_dirname)
 +                {
 +                    int found_conda = 0;
++                    int argi;
 +                    /* If any of the args contain 'conda' .. I am very sorry and there's probably a better way. */
-+                    for (int argi = 1; argi < argc; ++argi)
++                    for (argi = 1; argi < argc; ++argi)
 +                    {
-+                        if (!strcmp(argv[argi], "conda"))
++                        if (strcmp(argv[argi], "conda") == NULL)
 +                        {
 +                            found_conda = 1;
 +                            break;
@@ -403,7 +405,7 @@ index e5357cf9b4..d5a24615d0 100644
  /* Main program */
  
  int
-@@ -258,6 +625,9 @@ Py_Main(int argc, char **argv)
+@@ -258,6 +627,9 @@ Py_Main(int argc, char **argv)
      int saw_unbuffered_flag = 0;
      PyCompilerFlags cf;
  
@@ -413,7 +415,7 @@ index e5357cf9b4..d5a24615d0 100644
      cf.cf_flags = 0;
  
      orig_argc = argc;           /* For Py_GetArgcArgv() */
-@@ -557,6 +927,7 @@ Py_Main(int argc, char **argv)
+@@ -557,6 +929,7 @@ Py_Main(int argc, char **argv)
              Py_GetVersion(), Py_GetPlatform());
          if (!Py_NoSiteFlag)
              fprintf(stderr, "%s\n", COPYRIGHT);
