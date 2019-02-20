@@ -1,4 +1,4 @@
-From ddcabc7b147e16d0de6e8810f38b5e1d41db7617 Mon Sep 17 00:00:00 2001
+From c2ae8f24a682b5f4e602895e33e6dd55abc24855 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 17/17] Add CondaEcosystemModifyDllSearchPath()
@@ -19,7 +19,7 @@ in procmon what directories get looked in in the non-fullpath case.
  2 files changed, 357 insertions(+), 3 deletions(-)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index e5357cf9b4..18ba5df12d 100644
+index e5357cf9b4..7dee0e23e7 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -151,7 +151,7 @@ index e5357cf9b4..18ba5df12d 100644
 +    {
 +        wchar_t *conda_prefix = _wgetenv(L"CONDA_PREFIX");
 +        wchar_t *build_prefix = _wgetenv(L"BUILD_PREFIX");
-+        wchar_t *build_prefix = _wgetenv(L"PREFIX");
++        wchar_t *prefix = _wgetenv(L"PREFIX");
 +        pSetDefaultDllDirectories = (SDDD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "SetDefaultDllDirectories");
 +        pSetDllDirectory = (SDD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "SetDllDirectoryW");
 +        pAddDllDirectory = (ADD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "AddDllDirectory");
