@@ -1,4 +1,4 @@
-From 32a13de952d2c95fde5760baae4dd21f28986c5e Mon Sep 17 00:00:00 2001
+From 1dad60c7a2a01ee9b51fdf8d48b1f220e8477c76 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 17/17] Add CondaEcosystemModifyDllSearchPath()
@@ -14,12 +14,12 @@ I observed that you must call LoadLibraryExW() with the fullpath of
 the DLL for this stuff to not fail. It is probably worthwhile checking
 in procmon what directories get looked in in the non-fullpath case.
 ---
- Modules/main.c       | 373 +++++++++++++++++++++++++++++++++++++++++++
+ Modules/main.c       | 375 +++++++++++++++++++++++++++++++++++++++++++
  Python/dynload_win.c |  23 ++-
- 2 files changed, 393 insertions(+), 3 deletions(-)
+ 2 files changed, 395 insertions(+), 3 deletions(-)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index e5357cf9b4..c01aae4829 100644
+index e5357cf9b4..18c7980142 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -33,7 +33,7 @@ index e5357cf9b4..c01aae4829 100644
  #endif
  
  #if (defined(PYOS_OS2) && !defined(PYCC_GCC)) || defined(MS_WINDOWS)
-@@ -238,6 +242,371 @@ static int RunMainFromImporter(char *filename)
+@@ -238,6 +242,373 @@ static int RunMainFromImporter(char *filename)
  }
  
  
@@ -214,9 +214,11 @@ index e5357cf9b4..c01aae4829 100644
 +{
 +    if (sv_conda_not_activated == 1)
 +    {
-+        fwprintf(stderr, L"\n"
-+                         L"WARNING :: No conda environment has been activated.  Please use the `Anaconda Prompt`,\n"
-+                         L"WARNING :: `Anaconda Navigator` or one of the activate scripts in <INSTALL_ROOT>\Scripts\n"
++        fwprintf(stderr, L"Warning:\n"
++                         L"The conda environment for this python interpreter has not been activated."
++                         L"Libraries may fail to load.  To activate this environment please use:"
++                         L"`conda activation`:"
++                         L"https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#activating-an-environment"
 +                         L"\n");
 +    }
 +}
@@ -405,7 +407,7 @@ index e5357cf9b4..c01aae4829 100644
  /* Main program */
  
  int
-@@ -258,6 +627,9 @@ Py_Main(int argc, char **argv)
+@@ -258,6 +629,9 @@ Py_Main(int argc, char **argv)
      int saw_unbuffered_flag = 0;
      PyCompilerFlags cf;
  
@@ -415,7 +417,7 @@ index e5357cf9b4..c01aae4829 100644
      cf.cf_flags = 0;
  
      orig_argc = argc;           /* For Py_GetArgcArgv() */
-@@ -557,6 +929,7 @@ Py_Main(int argc, char **argv)
+@@ -557,6 +931,7 @@ Py_Main(int argc, char **argv)
              Py_GetVersion(), Py_GetPlatform());
          if (!Py_NoSiteFlag)
              fprintf(stderr, "%s\n", COPYRIGHT);
