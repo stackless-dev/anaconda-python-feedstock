@@ -1,4 +1,4 @@
-From d4796438eaae5441daa34533274a699933c872b0 Mon Sep 17 00:00:00 2001
+From d1b48515ce3634ad126c1677018fa8e186a6015a Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 17/17] Add CondaEcosystemModifyDllSearchPath()
@@ -14,12 +14,12 @@ I observed that you must call LoadLibraryExW() with the fullpath of
 the DLL for this stuff to not fail. It is probably worthwhile checking
 in procmon what directories get looked in in the non-fullpath case.
 ---
- Modules/main.c       | 367 +++++++++++++++++++++++++++++++++++++++++++
+ Modules/main.c       | 371 +++++++++++++++++++++++++++++++++++++++++++
  Python/dynload_win.c |  23 ++-
- 2 files changed, 387 insertions(+), 3 deletions(-)
+ 2 files changed, 391 insertions(+), 3 deletions(-)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index e5357cf9b4..31004757c6 100644
+index e5357cf9b4..d5a24615d0 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -33,7 +33,7 @@ index e5357cf9b4..31004757c6 100644
  #endif
  
  #if (defined(PYOS_OS2) && !defined(PYCC_GCC)) || defined(MS_WINDOWS)
-@@ -238,6 +242,365 @@ static int RunMainFromImporter(char *filename)
+@@ -238,6 +242,369 @@ static int RunMainFromImporter(char *filename)
  }
  
  
@@ -131,6 +131,10 @@ index e5357cf9b4..31004757c6 100644
 +int CondaEcosystemModifyDllSearchPath_Init(int argc, char *argv[])
 +{
 +    int res = 0;
++#if defined(HARDCODE_CONDA_PATHS)
++    CONDA_PATH *p_conda_path;
++#endif /* defined(HARDCODE_CONDA_PATHS) */
++
 +    if (pSetDefaultDllDirectories == NULL)
 +    {
 +        wchar_t *conda_prefix = _wgetenv(L"CONDA_PREFIX");
@@ -399,7 +403,7 @@ index e5357cf9b4..31004757c6 100644
  /* Main program */
  
  int
-@@ -258,6 +621,9 @@ Py_Main(int argc, char **argv)
+@@ -258,6 +625,9 @@ Py_Main(int argc, char **argv)
      int saw_unbuffered_flag = 0;
      PyCompilerFlags cf;
  
@@ -409,7 +413,7 @@ index e5357cf9b4..31004757c6 100644
      cf.cf_flags = 0;
  
      orig_argc = argc;           /* For Py_GetArgcArgv() */
-@@ -557,6 +923,7 @@ Py_Main(int argc, char **argv)
+@@ -557,6 +927,7 @@ Py_Main(int argc, char **argv)
              Py_GetVersion(), Py_GetPlatform());
          if (!Py_NoSiteFlag)
              fprintf(stderr, "%s\n", COPYRIGHT);
