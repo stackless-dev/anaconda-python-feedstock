@@ -184,13 +184,13 @@ index e5357cf9b4..7dee0e23e7 100644
 +        }
 +
 +        /* This has been put here for expediency purposes */
-+        if (conda_prefix == NULL || wcstr(sv_executable_dirname, conda_prefix) != sv_executable_dirname)
++        if (conda_prefix == NULL || wcsstr(sv_executable_dirname, conda_prefix) != sv_executable_dirname)
 +        {
-+            if (build_prefix == NULL || wcstr(sv_executable_dirname, build_prefix) != sv_executable_dirname)
++            if (build_prefix == NULL || wcsstr(sv_executable_dirname, build_prefix) != sv_executable_dirname)
 +            {
-+                if (prefix == NULL || wcstr(sv_executable_dirname, prefix) != sv_executable_dirname)
++                if (prefix == NULL || wcsstr(sv_executable_dirname, prefix) != sv_executable_dirname)
 +                {
-+                    wfprintf(stderr, L"WARNING :: No conda environment has been activated.  Please use the `Anaconda Prompt`,\n"
++                    fwprintf(stderr, L"WARNING :: No conda environment has been activated.  Please use the `Anaconda Prompt`,\n"
 +                                     L"        :: `Anaconda Navigator` or one of the activate scripts in <INSTALL_ROOT>\Scripts\n");
 +                }
 +            }
