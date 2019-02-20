@@ -1,4 +1,4 @@
-From 0eeca7ecd7b18fb758eab9bbdb824ecacb92ae12 Mon Sep 17 00:00:00 2001
+From ddcabc7b147e16d0de6e8810f38b5e1d41db7617 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 17/17] Add CondaEcosystemModifyDllSearchPath()
@@ -14,12 +14,12 @@ I observed that you must call LoadLibraryExW() with the fullpath of
 the DLL for this stuff to not fail. It is probably worthwhile checking
 in procmon what directories get looked in in the non-fullpath case.
 ---
- Modules/main.c       | 319 +++++++++++++++++++++++++++++++++++++++++++
- Python/dynload_win.c |  23 +++-
- 2 files changed, 339 insertions(+), 3 deletions(-)
+ Modules/main.c       | 337 +++++++++++++++++++++++++++++++++++++++++++
+ Python/dynload_win.c |  23 ++-
+ 2 files changed, 357 insertions(+), 3 deletions(-)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index e5357cf9b4..b85b3031cb 100644
+index e5357cf9b4..18ba5df12d 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -33,7 +33,7 @@ index e5357cf9b4..b85b3031cb 100644
  #endif
  
  #if (defined(PYOS_OS2) && !defined(PYCC_GCC)) || defined(MS_WINDOWS)
-@@ -238,6 +242,318 @@ static int RunMainFromImporter(char *filename)
+@@ -238,6 +242,336 @@ static int RunMainFromImporter(char *filename)
  }
  
  
@@ -146,14 +146,12 @@ index e5357cf9b4..b85b3031cb 100644
 +    int SetDllDirectoryValue = LOAD_LIBRARY_SEARCH_DEFAULT_DIRS;
 +    if (failed_to_find_dll_fns)
 +        return 1;
-+    if (_wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_DISABLE"))
-+        return 0;
-+    if (_wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_NEVER_ADD_WINDOWS_DIRECTORY"))
-+        add_windows_directory = 0;
-+    if (_wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_NEVER_ADD_CWD"))
-+        add_cwd = 0;
++
 +    if (pSetDefaultDllDirectories == NULL)  /* Really we mean 'have we not inited yet?' */
 +    {
++        wchar_t *conda_prefix = _wgetenv(L"CONDA_PREFIX");
++        wchar_t *build_prefix = _wgetenv(L"BUILD_PREFIX");
++        wchar_t *build_prefix = _wgetenv(L"PREFIX");
 +        pSetDefaultDllDirectories = (SDDD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "SetDefaultDllDirectories");
 +        pSetDllDirectory = (SDD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "SetDllDirectoryW");
 +        pAddDllDirectory = (ADD)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "AddDllDirectory");
@@ -184,7 +182,27 @@ index e5357cf9b4..b85b3031cb 100644
 +            mbstowcs_s(&convertedChars, sv_windows_directory, strlen(tmp_ascii)+1, tmp_ascii, _TRUNCATE);
 +            sv_windows_directory[sizeof(sv_windows_directory) / sizeof(sv_windows_directory[0]) - 1] = L'\0';
 +        }
++
++        /* This has been put here for expediency purposes */
++        if (conda_prefix == NULL || wcstr(sv_executable_dirname, conda_prefix) != sv_executable_dirname)
++        {
++            if (build_prefix == NULL || wcstr(sv_executable_dirname, build_prefix) != sv_executable_dirname)
++            {
++                if (prefix == NULL || wcstr(sv_executable_dirname, prefix) != sv_executable_dirname)
++                {
++                    wfprintf(stderr, L"WARNING :: No conda environment has been activated.  Please use the `Anaconda Prompt`,\n"
++                                     L"        :: `Anaconda Navigator` or one of the activate scripts in <INSTALL_ROOT>\Scripts\n");
++                }
++            }
++        }
 +    }
++
++    if (_wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_ENABLE") == NULL)
++        return 0;
++    if (_wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_NEVER_ADD_WINDOWS_DIRECTORY"))
++        add_windows_directory = 0;
++    if (_wgetenv(L"CONDA_DLL_SEARCH_MODIFICATION_NEVER_ADD_CWD"))
++        add_cwd = 0;
 +
 +    if (pSetDefaultDllDirectories == NULL || pSetDllDirectory == NULL || pAddDllDirectory == NULL)
 +    {
@@ -352,7 +370,7 @@ index e5357cf9b4..b85b3031cb 100644
  /* Main program */
  
  int
-@@ -258,6 +574,9 @@ Py_Main(int argc, char **argv)
+@@ -258,6 +592,9 @@ Py_Main(int argc, char **argv)
      int saw_unbuffered_flag = 0;
      PyCompilerFlags cf;
  
