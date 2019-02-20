@@ -1,4 +1,4 @@
-From 97f408c7abbe611d7e91cc9cc7fba1f4cfb07e72 Mon Sep 17 00:00:00 2001
+From e64180bf56dd3ce9d9f381e45957b3be600ad40d Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 20/20] Add CondaEcosystemModifyDllSearchPath()
@@ -10,12 +10,12 @@ Reviewed by Kai Tietz 7.2.2019
 
 Updated a bit to include other directories.
 ---
- Modules/main.c       | 326 +++++++++++++++++++++++++++++++++++++++++++
+ Modules/main.c       | 327 +++++++++++++++++++++++++++++++++++++++++++
  Python/dynload_win.c |   4 +
- 2 files changed, 330 insertions(+)
+ 2 files changed, 331 insertions(+)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index 514f809939..3582353a58 100644
+index 514f809939..0617e3e786 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -29,7 +29,7 @@ index 514f809939..3582353a58 100644
  #endif
  
  #ifdef _MSC_VER
-@@ -3026,9 +3030,331 @@ pymain_init(_PyMain *pymain)
+@@ -3026,9 +3030,332 @@ pymain_init(_PyMain *pymain)
  }
  
  
@@ -108,12 +108,13 @@ index 514f809939..3582353a58 100644
 +    wchar_t *p_name;
 +} CONDA_PATH;
 +
-+#define NUM_CONDA_PATHS 4
++#define NUM_CONDA_PATHS 5
 +
 +static CONDA_PATH condaPaths[NUM_CONDA_PATHS] =
 +{
 +    {0, L"Library\\mingw-w64\\bin", NULL},
 +    {0, L"Library\\usr\\bin", NULL},
++    {0, L"Library\\bin", NULL},
 +    {0, L"Scripts", NULL},
 +    {0, L"bin", NULL}
 +};
@@ -137,7 +138,7 @@ index 514f809939..3582353a58 100644
 +    ssize_t j;
 +    CONDA_PATH *p_conda_path;
 +    struct _stat64i32 sb;
-+    int foundCondaPath[NUM_CONDA_PATHS] = {0, 0, 0, 0};
++    int foundCondaPath[NUM_CONDA_PATHS] = {0, 0, 0, 0, 0};
 +#endif /* defined(HARDCODE_CONDA_PATHS) */
 +
 +    int SetDllDirectoryValue = LOAD_LIBRARY_SEARCH_DEFAULT_DIRS;
