@@ -1,4 +1,4 @@
-From e64180bf56dd3ce9d9f381e45957b3be600ad40d Mon Sep 17 00:00:00 2001
+From 2759a4473fc30d93fcc1b675eb1c0e38b1bf086f Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 20/20] Add CondaEcosystemModifyDllSearchPath()
@@ -10,12 +10,12 @@ Reviewed by Kai Tietz 7.2.2019
 
 Updated a bit to include other directories.
 ---
- Modules/main.c       | 327 +++++++++++++++++++++++++++++++++++++++++++
+ Modules/main.c       | 322 +++++++++++++++++++++++++++++++++++++++++++
  Python/dynload_win.c |   4 +
- 2 files changed, 331 insertions(+)
+ 2 files changed, 326 insertions(+)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index 514f809939..0617e3e786 100644
+index 514f809939..dbfef11c4b 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -29,7 +29,7 @@ index 514f809939..0617e3e786 100644
  #endif
  
  #ifdef _MSC_VER
-@@ -3026,9 +3030,332 @@ pymain_init(_PyMain *pymain)
+@@ -3026,9 +3030,327 @@ pymain_init(_PyMain *pymain)
  }
  
  
@@ -103,7 +103,6 @@ index 514f809939..0617e3e786 100644
 +#if defined(HARDCODE_CONDA_PATHS)
 +typedef struct
 +{
-+    int exists;
 +    wchar_t *p_relative;
 +    wchar_t *p_name;
 +} CONDA_PATH;
@@ -170,10 +169,6 @@ index 514f809939..0617e3e786 100644
 +            wcsncpy(p_conda_path->p_name, sv_executable_dirname, n_chars_executable_dirname+1);
 +            wcsncat(p_conda_path->p_name, L"\\", 2);
 +            wcsncat(p_conda_path->p_name, p_conda_path->p_relative, n_chars_p_relative+1);
-+            if (_wstat(p_conda_path->p_name, &sb) == 0 && S_ISDIR(sb.st_mode))
-+                p_conda_path->exists = 1;
-+            else
-+                p_conda_path->exists = 0;
 +        }
 +#endif /* defined(HARDCODE_CONDA_PATHS) */
 +
@@ -297,7 +292,7 @@ index 514f809939..0617e3e786 100644
 +#if defined(HARDCODE_CONDA_PATHS)
 +            for (j = 0, p_conda_path = &condaPaths[0]; p_conda_path < &condaPaths[NUM_CONDA_PATHS]; ++j, ++p_conda_path)
 +            {
-+                if (!foundCondaPath[j] && p_conda_path->exists && !wcscmp(path_entries[i], p_conda_path->p_name))
++                if (!foundCondaPath[j] && !wcscmp(path_entries[i], p_conda_path->p_name))
 +                {
 +                    foundCondaPath[j] = 1;
 +                    break;
@@ -314,8 +309,8 @@ index 514f809939..0617e3e786 100644
 +    {
 +        for (j = NUM_CONDA_PATHS-1, p_conda_path = &condaPaths[NUM_CONDA_PATHS-1]; j > -1; --j, --p_conda_path)
 +        {
-+            if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: p_conda_path->p_name = %ls, p_conda_path->exists = %d, foundCondaPath[%d] = %d\n", p_conda_path->p_name, p_conda_path->exists, j, foundCondaPath[j]);
-+            if (!foundCondaPath[j] && p_conda_path->exists)
++            if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: p_conda_path->p_name = %ls, foundCondaPath[%d] = %d\n", p_conda_path->p_name, j, foundCondaPath[j]);
++            if (!foundCondaPath[j])
 +            {
 +                if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: AddDllDirectory(%ls - ExePrefix)\n", p_conda_path->p_name);
 +                pAddDllDirectory(p_conda_path->p_name);
