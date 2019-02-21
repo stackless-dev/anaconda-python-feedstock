@@ -1,4 +1,4 @@
-From fdc14964dd38414816a4481cfe492feebefb7e1e Mon Sep 17 00:00:00 2001
+From 8d12c2d18db9fe913f4834fcfbe3fa3b6812ae42 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 20/20] Add CondaEcosystemModifyDllSearchPath()
@@ -15,7 +15,7 @@ Updated a bit to include other directories.
  2 files changed, 382 insertions(+)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index 514f809939..78dc94c7dc 100644
+index 514f809939..3cdeb673e6 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -29,14 +29,14 @@ index 514f809939..78dc94c7dc 100644
  #endif
  
  #ifdef _MSC_VER
-@@ -1240,6 +1244,8 @@ pymain_header(_PyMain *pymain)
+@@ -1239,6 +1243,8 @@ pymain_header(_PyMain *pymain)
+     fprintf(stderr, "Python %s :: %s on %s\n", Py_GetVersion(), Anaconda_GetVersion(), Py_GetPlatform());
      if (!Py_NoSiteFlag) {
          fprintf(stderr, "%s\n", COPYRIGHT);
++        void CondaEcosystemDisplayWarnings();
++        CondaEcosystemDisplayWarnings();
      }
-+    void CondaEcosystemDisplayWarnings();
-+    CondaEcosystemDisplayWarnings();
  }
- 
  
 @@ -3026,9 +3032,381 @@ pymain_init(_PyMain *pymain)
  }
