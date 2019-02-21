@@ -1,4 +1,4 @@
-From 8fedc898b3c4f581098f4fb67e67cbf816f02ef8 Mon Sep 17 00:00:00 2001
+From 4d12aa90fa287f159bba9b1679658a2e4e677f0a Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 17/17] Add CondaEcosystemModifyDllSearchPath()
@@ -19,7 +19,7 @@ in procmon what directories get looked in in the non-fullpath case.
  2 files changed, 400 insertions(+), 6 deletions(-)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index e5357cf9b4..5253ef2a9a 100644
+index e5357cf9b4..6e61a7c02f 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -172,11 +172,11 @@ index e5357cf9b4..5253ef2a9a 100644
 +            sv_windows_directory[sizeof(sv_windows_directory) / sizeof(sv_windows_directory[0]) - 1] = L'\0';
 +        }
 +
-+        if (conda_prefix == NULL || wcsstr(sv_executable_dirname, conda_prefix) != sv_executable_dirname)
++        if (conda_prefix == NULL || wcscmp(sv_executable_dirname, conda_prefix))
 +        {
-+            if (build_prefix == NULL || wcsstr(sv_executable_dirname, build_prefix) != sv_executable_dirname)
++            if (build_prefix == NULL || wcscmp(sv_executable_dirname, build_prefix))
 +            {
-+                if (prefix == NULL || wcsstr(sv_executable_dirname, prefix) != sv_executable_dirname)
++                if (prefix == NULL || wcscmp(sv_executable_dirname, prefix))
 +                {
 +                    int found_conda = 0;
 +                    int argi;
