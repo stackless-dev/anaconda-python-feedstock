@@ -233,7 +233,7 @@ index 514f809939..a1cf76fed1 100644
 +                          "The conda environment for this python interpreter has not been activated.\n"
 +                          "Libraries may fail to load.  To activate this environment please use:\n"
 +                          "`conda activation`:\n"
-+                          "https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#activating-an-environment\n"
++                          "https://conda.io/activation\n"
 +                          "\n");
 +    }
 +    return &warnings[0];
