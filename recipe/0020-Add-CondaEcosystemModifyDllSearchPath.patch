@@ -1,4 +1,4 @@
-From 8d12c2d18db9fe913f4834fcfbe3fa3b6812ae42 Mon Sep 17 00:00:00 2001
+From 344e3a056ca43979a7147de71c453e82876a1998 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 20/20] Add CondaEcosystemModifyDllSearchPath()
@@ -10,12 +10,12 @@ Reviewed by Kai Tietz 7.2.2019
 
 Updated a bit to include other directories.
 ---
- Modules/main.c       | 378 +++++++++++++++++++++++++++++++++++++++++++
+ Modules/main.c       | 380 +++++++++++++++++++++++++++++++++++++++++++
  Python/dynload_win.c |   4 +
- 2 files changed, 382 insertions(+)
+ 2 files changed, 384 insertions(+)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index 514f809939..3cdeb673e6 100644
+index 514f809939..d069633009 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -29,16 +29,18 @@ index 514f809939..3cdeb673e6 100644
  #endif
  
  #ifdef _MSC_VER
-@@ -1239,6 +1243,8 @@ pymain_header(_PyMain *pymain)
+@@ -1239,6 +1243,10 @@ pymain_header(_PyMain *pymain)
      fprintf(stderr, "Python %s :: %s on %s\n", Py_GetVersion(), Anaconda_GetVersion(), Py_GetPlatform());
      if (!Py_NoSiteFlag) {
          fprintf(stderr, "%s\n", COPYRIGHT);
++/* -- If we do this, then the regression testsuite hangs in different places. The only thing that happens is
++      a call to fwprintf(stderr), weird. */
 +        void CondaEcosystemDisplayWarnings();
 +        CondaEcosystemDisplayWarnings();
      }
  }
  
-@@ -3026,9 +3032,381 @@ pymain_init(_PyMain *pymain)
+@@ -3026,9 +3034,381 @@ pymain_init(_PyMain *pymain)
  }
  
  
@@ -219,12 +221,12 @@ index 514f809939..3cdeb673e6 100644
 +{
 +    if (sv_conda_not_activated == 1)
 +    {
-+        fwprintf(stderr, L"Warning:\n"
-+                         L"The conda environment for this python interpreter has not been activated."
-+                         L"Libraries may fail to load.  To activate this environment please use:"
-+                         L"`conda activation`:"
-+                         L"https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#activating-an-environment"
-+                         L"\n");
++        fprintf(stderr, "Warning:\n"
++                        "The conda environment for this python interpreter has not been activated.\n"
++                        "Libraries may fail to load.  To activate this environment please use:\n"
++                        "`conda activation`:\n"
++                        "https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#activating-an-environment\n"
++                        "\n");
 +    }
 +}
 +
