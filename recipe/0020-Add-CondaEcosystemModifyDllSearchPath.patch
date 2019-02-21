@@ -414,7 +414,7 @@ index 514f809939..3cdeb673e6 100644
  {
 +#ifdef MS_WINDOWS
 +    /* LoadAndUnloadTestDLL(L"libiomp5md.dll"); */
-+    CondaEcosystemModifyDllSearchPath_Init(pymain->argc, pymain->argv);
++    CondaEcosystemModifyDllSearchPath_Init(pymain->argc, pymain->wchar_argv);
 +    /* LoadAndUnloadTestDLL(L"libiomp5md.dll"); */
 +#endif
      int res = pymain_init(pymain);
