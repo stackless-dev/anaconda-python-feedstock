@@ -1,4 +1,4 @@
-From 4d12aa90fa287f159bba9b1679658a2e4e677f0a Mon Sep 17 00:00:00 2001
+From 23123308acc86d6972aabae7b6c1adb91ba937ce Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 17/17] Add CondaEcosystemModifyDllSearchPath()
@@ -19,7 +19,7 @@ in procmon what directories get looked in in the non-fullpath case.
  2 files changed, 400 insertions(+), 6 deletions(-)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index e5357cf9b4..6e61a7c02f 100644
+index e5357cf9b4..08466dcb07 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -215,11 +215,11 @@ index e5357cf9b4..6e61a7c02f 100644
 +    static char warnings[1024] = { 0 };
 +    if (sv_conda_not_activated == 1 && warnings[0] == '\0')
 +    {
-+        sprintf(warnings, "Warning:\n"
-+                          "The conda environment for this python interpreter has not been activated.\n"
-+                          "Libraries may fail to load.  To activate this environment please use:\n"
-+                          "`conda activation`:\n"
-+                          "https://conda.io/activation\n"
++        sprintf(warnings, "\n"
++                          "Warning:\n"
++                          "This Python interpreter is in a conda environment, but the environment has\n"
++                          "not been activated. Libraries may fail to load.  To activate this environment\n"
++                          "please see https://conda.io/activation\n"
 +                          "\n");
 +    }
 +    return &warnings[0];
