@@ -1,4 +1,4 @@
-From 2f4e9be768e6e46f262bf72c17bc647a39bfa200 Mon Sep 17 00:00:00 2001
+From c252434fa0284de1cfee61d6203707e1268c43fe Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 20/20] Add CondaEcosystemModifyDllSearchPath()
@@ -10,12 +10,12 @@ Reviewed by Kai Tietz 7.2.2019
 
 Updated a bit to include other directories.
 ---
- Modules/main.c       | 380 ++++++++++++++++++++++++++++++++++++++++++-
+ Modules/main.c       | 382 ++++++++++++++++++++++++++++++++++++++++++-
  Python/dynload_win.c |   4 +
- 2 files changed, 383 insertions(+), 1 deletion(-)
+ 2 files changed, 385 insertions(+), 1 deletion(-)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index 514f809939..d410abba94 100644
+index 514f809939..a1cf76fed1 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -29,16 +29,25 @@ index 514f809939..d410abba94 100644
  #endif
  
  #ifdef _MSC_VER
-@@ -1236,7 +1240,7 @@ pymain_header(_PyMain *pymain)
+@@ -56,6 +60,8 @@ extern "C" {
+         } \
+     } while (0)
+ 
++char *CondaEcosystemGetWarnings();
++
+ #ifdef MS_WINDOWS
+ #define WCSTOK wcstok_s
+ #else
+@@ -1236,7 +1242,7 @@ pymain_header(_PyMain *pymain)
          return;
      }
  
 -    fprintf(stderr, "Python %s :: %s on %s\n", Py_GetVersion(), Anaconda_GetVersion(), Py_GetPlatform());
-+    fprintf(stderr, "Python %s :: %s on %s\n%s\n", Py_GetVersion(), Anaconda_GetVersion(), Py_GetPlatform()), CondaEcosystemGetWarnings());
++    fprintf(stderr, "Python %s :: %s on %s\n%s", Py_GetVersion(), Anaconda_GetVersion(), Py_GetPlatform(), CondaEcosystemGetWarnings());
      if (!Py_NoSiteFlag) {
          fprintf(stderr, "%s\n", COPYRIGHT);
      }
-@@ -3026,9 +3030,383 @@ pymain_init(_PyMain *pymain)
+@@ -3026,9 +3032,383 @@ pymain_init(_PyMain *pymain)
  }
  
  
@@ -374,7 +383,7 @@ index 514f809939..d410abba94 100644
 +    {
 +        for (j = NUM_CONDA_PATHS-1, p_conda_path = &condaPaths[NUM_CONDA_PATHS-1]; j > -1; --j, --p_conda_path)
 +        {
-+            if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: p_conda_path->p_name = %ls, foundCondaPath[%d] = %d\n", p_conda_path->p_name, j, foundCondaPath[j]);
++            if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: p_conda_path->p_name = %ls, foundCondaPath[%zd] = %d\n", p_conda_path->p_name, j, foundCondaPath[j]);
 +            if (!foundCondaPath[j])
 +            {
 +                if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: AddDllDirectory(%ls - ExePrefix)\n", p_conda_path->p_name);
