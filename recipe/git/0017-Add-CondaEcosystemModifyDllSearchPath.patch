@@ -1,4 +1,4 @@
-From 3192c1975087d6e495a2e89b96deca8814c8d197 Mon Sep 17 00:00:00 2001
+From 8fedc898b3c4f581098f4fb67e67cbf816f02ef8 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 17/17] Add CondaEcosystemModifyDllSearchPath()
@@ -19,7 +19,7 @@ in procmon what directories get looked in in the non-fullpath case.
  2 files changed, 400 insertions(+), 6 deletions(-)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index e5357cf9b4..f96674e706 100644
+index e5357cf9b4..5253ef2a9a 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -183,7 +183,7 @@ index e5357cf9b4..f96674e706 100644
 +                    /* If any of the args contain 'conda' .. I am very sorry and there's probably a better way. */
 +                    for (argi = 1; argi < argc; ++argi)
 +                    {
-+                        if (strcmp(argv[argi], "conda") == NULL)
++                        if (strcmp(argv[argi], "conda") == 0)
 +                        {
 +                            found_conda = 1;
 +                            break;
