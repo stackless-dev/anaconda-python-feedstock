@@ -1,4 +1,4 @@
-From c252434fa0284de1cfee61d6203707e1268c43fe Mon Sep 17 00:00:00 2001
+From d2847180bf39d7ae484d185c9deb99069e3c6b36 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 20/20] Add CondaEcosystemModifyDllSearchPath()
@@ -15,7 +15,7 @@ Updated a bit to include other directories.
  2 files changed, 385 insertions(+), 1 deletion(-)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index 514f809939..a1cf76fed1 100644
+index 514f809939..4a9d793001 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -197,7 +197,7 @@ index 514f809939..a1cf76fed1 100644
 +                    /* If any of the args contain 'conda' .. I am very sorry and there's probably a better way. */
 +                    for (argi = 1; argi < argc; ++argi)
 +                    {
-+                        if (wcscmp(argv[argi], L"conda") == NULL)
++                        if (wcscmp(argv[argi], L"conda") == 0)
 +                        {
 +                            found_conda = 1;
 +                            break;
