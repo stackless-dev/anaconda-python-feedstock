@@ -1,4 +1,4 @@
-From efbd4f1584f6d108261ede03d0a9cc65a268fbeb Mon Sep 17 00:00:00 2001
+From 3192c1975087d6e495a2e89b96deca8814c8d197 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 17/17] Add CondaEcosystemModifyDllSearchPath()
@@ -14,12 +14,12 @@ I observed that you must call LoadLibraryExW() with the fullpath of
 the DLL for this stuff to not fail. It is probably worthwhile checking
 in procmon what directories get looked in in the non-fullpath case.
 ---
- Modules/main.c       | 378 ++++++++++++++++++++++++++++++++++++++++++-
+ Modules/main.c       | 383 ++++++++++++++++++++++++++++++++++++++++++-
  Python/dynload_win.c |  23 ++-
- 2 files changed, 397 insertions(+), 4 deletions(-)
+ 2 files changed, 400 insertions(+), 6 deletions(-)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index e5357cf9b4..d24faaf42a 100644
+index e5357cf9b4..f96674e706 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -33,7 +33,7 @@ index e5357cf9b4..d24faaf42a 100644
  #endif
  
  #if (defined(PYOS_OS2) && !defined(PYCC_GCC)) || defined(MS_WINDOWS)
-@@ -238,6 +242,373 @@ static int RunMainFromImporter(char *filename)
+@@ -238,6 +242,375 @@ static int RunMainFromImporter(char *filename)
  }
  
  
@@ -210,17 +210,19 @@ index e5357cf9b4..d24faaf42a 100644
 +    return res;
 +}
 +
-+void CondaEcosystemDisplayWarnings()
++char* CondaEcosystemGetWarnings()
 +{
-+    if (sv_conda_not_activated == 1)
++    static char warnings[1024] = { 0 };
++    if (sv_conda_not_activated == 1 && warnings[0] == '\0')
 +    {
-+        fprintf(stderr, "Warning:\n"
-+                        "The conda environment for this python interpreter has not been activated.\n"
-+                        "Libraries may fail to load.  To activate this environment please use:\n"
-+                        "`conda activation`:\n"
-+                        "https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#activating-an-environment\n"
-+                        "\n");
++        sprintf(warnings, "Warning:\n"
++                          "The conda environment for this python interpreter has not been activated.\n"
++                          "Libraries may fail to load.  To activate this environment please use:\n"
++                          "`conda activation`:\n"
++                          "https://conda.io/activation\n"
++                          "\n");
 +    }
++    return &warnings[0];
 +}
 +
 +int CondaEcosystemModifyDllSearchPath(int add_windows_directory, int add_cwd) {
@@ -407,7 +409,7 @@ index e5357cf9b4..d24faaf42a 100644
  /* Main program */
  
  int
-@@ -258,6 +629,9 @@ Py_Main(int argc, char **argv)
+@@ -258,6 +631,9 @@ Py_Main(int argc, char **argv)
      int saw_unbuffered_flag = 0;
      PyCompilerFlags cf;
  
@@ -417,14 +419,17 @@ index e5357cf9b4..d24faaf42a 100644
      cf.cf_flags = 0;
  
      orig_argc = argc;           /* For Py_GetArgcArgv() */
-@@ -555,8 +929,10 @@ Py_Main(int argc, char **argv)
+@@ -553,10 +929,11 @@ Py_Main(int argc, char **argv)
+ 
+     if (Py_VerboseFlag ||
          (command == NULL && filename == NULL && module == NULL && stdin_is_interactive)) {
-         fprintf(stderr, "Python %s on %s\n",
-             Py_GetVersion(), Py_GetPlatform());
+-        fprintf(stderr, "Python %s on %s\n",
+-            Py_GetVersion(), Py_GetPlatform());
 -        if (!Py_NoSiteFlag)
++        fprintf(stderr, "Python %s on %s\n%s",
++            Py_GetVersion(), Py_GetPlatform(), CondaEcosystemGetWarnings());
 +        if (!Py_NoSiteFlag) {
              fprintf(stderr, "%s\n", COPYRIGHT);
-+            CondaEcosystemDisplayWarnings();
 +        }
      }
  
