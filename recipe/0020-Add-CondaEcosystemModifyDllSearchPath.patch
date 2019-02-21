@@ -1,4 +1,4 @@
-From b73f78f8d192aa736db834b0677af128bdc14a6d Mon Sep 17 00:00:00 2001
+From 2f4e9be768e6e46f262bf72c17bc647a39bfa200 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 20/20] Add CondaEcosystemModifyDllSearchPath()
@@ -10,12 +10,12 @@ Reviewed by Kai Tietz 7.2.2019
 
 Updated a bit to include other directories.
 ---
- Modules/main.c       | 380 +++++++++++++++++++++++++++++++++++++++++++
+ Modules/main.c       | 380 ++++++++++++++++++++++++++++++++++++++++++-
  Python/dynload_win.c |   4 +
- 2 files changed, 384 insertions(+)
+ 2 files changed, 383 insertions(+), 1 deletion(-)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index 514f809939..c3d30ce0cb 100644
+index 514f809939..d410abba94 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -29,18 +29,16 @@ index 514f809939..c3d30ce0cb 100644
  #endif
  
  #ifdef _MSC_VER
-@@ -1239,6 +1243,10 @@ pymain_header(_PyMain *pymain)
-     fprintf(stderr, "Python %s :: %s on %s\n", Py_GetVersion(), Anaconda_GetVersion(), Py_GetPlatform());
+@@ -1236,7 +1240,7 @@ pymain_header(_PyMain *pymain)
+         return;
+     }
+ 
+-    fprintf(stderr, "Python %s :: %s on %s\n", Py_GetVersion(), Anaconda_GetVersion(), Py_GetPlatform());
++    fprintf(stderr, "Python %s :: %s on %s\n%s\n", Py_GetVersion(), Anaconda_GetVersion(), Py_GetPlatform()), CondaEcosystemGetWarnings());
      if (!Py_NoSiteFlag) {
          fprintf(stderr, "%s\n", COPYRIGHT);
-+/* -- If we do this, then the regression testsuite hangs in different places. The only thing that happens is
-+      a call to fwprintf(stderr), weird. */
-+        void CondaEcosystemDisplayWarnings();
-+        // CondaEcosystemDisplayWarnings();
      }
- }
- 
-@@ -3026,9 +3034,381 @@ pymain_init(_PyMain *pymain)
+@@ -3026,9 +3030,383 @@ pymain_init(_PyMain *pymain)
  }
  
  
@@ -217,17 +215,19 @@ index 514f809939..c3d30ce0cb 100644
 +    return res;
 +}
 +
-+void CondaEcosystemDisplayWarnings()
++char* CondaEcosystemGetWarnings()
 +{
-+    if (sv_conda_not_activated == 1)
++    static char warnings[1024] = { 0 };
++    if (sv_conda_not_activated == 1 && warnings[0] == '\0')
 +    {
-+        fprintf(stderr, "Warning:\n"
-+                        "The conda environment for this python interpreter has not been activated.\n"
-+                        "Libraries may fail to load.  To activate this environment please use:\n"
-+                        "`conda activation`:\n"
-+                        "https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#activating-an-environment\n"
-+                        "\n");
++        sprintf(warnings, "Warning:\n"
++                          "The conda environment for this python interpreter has not been activated.\n"
++                          "Libraries may fail to load.  To activate this environment please use:\n"
++                          "`conda activation`:\n"
++                          "https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#activating-an-environment\n"
++                          "\n");
 +    }
++    return &warnings[0];
 +}
 +
 +int CondaEcosystemModifyDllSearchPath(int add_windows_directory, int add_cwd) {
