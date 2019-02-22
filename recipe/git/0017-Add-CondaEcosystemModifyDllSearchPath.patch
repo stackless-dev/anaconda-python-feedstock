@@ -1,4 +1,4 @@
-From 23123308acc86d6972aabae7b6c1adb91ba937ce Mon Sep 17 00:00:00 2001
+From 9d86c7c7998538fae010501d1de236d9781ff38f Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
 Subject: [PATCH 17/17] Add CondaEcosystemModifyDllSearchPath()
@@ -19,7 +19,7 @@ in procmon what directories get looked in in the non-fullpath case.
  2 files changed, 400 insertions(+), 6 deletions(-)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index e5357cf9b4..08466dcb07 100644
+index e5357cf9b4..462821ab3a 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -70,7 +70,7 @@ index e5357cf9b4..08466dcb07 100644
 +*/
 +
 +/*
-+    Unless CONDA_DISABLE_DLL_SEARCH_MODIFICATION is set (to anything at all!)
++    Provided CONDA_DLL_SEARCH_MODIFICATION_ENABLE is set (to anything at all!)
 +    this function will modify the DLL search path so that C:\Windows\System32
 +    does not appear before entries in PATH. If it does appear in PATH then it
 +    gets added at the position it was in in PATH.
@@ -218,7 +218,7 @@ index e5357cf9b4..08466dcb07 100644
 +        sprintf(warnings, "\n"
 +                          "Warning:\n"
 +                          "This Python interpreter is in a conda environment, but the environment has\n"
-+                          "not been activated. Libraries may fail to load.  To activate this environment\n"
++                          "not been activated.  Libraries may fail to load.  To activate this environment\n"
 +                          "please see https://conda.io/activation\n"
 +                          "\n");
 +    }
@@ -369,7 +369,7 @@ index e5357cf9b4..08466dcb07 100644
 +    {
 +        for (j = NUM_CONDA_PATHS-1, p_conda_path = &condaPaths[NUM_CONDA_PATHS-1]; j > -1; --j, --p_conda_path)
 +        {
-+            if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: p_conda_path->p_name = %ls, foundCondaPath[%d] = %d\n", p_conda_path->p_name, j, foundCondaPath[j]);
++            if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: p_conda_path->p_name = %ls, foundCondaPath[%zd] = %d\n", p_conda_path->p_name, j, foundCondaPath[j]);
 +            if (!foundCondaPath[j])
 +            {
 +                if (debug_it) fwprintf(stderr, L"CondaEcosystemModifyDllSearchPath() :: AddDllDirectory(%ls - ExePrefix)\n", p_conda_path->p_name);
