@@ -84,7 +84,7 @@ index 514f809939..602adfeb77 100644
 +*/
 +
 +/*
-+    Unless CONDA_DISABLE_DLL_SEARCH_MODIFICATION is set (to anything at all!)
++    Unless CONDA_DLL_SEARCH_MODIFICATION_ENABLE is set (to anything at all!)
 +    this function will modify the DLL search path so that C:\Windows\System32
 +    does not appear before entries in PATH. If it does appear in PATH then it
 +    gets added at the position it was in in PATH.
@@ -232,7 +232,7 @@ index 514f809939..602adfeb77 100644
 +        sprintf(warnings, "\n"
 +                          "Warning:\n"
 +                          "This Python interpreter is in a conda environment, but the environment has\n"
-+                          "not been activated. Libraries may fail to load.  To activate this environment\n"
++                          "not been activated.  Libraries may fail to load.  To activate this environment\n"
 +                          "please see https://conda.io/activation\n"
 +                          "\n");
 +    }
