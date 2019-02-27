@@ -1,7 +1,7 @@
-From 928a11110f1b8cf8170c462d200c0133711a25ff Mon Sep 17 00:00:00 2001
+From 108318a2954a0636ab498f6e20c2f491dafacb5a Mon Sep 17 00:00:00 2001
 From: Nehal J Wani <nehaljw.kkd1@gmail.com>
 Date: Mon, 10 Dec 2018 10:49:49 -0600
-Subject: [PATCH 15/17] Unvendor sqlite3
+Subject: [PATCH 16/18] Unvendor sqlite3
 
 ---
  PCbuild/_sqlite3.vcxproj | 7 ++-----
@@ -60,7 +60,7 @@ index d2b1991558..8fe1270225 100644
      <!-- Directories of external projects. tcltk is handled in tcltk.props -->
      <ExternalsDir>$([System.IO.Path]::GetFullPath(`$(PySourcePath)externals\`))</ExternalsDir>
 -    <sqlite3Dir>$(ExternalsDir)sqlite-3.14.2.0\</sqlite3Dir>
-+    <sqlite3Dir>$(ExternalsDir)$(SQLITE3_DIR)\</sqlite3Dir>
++    <sqlite3Dir>$(SQLITE3_DIR)\</sqlite3Dir>
      <bz2Dir>$(ExternalsDir)bzip2-1.0.6\</bz2Dir>
      <bsddbDir>$(ExternalsDir)bsddb-4.7.25.0</bsddbDir>
      <opensslDir>$(ExternalsDir)openssl-1.0.2o\</opensslDir>
