@@ -1,6 +1,6 @@
-{% set version = "2.7.15" %}
-{% set sha256 = "18617d1f15a380a919d517630a9cd85ce17ea602f9bbdc58ddc672df4b0239db" %}
-{% set pdir = "2.7.15" %}
+{% set version = "2.7.16" %}
+{% set sha256 = "01da813a3600876f03f46db11cc5c408175e99f03af2ba942ef324389a83bad5" %}
+{% set pdir = "2.7.16" %}
 
 package:
   name: python
@@ -25,17 +25,16 @@ source:
       - {{ pdir }}/0013-Fix-cross-compilation-on-Debian-based-distros.patch
       - {{ pdir }}/0014-Disable-registry-lookup-unless-CONDA_PY_ALLOW_REG_PA.patch
       - {{ pdir }}/0015-Unvendor-sqlite3.patch
-      - {{ pdir }}/0016-bpo-34623-Use-XML_SetHashSalt-in-_elementtree-GH-914.patch
-      - {{ pdir }}/0017-Add-CondaEcosystemModifyDllSearchPath.patch
+      - {{ pdir }}/0016-Add-CondaEcosystemModifyDllSearchPath.patch                 # [win]
   - url: https://github.com/python/cpython-source-deps/archive/bzip2-1.0.6.zip      # [win]
     folder: externals/bzip2-1.0.6                                                   # [win]
     sha256: c42fd1432a2667b964a74bc423bb7485059c4a6d5dc92946d59dbf9a6bdb988d        # [win]
   - url: https://github.com/python/cpython-source-deps/archive/bsddb-4.7.25.0.zip   # [win]
     folder: externals/bsddb-4.7.25.0                                                # [win]
     sha256: 0bc1f79d2bbff8159cf56103db615cc011458b7b0f5fc4c8c3db3132f026abbc        # [win]
-  - url: https://github.com/python/cpython-source-deps/archive/openssl-1.0.2o.zip   # [win]
-    folder: externals/openssl-1.0.2o                                                # [win]
-    sha256: 9db2a35ef254b57e16a47916810a3bf1cd639b512b5fe6c1cb51afc985113595        # [win]
+  - url: https://github.com/python/cpython-source-deps/archive/openssl-1.0.2q.zip   # [win]
+    folder: externals/openssl-1.0.2q                                                # [win]
+    sha256: d0e7bc44ab7ea2d43837ccc648a6f94702f3bad870318c0c8c771afd9c347d16        # [win]
   - url: https://github.com/python/cpython-source-deps/archive/tcl-8.5.19.0.zip     # [win]
     folder: externals/tcl-8.5.19.0                                                  # [win]
     sha256: 8520a7d6df448770ec129f497b0b16fdddc6876905ffce2ad13d12180598ce48        # [win]
@@ -51,7 +50,7 @@ source:
 
 
 build:
-  number: 16
+  number: 0
   no_link:
     - bin/python2.7     # [unix]
     - DLLs/_ctypes.pyd  # [win]
