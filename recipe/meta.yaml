@@ -1,6 +1,6 @@
-{% set version = "2.7.15" %}
-{% set sha256 = "18617d1f15a380a919d517630a9cd85ce17ea602f9bbdc58ddc672df4b0239db" %}
-{% set pdir = "2.7.15" %}
+{% set version = "2.7.16" %}
+{% set sha256 = "01da813a3600876f03f46db11cc5c408175e99f03af2ba942ef324389a83bad5" %}
+{% set pdir = "2.7.16" %}
 
 package:
   name: python
@@ -51,7 +51,7 @@ source:
 
 
 build:
-  number: 16
+  number: 0
   no_link:
     - bin/python2.7     # [unix]
     - DLLs/_ctypes.pyd  # [win]
