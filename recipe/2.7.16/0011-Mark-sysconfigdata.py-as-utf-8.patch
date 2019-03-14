@@ -1,7 +1,7 @@
-From a36119e9fcdeaf069daeda755e8ca73bb3a72861 Mon Sep 17 00:00:00 2001
+From ee46e21259c28b0cb733972d2052e12a8a48dc3d Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Mon, 4 Dec 2017 22:14:32 +0000
-Subject: [PATCH 11/17] Mark sysconfigdata.py as utf-8
+Subject: [PATCH 11/16] Mark sysconfigdata.py as utf-8
 
 This is needed because we do shebang replacement.
 ---
@@ -10,7 +10,7 @@ This is needed because we do shebang replacement.
  2 files changed, 2 insertions(+)
 
 diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
-index 6700cb6582..7c3444033f 100644
+index 6700cb6..7c34440 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
 @@ -347,6 +347,7 @@ def _generate_posix_vars():
@@ -22,10 +22,10 @@ index 6700cb6582..7c3444033f 100644
                  ' the sysconfig module\n')
          f.write('build_time_vars = ')
 diff --git a/Mac/BuildScript/build-installer.py b/Mac/BuildScript/build-installer.py
-index 7875bc8ef4..4a58befd93 100755
+index 74d1e84..bd5b3ba 100755
 --- a/Mac/BuildScript/build-installer.py
 +++ b/Mac/BuildScript/build-installer.py
-@@ -1282,6 +1282,7 @@ def buildPython():
+@@ -1291,6 +1291,7 @@ def buildPython():
  
      fp = open(path, 'w')
      # duplicated from sysconfig._generate_posix_vars()
@@ -34,5 +34,5 @@ index 7875bc8ef4..4a58befd93 100755
                  ' the sysconfig module\n')
      fp.write('build_time_vars = ')
 -- 
-2.17.2 (Apple Git-113)
+2.7.4
 
