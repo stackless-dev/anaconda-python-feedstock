@@ -1,43 +1,41 @@
-{% set version = "2.7.15" %}
-# {% set sha256 = "18617d1f15a380a919d517630a9cd85ce17ea602f9bbdc58ddc672df4b0239db" %}
-{% set sha256 = "924ebc76708f76464e90b02bd44790ab79f4bb6b2c8bb31317b59302b87b7e07" %}
+{% set version = "2.7.16" %}
+{% set sha256 = "36910177defe95535727fd15123fd6eccff7f45956ae7537e4e4ed1588187908" %}
+{% set pdir = "2.7.16" %}
 
 package:
   name: python
   version: {{ version }}
 
 source:
-  - url: https://github.com/stackless-dev/stackless/archive/638e61c650cf55abfbd3c0880a9af51cd491c3fe.zip
+  - url: https://github.com/stackless-dev/stackless/archive/v2.7.16-slp.zip
   # - url: https://www.python.org/ftp/python/{{ version }}/Python-{{ version }}.tgz
     sha256: {{ sha256 }}
     patches:
-      - 0001-backport-Python-3.6-_PYTHON_SYSCONFIGDATA_NAME.patch
-      - 0002-Add-Anaconda-Distribution-version-logic.patch
-      - 0003-Darwin-Hack-sys.-exec_-prefix-if-run-from-python.app.patch
-      - 0004-Darwin-Add-arch-x86_64-to-UnicCCompiler-ld_args.patch
-      - 0005-Win32-distutils-Also-look-for-executable.bat.patch
-      # TODO :: This breaks conda activate and deactivate.
-      - 0006-Win32-Ensure-Library-bin-is-in-os.environ-PATH.patch
-      - 0007-Win32-Change-FD_SETSIZE-from-512-to-2048.patch
-      - 0008-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
-      - 0009-Do-not-pass-g-to-GCC-when-not-Py_DEBUG.patch
-      - 0010-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
-      - 0011-runtime_library_dir_option-Use-1st-word-of-CC-as-com.patch
-      - 0012-Mark-sysconfigdata.py-as-utf-8.patch
-      - 0013-Fix-find_library-so-that-it-looks-in-sys.prefix-lib-.patch
-      - 0014-Fix-cross-compilation-on-Debian-based-distros.patch
+      - {{ pdir }}/0001-backport-Python-3.6-_PYTHON_SYSCONFIGDATA_NAME.patch
+      - {{ pdir }}/0002-Add-Anaconda-Distribution-version-logic.patch
+      - {{ pdir }}/0003-Darwin-Hack-sys.-exec_-prefix-if-run-from-python.app.patch
+      - {{ pdir }}/0004-Darwin-Add-arch-x86_64-to-UnicCCompiler-ld_args.patch
+      - {{ pdir }}/0005-Win32-distutils-Also-look-for-executable.bat.patch
+      - {{ pdir }}/0006-Win32-Change-FD_SETSIZE-from-512-to-2048.patch
+      - {{ pdir }}/0007-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
+      - {{ pdir }}/0008-Do-not-pass-g-to-GCC-when-not-Py_DEBUG.patch
+      - {{ pdir }}/0009-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
+      - {{ pdir }}/0010-runtime_library_dir_option-Use-1st-word-of-CC-as-com.patch
+      - {{ pdir }}/0011-Mark-sysconfigdata.py-as-utf-8.patch
+      - {{ pdir }}/0012-Fix-find_library-so-that-it-looks-in-sys.prefix-lib-.patch
+      - {{ pdir }}/0013-Fix-cross-compilation-on-Debian-based-distros.patch
+      - {{ pdir }}/0014-Disable-registry-lookup-unless-CONDA_PY_ALLOW_REG_PA.patch
+      - {{ pdir }}/0015-Unvendor-sqlite3.patch
+      - {{ pdir }}/0016-Add-CondaEcosystemModifyDllSearchPath.patch                 # [win]
   - url: https://github.com/python/cpython-source-deps/archive/bzip2-1.0.6.zip      # [win]
     folder: externals/bzip2-1.0.6                                                   # [win]
     sha256: c42fd1432a2667b964a74bc423bb7485059c4a6d5dc92946d59dbf9a6bdb988d        # [win]
   - url: https://github.com/python/cpython-source-deps/archive/bsddb-4.7.25.0.zip   # [win]
     folder: externals/bsddb-4.7.25.0                                                # [win]
     sha256: 0bc1f79d2bbff8159cf56103db615cc011458b7b0f5fc4c8c3db3132f026abbc        # [win]
-  - url: https://github.com/python/cpython-source-deps/archive/openssl-1.0.2o.zip   # [win]
-    folder: externals/openssl-1.0.2o                                                # [win]
-    sha256: 9db2a35ef254b57e16a47916810a3bf1cd639b512b5fe6c1cb51afc985113595        # [win]
-  - url: https://github.com/python/cpython-source-deps/archive/sqlite-3.14.2.0.zip  # [win]
-    folder: externals/sqlite-3.14.2.0                                               # [win]
-    sha256: c1ff98c76c11dc10b2abe94d72ea5bae7da64ba8da9455a9af5dc3eae0f2f880        # [win]
+  - url: https://github.com/python/cpython-source-deps/archive/openssl-1.0.2q.zip   # [win]
+    folder: externals/openssl-1.0.2q                                                # [win]
+    sha256: d0e7bc44ab7ea2d43837ccc648a6f94702f3bad870318c0c8c771afd9c347d16        # [win]
   - url: https://github.com/python/cpython-source-deps/archive/tcl-8.5.19.0.zip     # [win]
     folder: externals/tcl-8.5.19.0                                                  # [win]
     sha256: 8520a7d6df448770ec129f497b0b16fdddc6876905ffce2ad13d12180598ce48        # [win]
@@ -62,6 +60,8 @@ build:
   # We delete the shared libraries.
   ignore_run_exports:   # [unix]
     - bzip2             # [unix]
+    - libcxx            # [osx]
+    - openssl           # [osx]
   skip: True            # [win and vc != 9]
   features:
     - stackless
@@ -76,7 +76,7 @@ requirements:
     - pkg-config                         # [unix]
   host:
     - bzip2                              # [unix]
-    - sqlite                             # [unix]
+    - sqlite
     - zlib                               # [unix]
     - openssl                            # [unix]
     - readline                           # [unix]

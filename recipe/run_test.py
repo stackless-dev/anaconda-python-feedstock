@@ -1,8 +1,8 @@
 # make sure Grammar pickle files are present
 import os
 from os.path import dirname, isfile, join
-for fn in ('Grammar2.7.15.final.0.pickle',
-           'PatternGrammar2.7.15.final.0.pickle'):
+for fn in ('Grammar2.7.16.final.0.pickle',
+           'PatternGrammar2.7.16.final.0.pickle'):
     assert isfile(join(dirname(os.__file__), 'lib2to3', fn))
 
 import platform
@@ -21,8 +21,8 @@ ppc64le = bool(platform.machine() == 'ppc64le')
 debug = int(os.getenv('DEBUG', 0))
 
 print('Python version:', platform.python_version())
-assert platform.python_version() == '2.7.15'
-assert sys.version_info[:3] == (2, 7, 15)
+assert platform.python_version() == '2.7.16'
+assert sys.version_info[:3] == (2, 7, 16)
 if sys.platform == 'win32':
     assert 'MSC v.1500' in sys.version
 print('max unicode:', sys.maxunicode)
@@ -87,6 +87,7 @@ import unicodedata
 import zlib
 import gzip
 from os import urandom
+import os
 
 a = 20 * 'Ilan'
 b = 'x\x9c\xf3\xccI\xcc\xf3\xa4"\x06\x00\xc8L\x1eQ'
@@ -121,12 +122,12 @@ if not (armv7l or ppc64le):
     if sys.platform == 'win32':
         TCLTK_VER = '8.5'
     else:
-        TCLTK_VER = '8.6'
+        TCLTK_VER = os.getenv("tk")
     assert _tkinter.TK_VERSION == _tkinter.TCL_VERSION == TCLTK_VER
 
 print('OPENSSL_VERSION:', ssl.OPENSSL_VERSION)
 if sys.platform != 'win32':
-    assert '1.0.2' in ssl.OPENSSL_VERSION
+    assert os.getenv("openssl") in ssl.OPENSSL_VERSION
 
 pprint(platform._sys_version())
 

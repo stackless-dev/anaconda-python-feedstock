@@ -3,3 +3,4 @@
 recipe/meta.yaml text eol=lf
 recipe/build.sh text eol=lf
 recipe/bld.bat text eol=crlf
+recipe/**/0015-Unvendor-sqlite3.patch binary
