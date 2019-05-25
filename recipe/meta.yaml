@@ -92,6 +92,8 @@ requirements:
     - {{ cdt('libx11-devel') }}          # [linux]
     - make                               # [unix]
     - pkg-config                         # [unix]
+    - patch                              # [not win]
+    - m2-patch                           # [win]
   host:
     - bzip2                              # [unix]
     - sqlite

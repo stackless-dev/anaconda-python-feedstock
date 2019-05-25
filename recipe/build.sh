@@ -26,7 +26,7 @@ if [[ ${PY_INTERP_LINKAGE_NATURE} == shared ]]; then
   _ENABLE_SHARED=--enable-shared
 fi
 
-# For debugging builds, set this to 0 to disable profile-guided optimization
+# For debugging builds, set this to no to disable profile-guided optimization
 if [[ ${DEBUG_C} == yes ]]; then
   _OPTIMIZED=no
 else
@@ -238,6 +238,7 @@ popd
 make -j${CPU_COUNT} -C ${_buildd_static} \
         EXTRA_CFLAGS="${EXTRA_CFLAGS}" \
         ${_MAKE_TARGET}
+
 # To speed up build times during testing (2):
 #       ${_MAKE_TARGET} PROFILE_TASK="${_PROFILE_TASK}"
 
