@@ -1,5 +1,5 @@
-{% set base_version = "3.7.3" %}
-{% set version = "3.7.3" %}
+{% set base_version = "3.7.4" %}
+{% set version = "3.7.4" %}
 {% set linkage_nature = os.environ.get('PY_INTERP_LINKAGE_NATURE', '') %}
 {% if linkage_nature != '' %}
   {% set linkage_nature = "_" ~ linkage_nature %}
@@ -11,29 +11,27 @@ package:
 
 source:
   - url: https://www.python.org/ftp/python/{{ base_version }}/Python-{{ version }}.tar.xz
-    sha256: da60b54064d4cfcd9c26576f6df2690e62085123826cff2e667e72a91952d318
+    sha256: fb799134b868199930b75f26678f18932214042639cd52b16da7fd134cd9b13f
     patches:
       - 0001-Add-Anaconda-Distribution-version-logic.patch
       - 0002-Darwin-Add-arch-x86_64-to-UnicCCompiler-ld_args.patch
-      - 0003-Win32-distutils-Also-look-for-executable.bat.patch
-      - 0004-Win32-Change-FD_SETSIZE-from-512-to-2048.patch
-      - 0005-Win32-distutils-Add-support-to-cygwinccompiler-for-V.patch
-      - 0006-Do-not-pass-g-to-GCC-when-not-Py_DEBUG.patch
-      - 0007-Support-cross-compiling-byte-code.patch
-      - 0008-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
-      - 0009-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
-      - 0010-runtime_library_dir_option-Use-1st-word-of-CC-as-com.patch
-      - 0011-Win32-Do-not-download-externals.patch
-      - 0012-Add-support-for-_CONDA_PYTHON_SYSCONFIGDATA_NAME-if-.patch
-      - 0013-Fix-find_library-so-that-it-looks-in-sys.prefix-lib-.patch
-      - 0014-Disable-new-dtags-in-unixccompiler.py.patch
-      - 0015-Fix-cross-compilation-on-Debian-based-distros.patch
-      - 0016-Disable-registry-lookup-unless-CONDA_PY_ALLOW_REG_PA.patch
-      - 0017-Unvendor-openssl.patch
-      - 0018-Unvendor-sqlite3.patch
-      # https://bugs.python.org/issue35644
-      - 0019-venv-Revert-a-change-from-https-github.com-python-cp.patch
-      - 0020-Add-CondaEcosystemModifyDllSearchPath.patch  # [win]
+      - 0003-Win32-Change-FD_SETSIZE-from-512-to-2048.patch
+      - 0004-Win32-distutils-Add-support-to-cygwinccompiler-for-V.patch
+      - 0005-Do-not-pass-g-to-GCC-when-not-Py_DEBUG.patch
+      - 0006-Support-cross-compiling-byte-code.patch
+      - 0007-Win32-Fixes-for-Windows-GCC-interop-needed-by-RPy2-a.patch
+      - 0008-Darwin-Look-in-sysroot-usr-lib-include-if-sysroot-is.patch
+      - 0009-runtime_library_dir_option-Use-1st-word-of-CC-as-com.patch
+      - 0010-Win32-Do-not-download-externals.patch
+      - 0011-Add-support-for-_CONDA_PYTHON_SYSCONFIGDATA_NAME-if-.patch
+      - 0012-Fix-find_library-so-that-it-looks-in-sys.prefix-lib-.patch
+      - 0013-Disable-new-dtags-in-unixccompiler.py.patch
+      - 0014-Fix-cross-compilation-on-Debian-based-distros.patch
+      - 0015-Disable-registry-lookup-unless-CONDA_PY_ALLOW_REG_PA.patch
+      - 0016-Unvendor-openssl.patch
+      - 0017-Unvendor-sqlite3.patch
+      - 0018-venv-Revert-a-change-from-https-github.com-python-cp.patch
+      - 0019-Add-CondaEcosystemModifyDllSearchPath.patch
   # TODO :: Depend on our own packages for these:
   - url: https://github.com/python/cpython-source-deps/archive/xz-5.2.2.zip          # [win]
     folder: externals/xz-5.2.2                                                       # [win]
