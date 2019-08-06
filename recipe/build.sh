@@ -8,9 +8,13 @@
 # .. but upstream regrtest.py now has --pgo (since >= 3.6) and skips tests that are:
 # "not helpful for PGO".
 
+VERFULL=${PKG_VERSION}
 VER=${PKG_VERSION%.*}
 VERNODOTS=${VER//./}
+TCLTK_VER=${tk%.*}
 CONDA_FORGE=no
+# Disables some PGO/LTO
+QUICK_BUILD=yes
 
 _buildd_static=build-static
 _buildd_shared=build-shared
@@ -32,6 +36,8 @@ if [[ ${DEBUG_C} == yes ]]; then
 else
   _OPTIMIZED=yes
 fi
+
+_OPTIMIZED=no
 
 declare -a _dbg_opts
 if [[ ${DEBUG_PY} == yes ]]; then
@@ -207,7 +213,9 @@ if [[ ${_OPTIMIZED} == yes ]]; then
   _extra_opts+=(--with-lto)
   _MAKE_TARGET=profile-opt
   # To speed up build times during testing (1):
-  # _PROFILE_TASK="./python -m test.regrtest --pgo test_builtin"
+  if [[ ${QUICK_BUILD} == yes ]]; then
+    _PROFILE_TASK="./python -m test.regrtest --pgo test_builtin"
+  fi
   if [[ ${CC} =~ .*gcc.* ]]; then
     LTO_CFLAGS+=(-fuse-linker-plugin)
     LTO_CFLAGS+=(-ffat-lto-objects)
@@ -235,12 +243,15 @@ pushd ${_buildd_static}
                        ${_DISABLE_SHARED}
 popd
 
-make -j${CPU_COUNT} -C ${_buildd_static} \
-        EXTRA_CFLAGS="${EXTRA_CFLAGS}" \
-        ${_MAKE_TARGET}
-
-# To speed up build times during testing (2):
-#       ${_MAKE_TARGET} PROFILE_TASK="${_PROFILE_TASK}"
+if [[ ${QUICK_BUILD} == yes ]]; then
+  make -j${CPU_COUNT} -C ${_buildd_static} \
+          EXTRA_CFLAGS="${EXTRA_CFLAGS}" \
+          ${_MAKE_TARGET} PROFILE_TASK="${_PROFILE_TASK}"
+else
+  make -j${CPU_COUNT} -C ${_buildd_static} \
+          EXTRA_CFLAGS="${EXTRA_CFLAGS}" \
+          ${_MAKE_TARGET}
+fi
 
 make -j${CPU_COUNT} -C ${_buildd_shared} \
         EXTRA_CFLAGS="${EXTRA_CFLAGS}"
@@ -347,7 +358,9 @@ pushd $PREFIX/lib/python${VER}
   for SYSCONFIG in ${SYSCONFIGS}; do
     cat ${SYSCONFIG} | sed -e "s|@ABIFLAGS@|${ABIFLAGS}|g" \
                            -e "s|@PYVERNODOTS@|${VERNODOTS}|g" \
-                           -e "s|@PYVER@|${VER}|g" > $(basename ${SYSCONFIG})
+                           -e "s|@PYVER@|${VER}|g" \
+                           -e "s|@PYVERFULL@|${VERFULL}|g" \
+                           -e "s|@TCLTK_VER@|${TCLTK_VER}|g" > $(basename ${SYSCONFIG})
   done
 
   if [[ ${HOST} =~ .*darwin.* ]]; then
@@ -364,8 +377,11 @@ pushd $PREFIX/lib/python${VER}
       exit 1
     fi
     cat ${RECIPE_DIR}/sysconfigdata/default/_sysconfigdata_linux.py | sed "s|@ARCH@|${PY_ARCH}|g" > ${recorded_name}
+    # mkdir -p ${PREFIX}/compiler_compat
+    # cp ${LD} ${PREFIX}/compiler_compat/ld.bin
     mkdir -p ${PREFIX}/compiler_compat
     cp ${LD} ${PREFIX}/compiler_compat/ld
+    cp ${RECIPE_DIR}/ld.wrapper ${PREFIX}/compiler_compat/ld
     echo "Files in this folder are to enhance backwards compatibility of anaconda software with older compilers."   > ${PREFIX}/compiler_compat/README
     echo "See: https://github.com/conda/conda/issues/6030 for more information."                                   >> ${PREFIX}/compiler_compat/README
   fi
