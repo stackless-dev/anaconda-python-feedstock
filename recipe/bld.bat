@@ -28,8 +28,6 @@ if "%DEBUG_C%"=="yes" (
   set PGO=--pgo
 )
 
-set PGO=
-
 call build.bat %PGO% -m -e -v -p %PLATFORM%
 if errorlevel 1 exit 1
 cd ..
