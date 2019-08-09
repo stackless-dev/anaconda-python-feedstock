@@ -14,7 +14,7 @@ VERNODOTS=${VER//./}
 TCLTK_VER=${tk%.*}
 CONDA_FORGE=no
 # Disables some PGO/LTO
-QUICK_BUILD=yes
+QUICK_BUILD=no
 
 _buildd_static=build-static
 _buildd_shared=build-shared
@@ -36,8 +36,6 @@ if [[ ${DEBUG_C} == yes ]]; then
 else
   _OPTIMIZED=yes
 fi
-
-_OPTIMIZED=no
 
 declare -a _dbg_opts
 if [[ ${DEBUG_PY} == yes ]]; then
