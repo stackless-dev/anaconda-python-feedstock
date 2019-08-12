@@ -62,7 +62,7 @@ source:
 
 
 build:
-  number: 0
+  number: 1
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
@@ -107,6 +107,8 @@ requirements:
    #  - ncurses >=6.1,<7.0a0               # [unix]
 
 test:
+  # files:
+  #   - tests/cext1
   commands:
     - python -V
     - python3 -V            # [unix]
@@ -116,6 +118,10 @@ test:
     - python -c "import sysconfig; print(sysconfig.get_config_var('CC'))"
     - python -m venv %%TEMP%%\venv  # [win]
     -  _CONDA_PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_x86_64_conda_cos6_linux_gnu python -c "import sysconfig; print(sysconfig.get_config_var('CC'))"  # [linux64]
+    # WIP.
+    # - pushd tests/cext1
+    # -   python setup.py install
+    # - popd
 
 about:
   home: http://www.python.org/
