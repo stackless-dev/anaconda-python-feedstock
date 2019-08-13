@@ -654,7 +654,7 @@ build_time_vars = {'ABIFLAGS': 'm',
  'TANH_PRESERVES_ZERO_SIGN': 1,
  'TCLTK_INCLUDES': '-I/opt/anaconda1anaconda2anaconda3/include',
  'TCLTK_LIBS': '-L/opt/anaconda1anaconda2anaconda3/lib '
-               '-ltcl@TCLTK_VER@ -ltk@TKLTK_VER@',
+               '-ltcl@TCLTK_VER@ -ltk@TCLTK_VER@',
  'TESTOPTS': '',
  'TESTPATH': '',
  'TESTPYTHON': 'LD_LIBRARY_PATH=/opt/anaconda1anaconda2anaconda3/../work/Python-@PYVERFULL@ '
