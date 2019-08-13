@@ -365,9 +365,6 @@ pushd "${PREFIX}"/lib/python${VER}
                                -e "s|@PYVER@|${VER}|g" \
                                -e "s|@PYVERFULL@|${VERFULL}|g" \
                                -e "s|@TCLTK_VER@|${TCLTK_VER}|g" > ${DST_SYSCONFIG}
-    if rg @ ${DST_SYSCONFIG}; then
-      echo "ERROR :: Found @ in ${DST_SYSCONFIG}"
-    fi
   done
   if [[ ${HOST} =~ .*darwin.* ]]; then
     cp _sysconfigdata_*.py $(dirname $(recorded_name))
@@ -375,12 +372,6 @@ pushd "${PREFIX}"/lib/python${VER}
   else
     cp _sysconfigdata_*.py $(dirname $(recorded_name))
     mv _sysconfigdata_linux.py ${recorded_name}
-  fi
-  SYSCONFIGS=$(find . -name '*sysconfigdata*.py')
-  # Ensure all templated variables got expanded.
-  for SYSCONFIG in ${SYSCONFIGS}; do
-  if rg @ ${SYSCONFIG}; then
-    echo "ERROR :: Found @ in ${SYSCONFIG}"
   fi
 popd
 
