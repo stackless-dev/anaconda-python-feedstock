@@ -367,11 +367,11 @@ pushd "${PREFIX}"/lib/python${VER}
                                -e "s|@TCLTK_VER@|${TCLTK_VER}|g" > ${DST_SYSCONFIG}
   done
   if [[ ${HOST} =~ .*darwin.* ]]; then
-    cp _sysconfigdata_*.py $(dirname $(recorded_name))
     mv _sysconfigdata_osx.py ${recorded_name}
+    rm _sysconfigdata_linux.py
   else
-    cp _sysconfigdata_*.py $(dirname $(recorded_name))
     mv _sysconfigdata_linux.py ${recorded_name}
+    rm _sysconfigdata_osx.py
   fi
 popd
 
