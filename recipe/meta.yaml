@@ -1,6 +1,6 @@
-{% set base_version = "3.7.3" %}
-{% set version = "3.7.3" %}
-{% set md5 = "f699ba365d433ce8e07b17ae07aeb96f" %}
+{% set base_version = "3.7.4" %}
+{% set version = "3.7.4" %}
+{% set md5 = "fbcacd59d592eefca5b2abc22f823f86" %}
 {% set linkage_nature = os.environ.get('PY_INTERP_LINKAGE_NATURE', '') %}
 {% if linkage_nature != '' %}
   {% set linkage_nature = "_" ~ linkage_nature %}
@@ -11,7 +11,7 @@ package:
   version: {{ base_version }}
 
 source:
-  - url: http://www.stackless.com/binaries/stackless-373-export.tar.xz
+  - url: http://www.stackless.com/binaries/stackless-374-export.tar.xz
     md5: {{ md5 }}
     patches:
       - 0001-Add-Anaconda-Distribution-version-logic.patch
