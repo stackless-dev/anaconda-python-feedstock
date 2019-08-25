@@ -142,7 +142,7 @@ about:
     fewer lines of code than would be possible in languages such as C++ or
     Java. The language provides constructs intended to enable clear programs
     on both a small and large scale.
-  doc_url: https://stackless.readthedocs.io/en/3.6-slp/
+  doc_url: https://stackless.readthedocs.io/en/3.7-slp/
   doc_source_url: https://github.com/python/pythondotorg/blob/master/docs/source/index.rst
   dev_url: https://github.com/stackless-dev/stackless
 
