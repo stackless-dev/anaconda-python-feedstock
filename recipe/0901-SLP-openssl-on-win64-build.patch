@@ -1,0 +1,10 @@
+--- work/PCbuild/openssl.props.orig	2019-09-05 14:18:04.902092000 +0200
++++ work/PCbuild/openssl.props	2019-09-05 14:23:51.640318300 +0200
+@@ -13,6 +13,7 @@
+     <_DLLSuffix>-1_1</_DLLSuffix>
+     <_DLLSuffix Condition="$(Platform) == 'ARM'">$(_DLLSuffix)-arm</_DLLSuffix>
+     <_DLLSuffix Condition="$(Platform) == 'ARM64'">$(_DLLSuffix)-arm64</_DLLSuffix>
++    <_DLLSuffix Condition="$(Platform) == 'x64'">$(_DLLSuffix)-x64</_DLLSuffix>
+   </PropertyGroup>
+   <ItemGroup>
+     <_SSLDLL Include="$(opensslOutDir)\libcrypto$(_DLLSuffix).dll" />

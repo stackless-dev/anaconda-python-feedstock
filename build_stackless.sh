@@ -38,6 +38,11 @@ conda config --env --set add_pip_as_python_dependency False
 conda config --env --add channels stackless
 conda update --all --yes
 conda install --yes conda-build
+# Required on Windows 32bit for m2-patch
+# Obviously this is a missing requirement
+if conda info | grep -q 'platform *: *win-32' ; then
+  conda install --yes m2-gcc-libs
+fi
 
 # Stackless Python source archives are "tar.xz" files. Therefore we need
 # the command "unxz" to extract them.
@@ -57,10 +62,6 @@ fi
 # See recipe/run_test.py for details
 export tk='8.6'
 export openssl=''
-# Fix a few Patches (CRLF mixup)
-sed -i -e 's/\r//g' "$recipe/0011-Win32-Do-not-download-externals.patch"
-sed -i -e 's/\r//g' "$recipe/0017-Unvendor-openssl.patch"
-sed -i -e 's/\r//g' "$recipe/0018-Unvendor-sqlite3.patch"
 
 conda build purge
 conda build "$recipe" --python="$ver"
