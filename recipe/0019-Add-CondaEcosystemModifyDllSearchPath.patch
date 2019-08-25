@@ -1,7 +1,7 @@
-From 4899df80f0de148f29c2e2a3f8d14c78da63eb0c Mon Sep 17 00:00:00 2001
+From f9c7e4aeedd1bc8061468925a145457e045d587b Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 25 Jan 2019 22:54:57 +0000
-Subject: [PATCH 20/20] Add CondaEcosystemModifyDllSearchPath()
+Subject: [PATCH 19/19] Add CondaEcosystemModifyDllSearchPath()
 
 This changes the DLL search order so that C:\Windows\System32 does not
 get searched in before entries in PATH.
@@ -10,12 +10,12 @@ Reviewed by Kai Tietz 7.2.2019
 
 Updated a bit to include other directories.
 ---
- Modules/main.c       | 382 ++++++++++++++++++++++++++++++++++++++++++-
+ Modules/main.c       | 387 ++++++++++++++++++++++++++++++++++++++++++-
  Python/dynload_win.c |   4 +
- 2 files changed, 385 insertions(+), 1 deletion(-)
+ 2 files changed, 390 insertions(+), 1 deletion(-)
 
 diff --git a/Modules/main.c b/Modules/main.c
-index 514f809939..602adfeb77 100644
+index b3fba944bf..38da7e2bc9 100644
 --- a/Modules/main.c
 +++ b/Modules/main.c
 @@ -16,6 +16,10 @@
@@ -28,7 +28,7 @@ index 514f809939..602adfeb77 100644
 +#  include <libloaderapi.h>
  #endif
  
- #ifdef _MSC_VER
+ #ifdef MS_WINDOWS
 @@ -56,6 +60,8 @@ extern "C" {
          } \
      } while (0)
@@ -38,7 +38,7 @@ index 514f809939..602adfeb77 100644
  #ifdef MS_WINDOWS
  #define WCSTOK wcstok_s
  #else
-@@ -1236,7 +1242,7 @@ pymain_header(_PyMain *pymain)
+@@ -1238,7 +1244,7 @@ pymain_header(_PyMain *pymain)
          return;
      }
  
@@ -47,7 +47,7 @@ index 514f809939..602adfeb77 100644
      if (!Py_NoSiteFlag) {
          fprintf(stderr, "%s\n", COPYRIGHT);
      }
-@@ -3026,9 +3032,383 @@ pymain_init(_PyMain *pymain)
+@@ -3017,9 +3023,388 @@ pymain_init(_PyMain *pymain)
  }
  
  
@@ -417,6 +417,11 @@ index 514f809939..602adfeb77 100644
 +
 +    return 0;
 +}
++#else
++char* CondaEcosystemGetWarnings()
++{
++    return "";
++}
 +#endif
 +
 +
@@ -432,7 +437,7 @@ index 514f809939..602adfeb77 100644
      if (res == 1) {
          goto done;
 diff --git a/Python/dynload_win.c b/Python/dynload_win.c
-index 0fdf77f552..73acda3475 100644
+index 51325be658..f52efdf46b 100644
 --- a/Python/dynload_win.c
 +++ b/Python/dynload_win.c
 @@ -217,6 +217,10 @@ dl_funcptr _PyImport_FindSharedFuncptrWindows(const char *prefix,
@@ -447,5 +452,5 @@ index 0fdf77f552..73acda3475 100644
          hDLL = LoadLibraryExW(wpathname, NULL,
                                LOAD_WITH_ALTERED_SEARCH_PATH);
 -- 
-2.17.2 (Apple Git-113)
+2.20.1 (Apple Git-117)
 
