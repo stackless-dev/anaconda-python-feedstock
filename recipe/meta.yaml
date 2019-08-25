@@ -63,7 +63,7 @@ source:
 
 
 build:
-  number: 2
+  number: 0
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
@@ -105,6 +105,9 @@ requirements:
     - tk                                 # [unix]
     - ncurses                            # [unix]
     - libffi                             # [unix]
+   # run:
+   # # conda-build bug?
+   #  - ncurses >=6.1,<7.0a0               # [unix]
 
 test:
   commands:
