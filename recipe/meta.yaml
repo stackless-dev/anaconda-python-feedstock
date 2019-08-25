@@ -95,6 +95,7 @@ requirements:
     - pkg-config                         # [unix]
     - patch                              # [not win]
     - m2-patch                           # [win]
+    - ripgrep                            # [not win]
   host:
     - bzip2                              # [unix]
     - sqlite
@@ -121,6 +122,8 @@ test:
     - python -c "import sysconfig; print(sysconfig.get_config_var('CC'))"
     - python -m venv %%TEMP%%\venv  # [win]
     -  _CONDA_PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_x86_64_conda_cos6_linux_gnu python -c "import sysconfig; print(sysconfig.get_config_var('CC'))"  # [linux64]
+    # check for unreplaced @ symbols in sysconfig files
+    - for f in ${PREFIX}/lib/python3.7/_sysconfig*.py; do echo "Checking $f:"; if [[ `rg @ $f` ]]; then exit 1; fi; done  # [linux64 or osx]
     # WIP.
     # - pushd tests/cext1
     # -   python setup.py install

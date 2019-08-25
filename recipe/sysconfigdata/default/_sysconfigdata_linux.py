@@ -654,7 +654,7 @@ build_time_vars = {'ABIFLAGS': 'm',
  'TANH_PRESERVES_ZERO_SIGN': 1,
  'TCLTK_INCLUDES': '-I/opt/anaconda1anaconda2anaconda3/include',
  'TCLTK_LIBS': '-L/opt/anaconda1anaconda2anaconda3/lib '
-               '-ltcl@TCLTK_VER@ -ltk@TKLTK_VER@',
+               '-ltcl@TCLTK_VER@ -ltk@TCLTK_VER@',
  'TESTOPTS': '',
  'TESTPATH': '',
  'TESTPYTHON': 'LD_LIBRARY_PATH=/opt/anaconda1anaconda2anaconda3/../work/Python-@PYVERFULL@ '
@@ -690,18 +690,3 @@ build_time_vars = {'ABIFLAGS': 'm',
  'exec_prefix': '/opt/anaconda1anaconda2anaconda3',
  'prefix': '/opt/anaconda1anaconda2anaconda3',
  'srcdir': '.'}
-
-from shutil import which
-from os import environ, devnull
-from subprocess import check_output
-GCC = which('gcc')
-if GCC:
-    with open(devnull, 'w') as err:
-        GCC_VERSION = check_output([GCC, '--version'], stderr=err).decode('utf-8').splitlines()[0].split(' ')[-1]
-    print(GCC_VERSION)
-    for btv in ('BLDSHARED', 'CC', 'CXX', 'LDCXXSHARED',
-                'LDSHARED', 'LINKCC', 'MAINCC'):
-        if btv in build_time_vars:
-            build_time_vars[btv] = build_time_vars[btv]. \
-                replace('-B /opt/anaconda1anaconda2anaconda3/compiler_compat ',
-                        '')

@@ -11,7 +11,7 @@
 VERFULL=${PKG_VERSION}
 VER=${PKG_VERSION%.*}
 VERNODOTS=${VER//./}
-TCLTK_VER=${tk%.*}
+TCLTK_VER=${tk}
 CONDA_FORGE=no
 # Disables some PGO/LTO
 QUICK_BUILD=no
@@ -355,7 +355,7 @@ pushd "${PREFIX}"/lib/python${VER}
   # So we can see if anything has significantly diverged by looking in a built package.
   cp ${recorded_name} ${recorded_name}.orig
   mv ${recorded_name} ${our_compilers_name}
-  PY_ARCH=${HOST%.*}
+  PY_ARCH=${HOST%-conda*}
   # Copy all "${RECIPE_DIR}"/sysconfigdata/*.py. This is to support cross-compilation. They will be
   # from the previous build unfortunately so care must be taken at version bumps and flag changes.
   SRC_SYSCONFIGS=$(find "${RECIPE_DIR}"/sysconfigdata -name '*sysconfigdata*.py')
@@ -368,29 +368,19 @@ pushd "${PREFIX}"/lib/python${VER}
                                -e "s|@PYVER@|${VER}|g" \
                                -e "s|@PYVERFULL@|${VERFULL}|g" \
                                -e "s|@TCLTK_VER@|${TCLTK_VER}|g" > ${DST_SYSCONFIG}
-    if rg @ ${DST_SYSCONFIG}; then
-      echo "ERROR :: Found @ in ${DST_SYSCONFIG}"
-    fi
   done
   if [[ ${HOST} =~ .*darwin.* ]]; then
-    cp _sysconfigdata_*.py $(dirname $(recorded_name))
     mv _sysconfigdata_osx.py ${recorded_name}
+    rm _sysconfigdata_linux.py
   else
-    cp _sysconfigdata_*.py $(dirname $(recorded_name))
     mv _sysconfigdata_linux.py ${recorded_name}
-  fi
-  SYSCONFIGS=$(find . -name '*sysconfigdata*.py')
-  # Ensure all templated variables got expanded.
-  for SYSCONFIG in ${SYSCONFIGS}; do
-  if rg @ ${SYSCONFIG}; then
-    echo "ERROR :: Found @ in ${SYSCONFIG}"
+    rm _sysconfigdata_osx.py
   fi
 popd
 
 if [[ ${HOST} =~ .*linux.* ]]; then
   mkdir -p ${PREFIX}/compiler_compat
   cp ${LD} ${PREFIX}/compiler_compat/ld
-  cp ${RECIPE_DIR}/ld.wrapper ${PREFIX}/compiler_compat/ld
   echo "Files in this folder are to enhance backwards compatibility of anaconda software with older compilers."   > ${PREFIX}/compiler_compat/README
   echo "See: https://github.com/conda/conda/issues/6030 for more information."                                   >> ${PREFIX}/compiler_compat/README
 fi
