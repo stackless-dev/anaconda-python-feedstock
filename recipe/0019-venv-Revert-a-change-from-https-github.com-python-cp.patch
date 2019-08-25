@@ -1,20 +1,34 @@
-From 5f78f1bfded1cf0877f609600d7961112daf777b Mon Sep 17 00:00:00 2001
+From afcd8ee2210ebb87001b03e83d9897bf9a5355ed Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Wed, 2 Jan 2019 21:38:48 +0000
-Subject: [PATCH 19/19] venv: Revert a change from
+Subject: [PATCH 19/20] venv: Revert a change from
  https://github.com/python/cpython/commit/1c3de541e64f75046b20cdd27bada1557e550bcd
  https://bugs.python.org/issue35644
 
 If copier(context.executable, path) is not also called on Windows (as it was in Python 3.7.1) then the venv\Scripts dir will not contain a Python exe
+
+Also, on Anaconda Distribution, python.exe lives in sys.prefix.
 ---
- Lib/venv/__init__.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Lib/venv/__init__.py | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/Lib/venv/__init__.py b/Lib/venv/__init__.py
-index 5438b0d4e5..9fee12efcb 100644
+index d5ab38958b..1221c119aa 100644
 --- a/Lib/venv/__init__.py
 +++ b/Lib/venv/__init__.py
-@@ -188,9 +188,9 @@ class EnvBuilder:
+@@ -186,7 +186,10 @@ class EnvBuilder:
+                         basename = 'venvwlauncher'
+                     scripts = os.path.dirname(src)
+                 else:
+-                    scripts = os.path.join(os.path.dirname(__file__), "scripts", "nt")
++                    if basename.startswith('python'):
++                        scripts = sys.prefix
++                    else:
++                        scripts = os.path.join(os.path.dirname(__file__), "scripts", "nt")
+                 src = os.path.join(scripts, basename + ext)
+ 
+             shutil.copyfile(src, dst)
+@@ -201,9 +204,9 @@ class EnvBuilder:
          binpath = context.bin_path
          path = context.env_exe
          copier = self.symlink_or_copy
@@ -26,5 +40,5 @@ index 5438b0d4e5..9fee12efcb 100644
                  os.chmod(path, 0o755)
              for suffix in ('python', 'python3'):
 -- 
-2.20.1
+2.21.0
 

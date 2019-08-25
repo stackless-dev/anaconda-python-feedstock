@@ -65,7 +65,7 @@ source:
 
 
 build:
-  number: 0
+  number: 2
   # Windows has issues updating python if conda is using files itself.
   # Copy rather than link.
   no_link:
@@ -73,6 +73,7 @@ build:
   # We delete the shared libraries.
   ignore_run_exports:   # [unix]
     - bzip2             # [unix]
+  detect_binary_files_with_prefix: False
   # match python.org compiler standard
   skip: True            # [win and vc != 14]
 # Would like to be able to append to the calculated build string here, ping @msarahan, is this possible?
@@ -94,6 +95,8 @@ requirements:
     - {{ cdt('libx11-devel') }}          # [linux]
     - make                               # [unix]
     - pkg-config                         # [unix]
+    - patch                              # [not win]
+    - m2-patch                           # [win]
   host:
     - bzip2                              # [unix]
     - sqlite
@@ -113,6 +116,7 @@ test:
     - pydoc -h
     - python3-config --help  # [unix]
     - python -c "import sysconfig; print(sysconfig.get_config_var('CC'))"
+    - python -m venv %%TEMP%%\venv  # [win]
     -  _CONDA_PYTHON_SYSCONFIGDATA_NAME=_sysconfigdata_x86_64_conda_cos6_linux_gnu python -c "import sysconfig; print(sysconfig.get_config_var('CC'))"  # [linux64]
   requires:
     - stackless
